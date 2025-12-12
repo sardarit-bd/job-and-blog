@@ -18,7 +18,7 @@ class CompanyResource extends Resource
 {
     protected static ?string $model = Company::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::BuildingOffice;
 
     public static function form(Schema $schema): Schema
     {
@@ -41,7 +41,7 @@ class CompanyResource extends Resource
     {
         return [
             'index' => ListCompanies::route('/'),
-            'create' => CreateCompany::route('/create'),
+            // 'create' => CreateCompany::route('/create'),
             'edit' => EditCompany::route('/{record}/edit'),
         ];
     }

@@ -19,15 +19,43 @@ class AllJobsTable
             ->columns([
                 TextColumn::make('title')
                     ->searchable(),
-                TextColumn::make('license_type')
-                    ->searchable(),
+
                 TextColumn::make('jobTypes.name')
                     ->badge()
                     ->label('Job Types')
                     ->listWithLineBreaks()
                     ->limitList(3),
+
+                TextColumn::make('jobLicensedIns.name')
+                    ->label('Licensed In')
+                    ->badge()
+                    ->listWithLineBreaks()
+                    ->color('secondary'),
+
+                TextColumn::make('license_type')
+                    ->searchable(),
+
+                TextColumn::make('experiences.title')
+                    ->badge()
+                    ->listWithLineBreaks()
+                    ->searchable(),
+
+                TextColumn::make('specialities.name')
+                    ->label('Specializations')
+                    ->badge()
+                    ->listWithLineBreaks()
+                    ->limitList(3)
+                    ->color('info'),
+                
                 TextColumn::make('schedule')
                     ->searchable(),
+
+                TextColumn::make('jobRemoteStatuses.name')
+                    ->label('Remote Status')
+                    ->badge()
+                    ->listWithLineBreaks()
+                    ->searchable(),
+
                 TextColumn::make('salaray_transparency')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -37,12 +65,7 @@ class AllJobsTable
                     }),
                 TextColumn::make('salary_range')
                     ->searchable(),
-                TextColumn::make('specialities.name')
-                    ->label('Specializations')
-                    ->badge()
-                    ->listWithLineBreaks()
-                    ->limitList(3)
-                    ->color('info'),
+                
 
                 ImageColumn::make('image')
                     ->disk('public')

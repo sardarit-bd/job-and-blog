@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\JobWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -30,7 +31,7 @@ class RecruiterPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/recruiter/theme.css')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Blue,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -39,7 +40,8 @@ class RecruiterPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                AccountWidget::class,
+                JobWidget::class,
+                // AccountWidget::class,
                 // FilamentInfoWidget::class,
             ])
             ->middleware([

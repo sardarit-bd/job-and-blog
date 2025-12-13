@@ -1,0 +1,53 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+
+.fi-sidebar {
+    @apply bg-gray-600 dark:bg-slate-900;
+}
+
+.fi-sidebar-item-label{
+    @apply text-gray-50;
+}
+
+.fi-sidebar-item:hover .fi-sidebar-item-icon,
+.fi-sidebar-item:hover .fi-sidebar-item-label {
+    @apply text-black dark:text-gray-50;
+}
+
+.fi-sidebar-group-label {
+    @apply text-gray-300;
+}
+ 
+
+.fi-sidebar-item-icon {
+    @apply text-gray-50;
+ }
+
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    color: #000000 !important;
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-icon {
+    color: #000000 !important;
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-label {
+    color: #000000 !important;
+}
+
+.dark .fi-sidebar-item.fi-active .fi-sidebar-item-label {
+    color: #ffffff !important;
+}
+
+.dark .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    color: #000000 !important;
+}
+
+.dark .fi-sidebar-item.fi-active .fi-sidebar-item-icon {
+    color: #ffffff !important;
+}
+

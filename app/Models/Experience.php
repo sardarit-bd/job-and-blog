@@ -10,4 +10,15 @@ class Experience extends Model
         'title',
         'description',
     ];
+
+
+    public function allJobs()
+    {
+        return $this->belongsToMany(
+            AllJob::class,
+            'job_experiences',
+            'experience_id',
+            'all_job_id'
+        );
+    }
 }

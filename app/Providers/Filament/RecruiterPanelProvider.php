@@ -27,6 +27,7 @@ class RecruiterPanelProvider extends PanelProvider
             ->default()
             ->id('recruiter')
             ->path('recruiter')
+            ->viteTheme('resources/css/filament/recruiter/theme.css')
             ->login()
             ->colors([
                 'primary' => Color::Amber,
@@ -39,7 +40,7 @@ class RecruiterPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 AccountWidget::class,
-                FilamentInfoWidget::class,
+                // FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -52,6 +53,7 @@ class RecruiterPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->viteTheme('resources/css/filament/recruiter/theme.css')
             ->authMiddleware([
                 Authenticate::class,
             ]);

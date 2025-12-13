@@ -52,4 +52,9 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
+
+    public function companies()
+    {
+        return $this->hasMany(Company::class);
+    }
 }

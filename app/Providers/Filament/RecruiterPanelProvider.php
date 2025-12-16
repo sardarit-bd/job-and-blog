@@ -30,6 +30,8 @@ class RecruiterPanelProvider extends PanelProvider
             ->path('recruiter')
             ->viteTheme('resources/css/filament/recruiter/theme.css')
             ->login()
+            ->registration()
+            ->authGuard('web')
             ->colors([
                 'primary' => Color::Blue,
             ])

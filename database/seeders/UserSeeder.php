@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'User',
                 'password' => 'password123',
+                'role' => 'recruiter',
                 'email_verified_at' => now(),
             ]
         );

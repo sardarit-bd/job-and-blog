@@ -30,6 +30,7 @@ class AllJobsTable
                     ->label('Licensed In')
                     ->badge()
                     ->listWithLineBreaks()
+                    ->limitList(3)
                     ->color('secondary'),
 
                 TextColumn::make('license_type')
@@ -38,6 +39,7 @@ class AllJobsTable
                 TextColumn::make('experiences.title')
                     ->badge()
                     ->listWithLineBreaks()
+                    ->limitList(3)
                     ->searchable(),
 
                 TextColumn::make('specialities.name')
@@ -54,6 +56,7 @@ class AllJobsTable
                     ->label('Remote Status')
                     ->badge()
                     ->listWithLineBreaks()
+                    ->limitList(3)
                     ->searchable(),
 
                 TextColumn::make('salaray_transparency')

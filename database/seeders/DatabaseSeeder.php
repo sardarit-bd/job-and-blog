@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
             RemoteStatusSeeder::class,
             ScheduleSeeder::class,
             SpecialitySeeder::class,
-            UsStatesSeeder::class
+            UsStatesSeeder::class,
+            LicenseTypeSeeder::class,
+            JobTypeSeeder::class,
         ]);
         
     }

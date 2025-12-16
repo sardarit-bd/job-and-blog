@@ -26,6 +26,8 @@ class CompanyForm
                 TextInput::make('website')
                     ->url(),
                 FileUpload::make('image')
+                    ->disk('public')
+                    ->directory('companies')
                     ->image(),
             ]);
     }

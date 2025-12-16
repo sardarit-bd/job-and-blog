@@ -110,13 +110,6 @@ class AllJobForm
                     ->preload()
                     ->required(),
 
-                RichEditor::make('fern_notes')
-                    ->columnSpanFull()
-                    ->extraInputAttributes([
-                        'class' => 'min-h-[300px] h-auto overflow-hidden prose',
-                        'style' => 'height:auto !important;',
-                    ]),
-
                 RichEditor::make('description')
                     ->required()
                     ->columnSpanFull()

@@ -1,0 +1,79 @@
+import { useState } from "react";
+
+export default function Header() {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <header className="bg-white shadow-md sticky top-0 z-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between items-center h-16">
+                    {/* Logo */}
+                    <a href="#" className="text-2xl font-extrabold text-primary">
+                        Job Board
+                    </a>
+
+                    {/* Desktop Nav */}
+                    <nav className="hidden md:flex space-x-8 items-center">
+                        <a href="#" className="text-gray-600 hover:text-primary font-medium">
+                            Jobs
+                        </a>
+                        <a href="#" className="text-gray-600 hover:text-primary font-medium">
+                            Employers
+                        </a>
+                        <a href="#" className="text-gray-600 hover:text-primary font-medium">
+                            Resources
+                        </a>
+                    </nav>
+
+                    {/* Right actions */}
+                    <div className="flex items-center space-x-4">
+                        <a
+                            href="#"
+                            className="bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm md:text-base"
+                        >
+                            Login
+                        </a>
+
+                        {/* Mobile toggle */}
+                        <button
+                            onClick={() => setOpen(!open)}
+                            className="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 focus:ring-2 focus:ring-primary"
+                            aria-label="Toggle menu"
+                        >
+                            <svg
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M4 6h16M4 12h16m-7 6h7"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Mobile Menu */}
+            {open && (
+                <div className="md:hidden bg-white shadow-xl py-6 border-t">
+                    <div className="flex flex-col space-y-4 text-center">
+                        <a href="#" className="text-lg text-gray-800 font-medium">
+                            Jobs
+                        </a>
+                        <a href="#" className="text-lg text-gray-800 font-medium">
+                            Employers
+                        </a>
+                        <a href="#" className="text-lg text-gray-800 font-medium">
+                            Resources
+                        </a>
+                    </div>
+                </div>
+            )}
+        </header>
+    );
+}

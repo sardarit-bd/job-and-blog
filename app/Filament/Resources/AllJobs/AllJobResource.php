@@ -2,18 +2,19 @@
 
 namespace App\Filament\Resources\AllJobs;
 
-use App\Filament\Resources\AllJobs\Pages\CreateAllJob;
+use UnitEnum;
+use BackedEnum;
+use App\Models\AllJob;
+use Filament\Tables\Table;
+use Filament\Schemas\Schema;
+use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
+use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\AllJobs\Pages\EditAllJob;
 use App\Filament\Resources\AllJobs\Pages\ListAllJobs;
+use App\Filament\Resources\AllJobs\Pages\CreateAllJob;
 use App\Filament\Resources\AllJobs\Schemas\AllJobForm;
 use App\Filament\Resources\AllJobs\Tables\AllJobsTable;
-use App\Models\AllJob;
-use BackedEnum;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
-use UnitEnum;
 
 class AllJobResource extends Resource
 {
@@ -30,7 +31,15 @@ class AllJobResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return AllJobsTable::configure($table);
+        return AllJobsTable::configure($table)
+            ->modifyQueryUsing(fn (Builder $query) => $query->with([
+                'jobTypes',
+                'jobLicensedIns',
+                'specialities',
+                'experiences',
+                'jobRemoteStatuses',
+                'jobWorkFroms'
+            ]));
     }
 
     public static function getRelations(): array

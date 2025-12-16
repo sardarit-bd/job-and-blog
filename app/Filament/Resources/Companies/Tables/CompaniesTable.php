@@ -27,7 +27,9 @@ class CompaniesTable
                     ->searchable(),
                 TextColumn::make('website')
                     ->searchable(),
-                ImageColumn::make('image'),
+                ImageColumn::make('image')
+                    ->disk('public'),
+                    
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

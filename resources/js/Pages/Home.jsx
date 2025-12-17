@@ -175,7 +175,7 @@ export default function Home() {
 
     return (
         <AppLayout>
-            <section className="py-16 sm:py-24 bg-background">
+            <section className="py-4 sm:py-24 bg-background">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row items-center gap-10">
                         <div className="md:w-1/2 order-2 md:order-1 text-center md:text-left">
@@ -202,7 +202,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <main id="job-listings" className="py-16 sm:py-20">
+            <main id="job-listings" className="py-8 sm:py-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Search
                         filters={filters}
@@ -213,61 +213,65 @@ export default function Home() {
                         schedules={schedules}
                     />
 
-                    <div className="space-y-6">
-                        <h3 className="text-3xl font-bold text-gray-900 mb-6 border-b pb-4 font-['Poppins']">
-                            Latest Jobs
-                        </h3>
+                    <section id="jobs">
+                        <div className="space-y-6">
+                            <h3 className="text-3xl font-bold text-gray-900 mb-6 border-b pb-4 font-['Poppins']">
+                                Latest Jobs
+                            </h3>
 
-                        {allJobs.length > 0 ? (
-                            <>
-                                {allJobs.map((job, index) => (
-                                    <div
-                                        key={job.id}
-                                        ref={index === allJobs.length - 1 ? lastJobRef : null}
-                                    >
-                                        <JobCard job={job} />
-                                    </div>
-                                ))}
+                            {allJobs.length > 0 ? (
+                                <>
+                                    {allJobs.map((job, index) => (
+                                        <div
+                                            key={job.id}
+                                            ref={index === allJobs.length - 1 ? lastJobRef : null}
+                                        >
+                                            <JobCard job={job} />
+                                        </div>
+                                    ))}
 
-                                {loading && (
-                                    <div className="text-center py-8">
-                                        <p className="text-gray-600">Loading more jobs...</p>
-                                    </div>
-                                )}
+                                    {loading && (
+                                        <div className="text-center py-8">
+                                            <p className="text-gray-600">Loading more jobs...</p>
+                                        </div>
+                                    )}
 
-                                {!nextPageUrl && !loading && allJobs.length > 10 && (
-                                    <div className="text-center py-8">
-                                        <p className="text-gray-500">No more jobs to load.</p>
+                                    {!nextPageUrl && !loading && allJobs.length > 10 && (
+                                        <div className="text-center py-8">
+                                            <p className="text-gray-500">No more jobs to load.</p>
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
+                                <div className="text-center py-16">
+                                    <div className="bg-gray-100 rounded-2xl p-10 max-w-md mx-auto">
+                                        <svg
+                                            className="w-20 h-20 mx-auto text-gray-400 mb-6"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                            />
+                                        </svg>
+                                        <h4 className="text-2xl font-bold text-gray-800 mb-3">
+                                            No Job Found
+                                        </h4>
+                                        <p className="text-gray-600">
+                                            Try adjusting your search keywords or filters to see more results.
+                                        </p>
                                     </div>
-                                )}
-                            </>
-                        ) : (
-                            <div className="text-center py-16">
-                                <div className="bg-gray-100 rounded-2xl p-10 max-w-md mx-auto">
-                                    <svg
-                                        className="w-20 h-20 mx-auto text-gray-400 mb-6"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                        />
-                                    </svg>
-                                    <h4 className="text-2xl font-bold text-gray-800 mb-3">
-                                        No Job Found
-                                    </h4>
-                                    <p className="text-gray-600">
-                                        Try adjusting your search keywords or filters to see more results.
-                                    </p>
                                 </div>
-                            </div>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    </section>
+
+                    
                 </div>
             </main>
         </AppLayout>

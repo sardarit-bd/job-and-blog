@@ -58,4 +58,16 @@ class AllJob extends Model
             'experience_id'
         );
     }
+
+    public function applications()
+    {
+        return $this->hasMany(JobApplication::class);
+    }
+
+    public function applicants()
+    {
+        return $this->belongsToMany(User::class, 'job_applications')
+            ->withPivot('status')
+            ->withTimestamps();
+    }
 }

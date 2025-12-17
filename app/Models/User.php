@@ -67,4 +67,16 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(Company::class);
     }
+
+    public function jobApplications()
+    {
+        return $this->hasMany(JobApplication::class);
+    }
+
+    public function appliedJobs()
+    {
+        return $this->belongsToMany(AllJob::class, 'job_applications')
+            ->withPivot('status')
+            ->withTimestamps();
+    }
 }

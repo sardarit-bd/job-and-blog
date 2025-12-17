@@ -15,7 +15,10 @@ export default function Header({ auth }) {
 
                     {/* Desktop Nav */}
                     <nav className="hidden md:flex space-x-8 items-center">
-                        <a href="#" className="text-gray-800 hover:text-primary font-medium">
+                        <a 
+                            href="#jobs" 
+                            className="text-gray-800 hover:text-primary font-medium"
+                        >
                             Jobs
                         </a>
                         <a href="/recruiter" className="text-gray-800 hover:text-primary font-medium">
@@ -61,7 +64,11 @@ export default function Header({ auth }) {
             {open && (
                 <div className="md:hidden bg-white shadow-xl py-6 border-t">
                     <div className="flex flex-col space-y-4 text-center">
-                        <a href="#" className="text-lg text-gray-800 font-medium">
+                        <a 
+                            href="#jobs" 
+                            onClick={() => setOpen(false)}
+                            className="text-lg text-gray-800 font-medium"
+                        >
                             Jobs
                         </a>
                         <a href="#" className="text-lg text-gray-800 font-medium">

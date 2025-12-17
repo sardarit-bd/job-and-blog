@@ -2,9 +2,10 @@ export default function Footer() {
     return (
         <footer className="bg-gray-800 text-white py-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
+                    
                     <div>
-                        <h4 className="text-xl font-smibold mb-4 text-primary">
+                        <h4 className="text-xl font-semibold mb-4 text-gray-200">
                             Job Board
                         </h4>
                         <p className="text-sm text-gray-400">
@@ -13,35 +14,35 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h4 className="font-semibold mb-3">For Nurses</h4>
+                        <h4 className="font-semibold mb-3 text-gray-200">For Nurses</h4>
                         <ul className="space-y-2 text-sm text-gray-400">
                             <li>
-                                <a href="/register">Registration</a>
+                                <a href="/register" className="hover:text-white transition">Registration</a>
                             </li>
                             <li>
-                                <a href="/login">Login</a>
+                                <a href="/login" className="hover:text-white transition">Login</a>
                             </li>
                         </ul>
                     </div>
 
                     <div>
-                        <h4 className="font-semibold mb-3">For Employers</h4>
+                        <h4 className="font-semibold mb-3 text-gray-200">For Employers</h4>
                         <ul className="space-y-2 text-sm text-gray-400">
                             <li>
-                                <a href="/recruiter">Post a Job</a>
+                                <a href="/recruiter" className="hover:text-white transition">Post a Job</a>
                             </li>
                             <li>
-                                <a href="/recruiter/login">Employer Login</a>
+                                <a href="/recruiter/login" className="hover:text-white transition">Employer Login</a>
                             </li>
                         </ul>
                     </div>
 
                     <div>
-                        <h4 className="font-semibold mb-3">Support</h4>
+                        <h4 className="font-semibold mb-3 text-gray-200">Support</h4>
                         <ul className="space-y-2 text-sm text-gray-400">
-                            <li>Help Center</li>
-                            <li>Contact</li>
-                            <li>Privacy Policy</li>
+                            <li className="hover:text-white cursor-pointer transition">Help Center</li>
+                            <li className="hover:text-white cursor-pointer transition">Contact</li>
+                            <li className="hover:text-white cursor-pointer transition">Privacy Policy</li>
                         </ul>
                     </div>
                 </div>

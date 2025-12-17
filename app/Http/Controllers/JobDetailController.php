@@ -7,9 +7,9 @@ use Inertia\Inertia;
 
 class JobDetailController extends Controller
 {
-    public function __invoke()  
+    public function __invoke()
     {
-        $job = AllJob::with([
+        $jobModel = AllJob::with([
             'company',
             'jobTypes',
             'specialities',
@@ -17,33 +17,46 @@ class JobDetailController extends Controller
             'jobRemoteStatuses',
             'jobWorkFroms',
             'experiences',
-        ])->where('slug', request()->slug)->firstOrFail();
+        ])
+        ->where('slug', request()->slug)
+        ->firstOrFail();
 
-        $job = array_merge($job->toArray(), [
-            'id' => $job->id,
-            'title' => $job->title,
-            'slug' => $job->slug,
-            'description' => $job->description,
+        $alreadyApplied = auth()->check()
+            ? $jobModel->applications()
+                ->where('user_id', auth()->id())
+                ->exists()
+            : false;
+
+        $job = [
+            'id' => $jobModel->id,
+            'title' => $jobModel->title,
+            'slug' => $jobModel->slug,
+            'description' => $jobModel->description,
+            'already_applied' => $alreadyApplied,
+
             'company' => [
-                'name' => $job->company?->name,
-                'logo' => $job->company?->image ? asset('storage/' . $job->company->image) : null,
-                'description' => $job->company?->description,
+                'name' => $jobModel->company?->name,
+                'logo' => $jobModel->company?->image
+                    ? asset('storage/' . $jobModel->company->image)
+                    : null,
+                'description' => $jobModel->company?->description,
             ],
-            'job_types' => $job->jobTypes->pluck('name'),
-            'specialities' => $job->specialities->pluck('name'),
-            'licenses' => $job->jobLicensedIns->pluck('name', 'short'),
-            'remote_statuses' => $job->jobRemoteStatuses->pluck('name'),
-            'work_from' => $job->jobWorkFroms->pluck('name', 'short'),
-            'experiences' => $job->experiences->pluck('title'),
-            'salary_range' => $job->salary_range,
-            'salaray_transparency' => $job->salaray_transparency,
-            'schedule' => $job->schedule,
-            'image' => $job->image,
-            'posted_at' => date('m-d-Y', strtotime($job->created_at)), 
-        ]);
+
+            'job_types' => $jobModel->jobTypes->pluck('name'),
+            'specialities' => $jobModel->specialities->pluck('name'),
+            'licenses' => $jobModel->jobLicensedIns->pluck('name', 'short'),
+            'remote_statuses' => $jobModel->jobRemoteStatuses->pluck('name'),
+            'work_from' => $jobModel->jobWorkFroms->pluck('name', 'short'),
+            'experiences' => $jobModel->experiences->pluck('title'),
+            'salary_range' => $jobModel->salary_range,
+            'salaray_transparency' => $jobModel->salaray_transparency,
+            'schedule' => $jobModel->schedule,
+            'image' => $jobModel->image,
+            'posted_at' => $jobModel->created_at->format('m-d-Y'),
+        ];
 
         return Inertia::render('JobDetail', [
-            'job' => $job
+            'job' => $job,
         ]);
     }
 }

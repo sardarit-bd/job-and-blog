@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\CompanyAboutController;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobDetailController;
+use App\Http\Controllers\CompanyAboutController;
 use App\Http\Controllers\UploadResumeController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\JobApplicationController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', function () {
@@ -37,6 +38,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     ]);
     })->name('resume');
     Route::post('/resume/upload', [UploadResumeController::class, 'uploadResume'])->name('resume.upload');
+
+    Route::post('/jobs/{job}/apply', [JobApplicationController::class, 'store'])
+        ->name('jobs.apply');
+
+    Route::get('/jobs/{job}/applied-status', [JobApplicationController::class, 'appliedStatus'])
+    ->name('jobs.applied-status');
 });
 
 require __DIR__.'/settings.php';

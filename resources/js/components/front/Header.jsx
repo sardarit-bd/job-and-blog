@@ -19,7 +19,7 @@ const Header = ({ toggleSidebar, auth }) => {
   };
 
   return (
-    <header className="flex items-center justify-between h-16 bg-white border-b border-gray-200 px-4 sm:px-6 lg:px-8 shadow-sm">
+    <header className="flex items-center justify-between h-16 bg-slate-800 border-b border-gray-200 px-4 sm:px-6 lg:px-8 shadow-sm">
       
       {/* Mobile menu button */}
       {toggleSidebar && (
@@ -27,7 +27,7 @@ const Header = ({ toggleSidebar, auth }) => {
           onClick={toggleSidebar}
           className="md:hidden text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 p-2 rounded-md"
         >
-          <span className="text-2xl">☰</span>
+          <span className="text-2xl text-gray-100">☰</span>
         </button>
       )}
 
@@ -42,8 +42,7 @@ const Header = ({ toggleSidebar, auth }) => {
               src={`https://ui-avatars.com/api/?name=${userName}&background=5008C3&color=FFFFFF&bold=true`}
               alt="User Avatar"
             />
-            {/* Keeping the name visible next to the avatar on desktop (optional) */}
-            <span className="hidden sm:block text-sm font-medium text-gray-700">
+            <span className="hidden sm:block text-sm font-medium text-gray-200 hover:text-black">
               {userName}
             </span>
           </button>
@@ -53,7 +52,6 @@ const Header = ({ toggleSidebar, auth }) => {
           align="end"
           className="w-48 bg-gray-600 text-white border border-gray-700 shadow-lg"
         >
-          {/* USER NAME - Now visible on all devices */}
           <div className="px-3 py-2 border-b border-gray-500 mb-1">
             <p className="text-xs text-gray-300 uppercase tracking-wider font-semibold">Signed in as</p>
             <p className="text-sm font-medium truncate">{userName}</p>

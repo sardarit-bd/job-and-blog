@@ -8,6 +8,14 @@
     @apply bg-gray-600 dark:bg-slate-900;
 }
 
+.fi-topbar {
+    @apply bg-gray-600 dark:bg-slate-900;
+}
+
+.fi-logo {
+    @apply text-gray-50;
+}
+
 .fi-sidebar-nav-groups {
     @apply gap-y-2;
 }

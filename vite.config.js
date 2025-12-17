@@ -3,6 +3,7 @@ import laravel from 'laravel-vite-plugin';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { wayfinder } from '@laravel/vite-plugin-wayfinder';
+import path from 'path';
 
 export default defineConfig({
     plugins: [
@@ -20,4 +21,10 @@ export default defineConfig({
             formVariants: true,
         }),
     ],
+    resolve: {
+        alias: {
+            // This defines @/ as the resources/js folder
+            '@': path.resolve(__dirname, 'resources/js'), 
+        },
+    },
 });

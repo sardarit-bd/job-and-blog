@@ -1,18 +1,22 @@
+
+import { usePage } from "@inertiajs/react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
-
 export default function AppLayout({ children }) {
-    return (
-        <div className="flex flex-col min-h-screen">
-            <Header />
+  const { auth } = usePage().props;
 
-            {/* Main content */}
-            <main className="flex-1">
-                {children}
-            </main>
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header auth={auth} />
 
-            <Footer />
-        </div>
-    );
+      {/* Main content */}
+      <main className="flex-1">
+        {children}
+      </main>
+
+      <Footer />
+    </div>
+  );
 }
+

@@ -28,7 +28,7 @@ export default function Header() {
                     {/* Right actions */}
                     <div className="flex items-center space-x-4">
                         <a
-                            href="#"
+                            href="/login"
                             className="bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm md:text-base"
                         >
                             Login

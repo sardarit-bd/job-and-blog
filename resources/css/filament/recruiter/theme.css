@@ -8,6 +8,10 @@
     @apply bg-gray-600 dark:bg-slate-900;
 }
 
+.fi-sidebar-nav-groups {
+    @apply gap-y-2;
+}
+
 .fi-sidebar-item-label{
     @apply text-gray-50;
 }

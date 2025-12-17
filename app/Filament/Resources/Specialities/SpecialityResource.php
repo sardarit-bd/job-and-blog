@@ -21,7 +21,7 @@ class SpecialityResource extends Resource
 {
     protected static ?string $model = Speciality::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHandRaised;
 
     protected static string | UnitEnum | null $navigationGroup = 'Expertise';
 

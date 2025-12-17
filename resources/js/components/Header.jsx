@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Link } from "@inertiajs/react"; // Use Link for Inertia navigation
 
-export default function Header() {
+export default function Header({ auth }) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -8,31 +9,29 @@ export default function Header() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
-                    <a href="#" className="text-2xl font-extrabold text-primary">
+                    <Link href="/" className="text-2xl font-extrabold text-blue-700">
                         Job Board
-                    </a>
+                    </Link>
 
                     {/* Desktop Nav */}
                     <nav className="hidden md:flex space-x-8 items-center">
-                        <a href="#" className="text-gray-600 hover:text-primary font-medium">
+                        <a href="#" className="text-gray-800 hover:text-primary font-medium">
                             Jobs
                         </a>
-                        <a href="#" className="text-gray-600 hover:text-primary font-medium">
+                        <a href="/recruiter" className="text-gray-800 hover:text-primary font-medium">
                             Employers
-                        </a>
-                        <a href="#" className="text-gray-600 hover:text-primary font-medium">
-                            Resources
                         </a>
                     </nav>
 
                     {/* Right actions */}
                     <div className="flex items-center space-x-4">
-                        <a
-                            href="/login"
-                            className="bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm md:text-base"
+                        {/* Conditional Login/Dashboard Button */}
+                        <Link
+                            href={auth?.user ? "/dashboard" : "/login"}
+                            className="bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm md:text-base hover:bg-blue-800 transition"
                         >
-                            Login
-                        </a>
+                            {auth?.user ? "Dashboard" : "Login"}
+                        </Link>
 
                         {/* Mobile toggle */}
                         <button
@@ -68,9 +67,13 @@ export default function Header() {
                         <a href="#" className="text-lg text-gray-800 font-medium">
                             Employers
                         </a>
-                        <a href="#" className="text-lg text-gray-800 font-medium">
-                            Resources
-                        </a>
+                        {/* Mobile Login/Dashboard link */}
+                        <Link 
+                            href={auth?.user ? "/dashboard" : "/login"} 
+                            className="text-lg text-blue-700 font-bold"
+                        >
+                            {auth?.user ? "Go to Dashboard" : "Login"}
+                        </Link>
                     </div>
                 </div>
             )}

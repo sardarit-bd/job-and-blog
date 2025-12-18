@@ -1,10 +1,13 @@
 <?php
 
+use Carbon\Carbon;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\JobDetailController;
 use App\Http\Controllers\CompanyAboutController;
 use App\Http\Controllers\UploadResumeController;
@@ -32,31 +35,72 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         $user = Auth::user();
 
-    $stats = [
-        'totalApplications' => $user->jobApplications()->count(),
-        'pending' => $user->jobApplications()->where('status', 'pending')->count(),
-        'interviews' => $user->jobApplications()->where('status', 'interview')->count(),
-        'rejected' => $user->jobApplications()->where('status', 'rejected')->count(),
-        'accepted' => $user->jobApplications()->where('status', 'accepted')->count(),
-    ];
+        // Base stats (as before)
+        $stats = [
+            'totalApplications' => $user->jobApplications()->count(),
+            'pending' => $user->jobApplications()->where('status', 'pending')->count(),
+            'interviews' => $user->jobApplications()->where('status', 'interview')->count(),
+            'rejected' => $user->jobApplications()->where('status', 'rejected')->count(),
+            'accepted' => $user->jobApplications()->where('status', 'accepted')->count(),
+        ];
 
-    return Inertia::render('front/Dashboard', [
-        'stats' => $stats
-    ]);
+        // Monthly chart data – last 12 months
+        $monthlyData = $user->jobApplications()
+            ->select(
+                DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+                DB::raw('COUNT(*) as total'),
+                DB::raw('SUM(CASE WHEN status = "accepted" THEN 1 ELSE 0 END) as accepted_count')
+            )
+            ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $chartData = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $date = Carbon::now()->subMonths($i)->format('Y-m');
+            $shortMonth = Carbon::now()->subMonths($i)->format('M'); // e.g., Jan, Feb
+
+            $row = $monthlyData->firstWhere('month', $date);
+
+            $chartData[] = [
+                'month' => $shortMonth,
+                'applications' => $row?->total ?? 0,
+                'accepted' => $row?->accepted_count ?? 0,
+            ];
+        }
+
+        return Inertia::render('front/Dashboard', [
+            'auth' => [
+                'user' => $user->only('name', 'email', 'image'),
+            ],
+            'stats' => $stats,
+            'chartData' => $chartData, 
+        ]);
     })->name('dashboard');
 
+    // resume
     Route::get('/resume', function (Request $request) {
         return Inertia::render('front/ResumeUpload', [
         'resume_path' => $request->user()->resume_path,
     ]);
     })->name('resume');
     Route::post('/resume/upload', [UploadResumeController::class, 'uploadResume'])->name('resume.upload');
+    Route::post('/resume/upload', [ProfileController::class, 'uploadResume'])->name('resume.upload');
 
+
+    // job application
     Route::post('/jobs/{job}/apply', [JobApplicationController::class, 'store'])
         ->name('jobs.apply');
 
     Route::get('/jobs/{job}/applied-status', [JobApplicationController::class, 'appliedStatus'])
     ->name('jobs.applied-status');
+
+
+    // profile update
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 require __DIR__.'/settings.php';

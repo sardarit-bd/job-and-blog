@@ -113,5 +113,5 @@
         },
         "jsx": "react-jsx"
     },
-    "include": ["resources/js/**/*.ts", "resources/js/**/*.d.ts", "resources/js/**/*.tsx", "resources/js/components/front/Header.jsx", "resources/js/components/front/Footer.jsx", "resources/js/layouts/FrontLayout.jsx"]
+    "include": ["resources/js/**/*.ts", "resources/js/**/*.d.ts", "resources/js/**/*.tsx", "resources/js/components/front/Header.jsx", "resources/js/components/front/Footer.jsx", "resources/js/layouts/FrontLayout.jsx", "resources/js/components/front/BarChartCard.tsx"]
 }

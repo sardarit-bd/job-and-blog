@@ -2,6 +2,7 @@
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobDetailController;
@@ -29,7 +30,19 @@ Route::get('/company/{id}', [CompanyAboutController::class, 'show'])->name('comp
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        return Inertia::render('front/Dashboard');
+        $user = Auth::user();
+
+    $stats = [
+        'totalApplications' => $user->jobApplications()->count(),
+        'pending' => $user->jobApplications()->where('status', 'pending')->count(),
+        'interviews' => $user->jobApplications()->where('status', 'interview')->count(),
+        'rejected' => $user->jobApplications()->where('status', 'rejected')->count(),
+        'accepted' => $user->jobApplications()->where('status', 'accepted')->count(),
+    ];
+
+    return Inertia::render('front/Dashboard', [
+        'stats' => $stats
+    ]);
     })->name('dashboard');
 
     Route::get('/resume', function (Request $request) {

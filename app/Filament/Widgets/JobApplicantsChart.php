@@ -28,6 +28,7 @@ class JobApplicantsChart extends ChartWidget
         $jobs = AllJob::whereHas('company', fn($q) => $q->where('user_id', $userId))
             ->withCount('applications')
             ->orderBy('applications_count', 'desc')
+            ->limit(7)
             ->get();
 
         $labels = $jobs->pluck('title')->toArray();
@@ -35,7 +36,7 @@ class JobApplicantsChart extends ChartWidget
 
         $backgroundColors = [];
         foreach ($data as $i => $value) {
-            $backgroundColors[] = $colors[$i % count($colors)]; // repeat if more jobs than colors
+            $backgroundColors[] = $colors[$i % count($colors)];
         }
 
 

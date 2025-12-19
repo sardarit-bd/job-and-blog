@@ -37,6 +37,10 @@
     @apply gap-y-2;
 }
 
+.fi-topbar-open-sidebar-btn {
+    @apply text-white;
+}
+
 .fi-sidebar-item-label{
     @apply text-gray-50;
 }

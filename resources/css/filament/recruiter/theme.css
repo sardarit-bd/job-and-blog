@@ -2,6 +2,8 @@
 
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
+@source '../../../../vendor/diogogpinto/filament-auth-ui-enhancer/resources/**/*.blade.php';
+
 
 
 .fi-sidebar {
@@ -36,6 +38,8 @@
 .fi-sidebar-nav-groups {
     @apply gap-y-2;
 }
+
+
 
 .fi-topbar-open-sidebar-btn {
     @apply text-white;
@@ -87,4 +91,12 @@
 
 .fi-wi-stats-overview-stat-label, .fi-wi-stats-overview-stat-description {
     @apply text-black dark:text-white;
+}
+
+.fi-simple-layout {
+    @apply m-0 p-0;
+}
+
+.custom-auth-form-panel {
+    @apply bg-gradient-to-br from-white to-slate-400;
 }

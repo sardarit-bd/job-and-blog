@@ -2,7 +2,10 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\JobApplicantsChart;
+use App\Filament\Widgets\JobPostsChart;
 use App\Filament\Widgets\JobWidget;
+use App\Filament\Widgets\TotalJobs;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -31,6 +34,7 @@ class RecruiterPanelProvider extends PanelProvider
             ->maxContentWidth('full')
             ->login()
             ->registration()
+            ->passwordReset()
             ->authGuard('web')
             ->colors([
                 'primary' => Color::Blue,
@@ -42,7 +46,9 @@ class RecruiterPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                JobWidget::class,
+                TotalJobs::class,
+                JobPostsChart::class,
+                JobApplicantsChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,

@@ -29,7 +29,9 @@
 }
 
 
-
+.fi-sidebar-nav {
+    @apply border-t border-white
+}
 
 .fi-sidebar-nav-groups {
     @apply gap-y-2;
@@ -76,4 +78,9 @@
 
 .dark .fi-sidebar-item.fi-active .fi-sidebar-item-icon {
     color: #ffffff !important;
+}
+
+
+.fi-wi-stats-overview-stat-label, .fi-wi-stats-overview-stat-description {
+    @apply text-black dark:text-white;
 }

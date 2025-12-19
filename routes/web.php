@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use Illuminate\Cache\RateLimiting\Limit;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\RateLimiter;
 use App\Http\Controllers\JobDetailController;
 use App\Http\Controllers\CompanyAboutController;
 use App\Http\Controllers\UploadResumeController;
@@ -25,9 +27,20 @@ Route::middleware('guest')->group(function () {
         return Inertia::render('Auth/Register');
     })->name('register');
 
+    
+    RateLimiter::for('forgot-password', function (Request $request) {
+        return Limit::perMinute(5)->by($request->ip())
+            ->response(function (Request $request) {
+                return redirect()->back()
+                    ->withInput($request->only('email'))
+                    ->with('error', 'Too many password reset requests. Please try again in 1 minute.');
+            });
+    });
+
+
     // Forgot Password Routes
     Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email')->middleware(['throttle:forgot-password']);
 
     // Reset Password Routes
     Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');

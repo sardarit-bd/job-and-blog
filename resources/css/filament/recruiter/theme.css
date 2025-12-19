@@ -5,16 +5,31 @@
 
 
 .fi-sidebar {
-    @apply bg-gray-600 dark:bg-slate-900;
+    @apply bg-sky-900 dark:bg-slate-900;
 }
 
 .fi-topbar {
-    @apply bg-gray-600 dark:bg-slate-900;
+    @apply bg-sky-900 dark:bg-slate-900;
 }
 
 .fi-logo {
+    @apply text-black;
+}
+
+.fi-topbar-start .fi-logo {
     @apply text-gray-50;
 }
+
+.fi-simple-main-ctn {
+    @apply bg-gradient-to-br from-blue-950 to-cyan-700;
+}
+
+.fi-main .fi-width-7xl {
+    max-width: none !important;
+}
+
+
+
 
 .fi-sidebar-nav-groups {
     @apply gap-y-2;

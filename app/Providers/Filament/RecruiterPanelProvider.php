@@ -28,6 +28,7 @@ class RecruiterPanelProvider extends PanelProvider
             ->path('recruiter')
             ->viteTheme('resources/css/filament/recruiter/theme.css')
             ->sidebarWidth('16rem')
+            ->maxContentWidth('full')
             ->login()
             ->registration()
             ->authGuard('web')

@@ -22,6 +22,10 @@
     @apply text-gray-50;
 }
 
+.fi-sidebar-header-logo-ctn .fi-logo {
+    @apply text-gray-50;
+}
+
 .fi-simple-main-ctn {
     @apply bg-gradient-to-br from-blue-950 to-cyan-700;
 }
@@ -30,6 +34,9 @@
     max-width: none !important;
 }
 
+.fi-sidebar-header-logo-ctn {
+    @apply text-white;
+}
 
 .fi-sidebar-nav {
     @apply border-t border-white

@@ -74,7 +74,7 @@ export default function Search({
 
     return (
         <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl mb-12 border border-gray-100">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <h2 className="text-2xl font-bold text-gray-900 font-['Poppins']">
                     Find Your Perfect Role
                 </h2>

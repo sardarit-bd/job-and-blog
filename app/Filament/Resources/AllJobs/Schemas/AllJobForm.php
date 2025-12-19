@@ -114,8 +114,9 @@ class AllJobForm
                     ->required()
                     ->columnSpanFull()
                     ->extraInputAttributes([
-                        'class' => 'min-h-[300px] h-auto overflow-hidden prose',
+                        // 'class' => 'min-h-[300px] h-auto overflow-hidden prose',
                         'style' => 'height:auto !important;',
+                        'class' => 'prose max-w-none',
                     ]),
 
                 FileUpload::make('image')

@@ -62,7 +62,7 @@ export default function Header({ auth }) {
 
             {/* Mobile Menu */}
             {open && (
-                <div className="md:hidden bg-white shadow-xl py-6 border-t">
+                <div className="md:hidden bg-white shadow-xl py-6 border-t border-gray-200">
                     <div className="flex flex-col space-y-4 text-center">
                         <a 
                             href="#jobs" 
@@ -71,7 +71,7 @@ export default function Header({ auth }) {
                         >
                             Jobs
                         </a>
-                        <a href="#" className="text-lg text-gray-800 font-medium">
+                        <a href="/recruiter" className="text-lg text-gray-800 font-medium">
                             Employers
                         </a>
                         {/* Mobile Login/Dashboard link */}

@@ -11,7 +11,6 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
   const [job, setJob] = useState(initialJob);
   const [loadingStatus, setLoadingStatus] = useState(true);
 
-  // Fetch latest applied status when modal opens
   useEffect(() => {
     if (isOpen && initialJob?.id) {
       setLoadingStatus(true);
@@ -21,7 +20,6 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
         headers: {
           'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest',
-          // Laravel automatically includes CSRF in meta tag for fetch/axios
         },
       })
         .then((response) => {
@@ -47,12 +45,10 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {
-          // Instantly update UI after successful apply
           setJob((prev) => ({ ...prev, already_applied: true }));
         },
         onError: (errors) => {
           console.error('Apply failed:', errors);
-          // Optional: show error message
         },
       }
     );
@@ -96,7 +92,7 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
               <div className="flex flex-wrap items-center gap-3">
                 <span className="text-gray-700 font-semibold">{job.company.name}</span>
 
-                {/* Apply Button / Already Applied */}
+                {/* Apply Button */}
                 {loadingStatus ? (
                   <span className="text-sm text-gray-500">Checking application status...</span>
                 ) : job.already_applied ? (

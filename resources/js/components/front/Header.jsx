@@ -62,7 +62,7 @@ const Header = ({ toggleSidebar, auth }) => {
             className="flex items-center gap-2 px-3 py-2 hover:bg-gray-500 rounded-md cursor-pointer"
           >
             <User className="h-4 w-4" />
-            Profile
+           <a href="/resume">Profile</a>
           </DropdownMenuItem>
 
           <DropdownMenuSeparator className="bg-gray-500" />

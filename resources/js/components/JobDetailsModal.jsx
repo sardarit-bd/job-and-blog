@@ -136,11 +136,11 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
           <hr className="my-6" />
 
           {/* Flash Success Message */}
-          {flash?.success && (
+          {/* {flash?.success && (
             <div className="bg-green-100 text-green-800 p-2 rounded mb-2">
               {flash.success}
             </div>
-          )}
+          )} */}
 
           {/* Remote Status */}
           <div className="flex justify-center flex-wrap gap-2 mb-6">

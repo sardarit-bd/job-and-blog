@@ -112,7 +112,7 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
                   <span className="text-sm text-gray-500">Checking application status...</span>
                 ) : !job.can_apply ? (
                   /* New Check: Company users cannot apply */
-                  <span className="px-4 py-1.5 rounded-lg text-sm bg-red-100 text-red-700 font-bold border border-red-200">
+                  <span className="px-4 py-1.5 rounded-lg text-sm bg-red-100 text-red-700 border border-red-200">
                     You cannot apply for this job
                   </span>
                 ) : job.already_applied ? (

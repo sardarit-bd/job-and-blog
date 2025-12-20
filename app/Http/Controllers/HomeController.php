@@ -15,6 +15,8 @@ class HomeController extends Controller
 {
     public function __invoke(Request $request)
     {
+        $userId = auth()->id();
+        
         $query = AllJob::with([
             'company',
             'jobTypes',
@@ -48,11 +50,12 @@ class HomeController extends Controller
             $query->where('schedule', $request->schedule);
         }
 
-        $userCompanyId = auth()->check() ? auth()->user()->company_id : null;
+        $userCompanyId = auth()->check() ? auth()->user()->id : null;
         $userId = auth()->id();
 
-        $jobs = $query->latest()->simplePaginate(10)->through(function ($job) use ($userCompanyId, $userId) {
-        $isCompanyMember = ($userCompanyId !== null && $userCompanyId === $job->company_id);
+        $jobs = $query->latest()->simplePaginate(10)->through(function ($job) use ($userId) {
+            // Check if the current user is the owner of the job post
+        $isOwner = ($userId !== null && (int)$userId === (int)$job->user_id);
 
         $alreadyApplied = false;
         if ($userId) {
@@ -67,13 +70,17 @@ class HomeController extends Controller
             'slug' => $job->slug,
             'description' => $job->description,
             'already_applied' => $alreadyApplied,
-            'can_apply' => !$isCompanyMember,
+            
+            // A user cannot apply if they are the owner OR if they already applied
+            'can_apply' => !$isOwner, 
+            
             'company' => [
                 'id' => $job->company_id,
                 'name' => $job->company?->name,
                 'logo' => $job->company?->image ? asset('storage/' . $job->company->image) : null,
                 'description' => $job->company?->description,
             ],
+            // ... rest of your mapping code
             'job_types' => $job->jobTypes->pluck('name'),
             'specialities' => $job->specialities->pluck('name'),
             'licenses' => $job->jobLicensedIns->pluck('name', 'short'),
@@ -86,7 +93,7 @@ class HomeController extends Controller
             'image' => $job->image,
             'posted_at' => date('m-d-Y', strtotime($job->created_at)),
         ];
-    });
+        });
 
         return Inertia::render('Home', [
             'jobs' => $jobs,

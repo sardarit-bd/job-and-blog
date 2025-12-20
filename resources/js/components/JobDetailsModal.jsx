@@ -11,7 +11,6 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
 
   const [job, setJob] = useState(initialJob);
   const [loadingStatus, setLoadingStatus] = useState(true);
-  console.log(job);
 
   useEffect(() => {
     if (isOpen && initialJob?.id) {
@@ -95,15 +94,30 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
                 <span className="text-gray-700 font-semibold">{job.company.name} {job.company.id}</span>
 
                 {/* Apply Button */}
+                {/* {loadingStatus ? (
+                  <span className="text-sm text-gray-500">Checking application status...</span>
+                ) : job.already_applied ? (
+                  <span className="px-4 py-1.5 rounded-lg text-sm bg-green-100 text-green-700">
+                    You already applied this job
+                  </span>
+                ) : (
+                  <button
+                    onClick={applyJob}
+                    className="px-4 py-1.5 rounded-lg text-sm bg-teal-600 text-white hover:bg-teal-700 transition"
+                  >
+                    Apply
+                  </button>
+                )} */}
                 {loadingStatus ? (
                   <span className="text-sm text-gray-500">Checking application status...</span>
                 ) : !job.can_apply ? (
-                  <span className="px-4 py-1.5 rounded-lg text-sm bg-red-100 text-red-700">
+                  /* New Check: Company users cannot apply */
+                  <span className="px-4 py-1.5 rounded-lg text-sm bg-red-100 text-red-700 font-bold border border-red-200">
                     You cannot apply for this job
                   </span>
                 ) : job.already_applied ? (
                   <span className="px-4 py-1.5 rounded-lg text-sm bg-green-100 text-green-700">
-                    You already applied for this job
+                    You already applied this job
                   </span>
                 ) : (
                   <button

@@ -22,7 +22,7 @@ class JobDetailController extends Controller
         ->where('slug', request()->slug)
         ->firstOrFail();
 
-        $isCompanyMember = auth()->check() && auth()->user()->company_id === $jobModel->company_id;
+        $isCompanyMember = auth()->check() && auth()->user()->id === $jobModel->user_id;
 
         $alreadyApplied = auth()->check()
             ? $jobModel->applications()

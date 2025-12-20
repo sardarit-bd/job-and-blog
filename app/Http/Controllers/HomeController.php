@@ -48,32 +48,45 @@ class HomeController extends Controller
             $query->where('schedule', $request->schedule);
         }
 
+        $userCompanyId = auth()->check() ? auth()->user()->company_id : null;
+        $userId = auth()->id();
 
-        $jobs = $query->latest()->simplePaginate(10)->through(function ($job) {
-            return [
-                'id' => $job->id,
-                'title' => $job->title,
-                'slug' => $job->slug,
-                'description' => $job->description,
-                'company' => [
-                    'id' => $job->company_id,
-                    'name' => $job->company?->name,
-                    'logo' => $job->company?->image ? asset('storage/' . $job->company->image) : null,
-                    'description' => $job->company?->description,
-                ],
-                'job_types' => $job->jobTypes->pluck('name'),
-                'specialities' => $job->specialities->pluck('name'),
-                'licenses' => $job->jobLicensedIns->pluck('name', 'short'),
-                'remote_statuses' => $job->jobRemoteStatuses->pluck('name'),
-                'work_from' => $job->jobWorkFroms->pluck('name', 'short'),
-                'experiences' => $job->experiences->pluck('title'),
-                'salary_range' => $job->salary_range,
-                'salaray_transparency' => $job->salaray_transparency,
-                'schedule' => $job->schedule,
-                'image' => $job->image,
-                'posted_at' => date('m-d-Y', strtotime($job->created_at)),
-            ];
-        });
+        $jobs = $query->latest()->simplePaginate(10)->through(function ($job) use ($userCompanyId, $userId) {
+        $isCompanyMember = ($userCompanyId !== null && $userCompanyId === $job->company_id);
+
+        $alreadyApplied = false;
+        if ($userId) {
+            $alreadyApplied = $job->applications()
+                ->where('user_id', $userId)
+                ->exists();
+        }
+
+        return [
+            'id' => $job->id,
+            'title' => $job->title,
+            'slug' => $job->slug,
+            'description' => $job->description,
+            'already_applied' => $alreadyApplied,
+            'can_apply' => !$isCompanyMember,
+            'company' => [
+                'id' => $job->company_id,
+                'name' => $job->company?->name,
+                'logo' => $job->company?->image ? asset('storage/' . $job->company->image) : null,
+                'description' => $job->company?->description,
+            ],
+            'job_types' => $job->jobTypes->pluck('name'),
+            'specialities' => $job->specialities->pluck('name'),
+            'licenses' => $job->jobLicensedIns->pluck('name', 'short'),
+            'remote_statuses' => $job->jobRemoteStatuses->pluck('name'),
+            'work_from' => $job->jobWorkFroms->pluck('name', 'short'),
+            'experiences' => $job->experiences->pluck('title'),
+            'salary_range' => $job->salary_range,
+            'salaray_transparency' => $job->salaray_transparency,
+            'schedule' => $job->schedule,
+            'image' => $job->image,
+            'posted_at' => date('m-d-Y', strtotime($job->created_at)),
+        ];
+    });
 
         return Inertia::render('Home', [
             'jobs' => $jobs,

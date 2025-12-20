@@ -62,4 +62,11 @@ class AllJobResource extends Resource
             'edit' => EditAllJob::route('/{record}/edit'),
         ];
     }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['user_id'] = auth()->id();
+
+        return $data;
+    }
 }

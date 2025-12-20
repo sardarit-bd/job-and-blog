@@ -1,10 +1,57 @@
+import { useState, useEffect } from "react";
 import DOMPurify from "dompurify";
 import AppLayout from "../layouts/AppLayout";
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import ShareButton from "../components/ShareButton";
 
-export default function JobDetail() {
-  const { job } = usePage().props;
+export default function JobDetail({ job: initialJob}) {
+  const { flash } = usePage().props;
+
+  const [job, setJob] = useState(initialJob);
+  const [loadingStatus, setLoadingStatus] = useState(true);
+  
+    useEffect(() => {
+      if (initialJob?.id) {
+        setLoadingStatus(true);
+  
+        fetch(`/jobs/${initialJob.id}/applied-status`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error('Failed to fetch status');
+            return response.json();
+          })
+          .then((data) => {
+            setJob((prev) => ({ ...prev, already_applied: data.already_applied }));
+            setLoadingStatus(false);
+          })
+          .catch((error) => {
+            console.error('Error fetching applied status:', error);
+            setLoadingStatus(false);
+          });
+      }
+    }, [initialJob?.id]);
+
+    const applyJob = () => {
+        router.post(
+          `/jobs/${job.id}/apply`,
+          {},
+          {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+              setJob((prev) => ({ ...prev, already_applied: true }));
+            },
+            onError: (errors) => {
+              console.error('Apply failed:', errors);
+            },
+          }
+        );
+      };
 
   return (
     <AppLayout>
@@ -39,9 +86,20 @@ export default function JobDetail() {
                     {job.company.name}
                   </span>
 
-                  <button className="px-5 py-2 rounded-lg text-sm bg-teal-600 text-white hover:bg-teal-700">
-                    Apply Now
+                  {loadingStatus ? (
+                  <span className="text-sm text-gray-500">Checking application status...</span>
+                ) : job.already_applied ? (
+                  <span className="px-4 py-1.5 rounded-lg text-sm bg-green-100 text-green-700">
+                    You already applied this job
+                  </span>
+                ) : (
+                  <button
+                    onClick={applyJob}
+                    className="px-4 py-1.5 rounded-lg text-sm bg-teal-600 text-white hover:bg-teal-700 transition"
+                  >
+                    Apply
                   </button>
+                )}
 
                   <ShareButton job={job} />
                 </div>
@@ -105,17 +163,17 @@ export default function JobDetail() {
               </div>
             </div>
 
-            <hr className="my-8" />
+            {/* <hr className="my-8" /> */}
 
             {/* ================= COMPANY INFO ================= */}
-            <div>
+            {/* <div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
                 <h2 className="text-lg font-bold text-gray-900">
                   {job.company.name}
                 </h2>
 
                 <a
-                  href="#"
+                  href={`/company/${job.company.id}`}
                   className="px-4 py-2 rounded-lg text-sm border border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white transition"
                 >
                   Company Profile
@@ -125,7 +183,7 @@ export default function JobDetail() {
               <p className="text-gray-700 text-sm leading-relaxed">
                 {job.company.description || "No description provided."}
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ class AllJob extends Model
 {
     protected $fillable = [
         'company_id',
+        'user_id',
         'title',
         'slug',
         'license_type',
@@ -18,6 +19,15 @@ class AllJob extends Model
         'description',
         'image',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($job) {
+            if (auth()->check()) {
+                $job->user_id = auth()->id();
+            }
+        });
+    }
 
     public function company()
     {

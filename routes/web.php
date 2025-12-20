@@ -63,9 +63,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $stats = [
             'totalApplications' => $user->jobApplications()->count(),
             'pending' => $user->jobApplications()->where('status', 'pending')->count(),
-            'interviews' => $user->jobApplications()->where('status', 'interview')->count(),
+            'interviews' => $user->jobApplications()->where('status', 'shortlisted')->count(),
             'rejected' => $user->jobApplications()->where('status', 'rejected')->count(),
-            'accepted' => $user->jobApplications()->where('status', 'accepted')->count(),
+            'accepted' => $user->jobApplications()->where('status', 'hired')->count(),
         ];
 
         // Monthly chart data – last 12 months
@@ -73,7 +73,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->select(
                 DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
                 DB::raw('COUNT(*) as total'),
-                DB::raw('SUM(CASE WHEN status = "accepted" THEN 1 ELSE 0 END) as accepted_count')
+                DB::raw('SUM(CASE WHEN status = "hired" THEN 1 ELSE 0 END) as accepted_count')
             )
             ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
             ->groupBy('month')

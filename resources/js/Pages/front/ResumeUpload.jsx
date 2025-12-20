@@ -74,12 +74,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
     return (
         <MainLayout auth={auth}>
             <div className="mx-auto py-5 px-4 sm:px-6 lg:px-8 ">
-              {flash.success && (
-                  <Alert className="mb-6 bg-emerald-50 border-emerald-100 text-emerald-800 rounded-xl">
-                      <CheckCircle2 className="h-4 w-4 stroke-emerald-600" />
-                      <AlertDescription>{flash.success}</AlertDescription>
-                  </Alert>
-              )}
+              
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start ">
                     {/* LEFT SIDE: Profile Section */}
@@ -87,13 +82,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
                         <Card className="border-none shadow-xl bg-white overflow-hidden ring-1 ring-slate-100 p-0">
                             <div className="h-28 bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600" />
                             <CardContent className="relative pt-0 px-6 pb-8">
-                                {/* Flash Message for Profile */}
-                                {flash.error && (
-                                    <Alert variant="destructive" className="mb-6 rounded-xl">
-                                        <AlertCircle className="h-4 w-4" />
-                                        <AlertDescription>{flash.error}</AlertDescription>
-                                    </Alert>
-                                )}
+                                  
                                 <form onSubmit={handleProfileSubmit}>
                                     {/* Avatar Upload */}
                                     <div className="flex flex-col items-center -mt-14 mb-6">
@@ -122,6 +111,23 @@ const ResumeUpload = ({ auth, resume_path }) => {
                                         </div>
                                         <p className="mt-2 text-xs font-medium text-indigo-600">Click to change photo</p>
                                     </div>
+
+                                    {flash.success?.scope === "profile" && (
+                                    <Alert className="mb-4 bg-emerald-50 border-emerald-100">
+                                        <AlertDescription>
+                                        {flash.success.message}
+                                        </AlertDescription>
+                                    </Alert>
+                                    )}
+
+
+                                    {flash.error?.scope === "profile" && (
+                                    <Alert variant="destructive" className="mb-4 text-red-500 py-1">
+                                        {/* <AlertCircle className="h-4 w-4" /> */}
+                                        <AlertDescription>{flash.error.message}</AlertDescription>
+                                    </Alert>
+                                    )}
+
 
                                     <div className="space-y-5">
                                         {/* Name Input */}
@@ -181,21 +187,31 @@ const ResumeUpload = ({ auth, resume_path }) => {
 
                     {/* RIGHT SIDE: Resume Section */}
                     <div className="lg:col-span-7 space-y-6">
-                        <Card className="border-none shadow-lg bg-white ring-1 ring-slate-100">
-                            <CardHeader className="pb-4">
-                                <CardTitle className="text-xl font-bold flex items-center text-slate-800">
-                                    <FileUp className="mr-3 h-6 w-6 text-indigo-600" />
+                        <Card className="border-none shadow-lg bg-white ring-1 ring-slate-100 py-0">
+                            <CardHeader className="bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 py-7 rounded-t-xl ">
+                                <CardTitle className="text-xl font-bold flex items-center text-gray-50">
+                                    <FileUp className="mr-3 h-6 w-6 text-gray-50" />
                                     Upload Resume
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 {/* Flash Message for Resume */}
-                                {flash.error && (
-                                    <Alert variant="destructive" className="mb-6 rounded-xl">
-                                        <AlertCircle className="h-4 w-4" />
-                                        <AlertDescription>{flash.error}</AlertDescription>
+                                {flash.success?.scope === "resume" && (
+                                    <Alert className="mb-4 bg-emerald-50 border-emerald-100">
+                                        <AlertDescription>
+                                        {flash.success.message}
+                                        </AlertDescription>
                                     </Alert>
-                                )}
+                                    )}
+
+
+                                    {flash.error?.scope === "resume" && (
+                                    <Alert variant="destructive" className="mb-4 text-red-500">
+                                        {/* <AlertCircle className="h-4 w-4" /> */}
+                                        <AlertDescription >{flash.error.message}</AlertDescription>
+                                    </Alert>
+                                    )}
+
 
                                 <form onSubmit={handleResumeSubmit} className="space-y-4">
                                     <div 
@@ -234,7 +250,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
                                 </form>
 
                                 {/* Last Uploaded Preview Section */}
-                                <div className="pt-6 border-t border-slate-100">
+                                <div className="py-6 border-t border-slate-100">
                                     <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Current Active Resume</h4>
                                     {resume_path ? (
                                         <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200 group">

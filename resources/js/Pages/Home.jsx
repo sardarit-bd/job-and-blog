@@ -65,7 +65,7 @@ export default function Home() {
 
     return (
         <AppLayout>
-            <section className="py-4 sm:py-24 bg-background">
+            <section className="py-2 sm:py-24 bg-background bg-gradient-br from-gray-100 to-gray-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row items-center gap-10">
                         <div className="md:w-1/2 order-2 md:order-1 text-center md:text-left">
@@ -92,7 +92,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <main id="job-listings" className="py-8 sm:py-20">
+            <main id="job-listings" className="py-2 sm:py-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Search
                         filters={filters}
@@ -103,7 +103,7 @@ export default function Home() {
                         schedules={schedules}
                     />
 
-                    <section id="jobs">
+                    <section id="jobs bg-gradient-br from-gray-100 to-gray-200">
                         <div className="space-y-6">
                             <h3 className="text-3xl font-bold text-gray-900 mb-6 border-b pb-4 font-['Poppins']">
                                 Latest Jobs

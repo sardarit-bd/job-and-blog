@@ -77,7 +77,7 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
         </button>
 
         {/* Modal Content */}
-        <div className="p-6 sm:p-8">
+        <div className="p-6 sm:p-8 bg-sky-50">
           {/* Header */}
           <div className="grid grid-cols-12 gap-4 items-start">
             <div className="col-span-12 sm:col-span-3 flex justify-center sm:justify-start">

@@ -7,7 +7,7 @@ export default function JobCard({ job }) {
   return (
     <>
       <div
-        className="job-card bg-white p-6 shadow-xl rounded-2xl border border-gray-100 transition duration-300 hover:shadow-2xl hover:border-primary/50 cursor-pointer"
+        className="job-card bg-sky-50 p-6 shadow-xl rounded-2xl border border-gray-100 transition duration-300 hover:shadow-2xl hover:border-primary/50 cursor-pointer"
         onClick={(e) => {
           if (e.target.closest("button")) return;
           setIsModalOpen(true);

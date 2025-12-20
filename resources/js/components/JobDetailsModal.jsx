@@ -98,7 +98,7 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
                 {loadingStatus ? (
                   <span className="text-sm text-gray-500">Checking application status...</span>
                 ) : !job.can_apply ? (
-                  <span className="px-4 py-1.5 rounded-lg text-sm bg-red-100 text-red-700 font-semibold">
+                  <span className="px-4 py-1.5 rounded-lg text-sm bg-red-100 text-red-700">
                     You cannot apply for this job
                   </span>
                 ) : job.already_applied ? (

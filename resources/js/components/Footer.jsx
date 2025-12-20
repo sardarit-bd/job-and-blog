@@ -38,17 +38,18 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h4 className="font-semibold mb-3 text-gray-200">Support</h4>
-                        <ul className="space-y-2 text-sm text-gray-400">
+                        <h4 className="font-semibold mb-3 text-gray-200">Contact Us</h4>
+                        <p className="text-gray-400">47 W 13th St, New York, NY 10011, USA</p>
+                        {/* <ul className="space-y-2 text-sm text-gray-400">
                             <li className="hover:text-white cursor-pointer transition">Help Center</li>
                             <li className="hover:text-white cursor-pointer transition">Contact</li>
                             <li className="hover:text-white cursor-pointer transition">Privacy Policy</li>
-                        </ul>
+                        </ul> */}
                     </div>
                 </div>
 
                 <div className="mt-12 pt-8 border-t border-gray-700 text-center text-sm text-gray-400">
-                    © 2025 Job Board, Inc. All rights reserved.
+                    © {new Date().getFullYear()} Job Board, Inc. All rights reserved.
                 </div>
             </div>
         </footer>

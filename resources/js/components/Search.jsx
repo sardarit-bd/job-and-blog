@@ -105,7 +105,7 @@ export default function Search({
                         <button
                             type="button"
                             onClick={() => setShowAdvanced(!showAdvanced)}
-                            className="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition duration-150 font-medium whitespace-nowrap"
+                            className="px-4 py-3 bg-blue-700 text-gray-50 rounded-xl hover:bg-blue-800 hover:text-white transition duration-150 font-medium whitespace-nowrap"
                         >
                             <span className="hidden sm:inline">
                                 {showAdvanced ? "Hide Filters" : "Advanced Search"}
@@ -197,7 +197,7 @@ export default function Search({
                                 onChange={(e) => setRemoteStatus(e.target.value)}
                                 className="w-full p-3 border border-gray-300 rounded-xl focus:ring-blue-500 focus:border-blue-500 transition"
                             >
-                                <option value="" disabled>Select Location</option>
+                                <option value="" disabled>Select Remote Status</option>
                                 {remoteStatuses.map((status) => (
                                     <option key={status.id} value={status.name}>
                                         {status.name}

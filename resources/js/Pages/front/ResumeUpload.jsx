@@ -109,7 +109,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
                                                 onChange={handleImageChange}
                                             />
                                         </div>
-                                        <p className="mt-2 text-xs font-medium text-indigo-600">Click to change photo</p>
+                                        <p className="mt-2 text-xs font-medium text-indigo-600">Click to change photo (upto 5MB). Supported files: JPEG,JPG,PNG,GIF,WEBP</p>
                                     </div>
 
                                     {flash.success?.scope === "profile" && (

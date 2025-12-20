@@ -5,11 +5,11 @@ export default function Header({ auth }) {
     const [open, setOpen] = useState(false);
 
     return (
-        <header className="bg-white shadow-md sticky top-0 z-50">
+        <header className="bg-gray-800 text-gray-50 shadow-md sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
-                    <Link href="/" className="text-2xl font-extrabold text-blue-700">
+                    <Link href="/" className="text-2xl font-bold text-gray-50">
                         Job Board
                     </Link>
 
@@ -17,11 +17,11 @@ export default function Header({ auth }) {
                     <nav className="hidden md:flex space-x-8 items-center">
                         <a 
                             href="#jobs" 
-                            className="text-gray-800 hover:text-primary font-medium"
+                            className="text-gray-50 hover:text-primary font-medium"
                         >
                             Jobs
                         </a>
-                        <a href="/recruiter" className="text-gray-800 hover:text-primary font-medium">
+                        <a href="/recruiter" className="text-gray-50 hover:text-primary font-medium">
                             Employers
                         </a>
                     </nav>
@@ -31,7 +31,7 @@ export default function Header({ auth }) {
                         {/* Conditional Login/Dashboard Button */}
                         <Link
                             href={auth?.user ? "/dashboard" : "/login"}
-                            className="bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm md:text-base hover:bg-blue-800 transition"
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium text-sm md:text-base hover:bg-blue-800 transition"
                         >
                             {auth?.user ? "Dashboard" : "Login"}
                         </Link>

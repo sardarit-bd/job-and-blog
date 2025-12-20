@@ -36,7 +36,7 @@ const Header = ({ toggleSidebar, auth }) => {
       {/* User dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center gap-2 rounded-full p-1 hover:bg-gray-100 transition focus:outline-none">
+          <button className="flex items-center gap-2 rounded-full p-1 hover:bg-gray-100 hover:text-black transition focus:outline-none">
             <img
               className="h-8 w-8 rounded-full object-cover border border-gray-300"
               src={`https://ui-avatars.com/api/?name=${userName}&background=5008C3&color=FFFFFF&bold=true`}

@@ -95,21 +95,6 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
                 <span className="text-gray-700 font-semibold">{job.company.name} {job.company.id}</span>
 
                 {/* Apply Button */}
-                {/* {loadingStatus ? (
-                  <span className="text-sm text-gray-500">Checking application status...</span>
-                ) : job.already_applied ? (
-                  <span className="px-4 py-1.5 rounded-lg text-sm bg-green-100 text-green-700">
-                    You already applied this job
-                  </span>
-                ) : (
-                  <button
-                    onClick={applyJob}
-                    className="px-4 py-1.5 rounded-lg text-sm bg-teal-600 text-white hover:bg-teal-700 transition"
-                  >
-                    Apply
-                  </button>
-                )} */}
-
                 {loadingStatus ? (
                   <span className="text-sm text-gray-500">Checking application status...</span>
                 ) : !job.can_apply ? (

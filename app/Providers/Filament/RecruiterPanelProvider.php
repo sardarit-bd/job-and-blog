@@ -56,6 +56,7 @@ class RecruiterPanelProvider extends PanelProvider
                     ->showEmptyPanelOnMobile(false)
                     ->emptyPanelBackgroundImageOpacity('70%')
                     ->formPanelWidth('60%')
+                    ->formPanelPosition('left')
                     ->formPanelBackgroundColor(Color::hex('#f0f0f0')),
             ])
             ->middleware([

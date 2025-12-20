@@ -56,7 +56,7 @@ class HomeController extends Controller
                 'slug' => $job->slug,
                 'description' => $job->description,
                 'company' => [
-                    'id' => $job->company?->company_id,
+                    'id' => $job->company_id,
                     'name' => $job->company?->name,
                     'logo' => $job->company?->image ? asset('storage/' . $job->company->image) : null,
                     'description' => $job->company?->description,

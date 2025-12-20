@@ -4,12 +4,14 @@ import { router, usePage } from "@inertiajs/react";
 import { useState, useEffect } from "react";
 
 export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
+  
   if (!isOpen) return null;
 
   const { flash } = usePage().props;
 
   const [job, setJob] = useState(initialJob);
   const [loadingStatus, setLoadingStatus] = useState(true);
+  console.log(job);
 
   useEffect(() => {
     if (isOpen && initialJob?.id) {
@@ -90,14 +92,33 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
             <div className="col-span-12 sm:col-span-9 space-y-2">
               <h2 className="text-2xl font-bold text-gray-900 capitalize">{job.title}</h2>
               <div className="flex flex-wrap items-center gap-3">
-                <span className="text-gray-700 font-semibold">{job.company.name}</span>
+                <span className="text-gray-700 font-semibold">{job.company.name} {job.company.id}</span>
 
                 {/* Apply Button */}
-                {loadingStatus ? (
+                {/* {loadingStatus ? (
                   <span className="text-sm text-gray-500">Checking application status...</span>
                 ) : job.already_applied ? (
                   <span className="px-4 py-1.5 rounded-lg text-sm bg-green-100 text-green-700">
                     You already applied this job
+                  </span>
+                ) : (
+                  <button
+                    onClick={applyJob}
+                    className="px-4 py-1.5 rounded-lg text-sm bg-teal-600 text-white hover:bg-teal-700 transition"
+                  >
+                    Apply
+                  </button>
+                )} */}
+
+                {loadingStatus ? (
+                  <span className="text-sm text-gray-500">Checking application status...</span>
+                ) : !job.can_apply ? (
+                  <span className="px-4 py-1.5 rounded-lg text-sm bg-red-100 text-red-700 font-semibold">
+                    You cannot apply for this job
+                  </span>
+                ) : job.already_applied ? (
+                  <span className="px-4 py-1.5 rounded-lg text-sm bg-green-100 text-green-700">
+                    You already applied for this job
                   </span>
                 ) : (
                   <button
@@ -176,7 +197,8 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
             <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
               <h3 className="text-lg font-bold text-gray-900">{job.company.name}</h3>
               <a
-                href="#"
+                href={`/company/${job.company.id}`}
+                target="_blank"
                 className="px-4 py-1.5 rounded-lg text-sm border border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white transition"
               >
                 Company Profile

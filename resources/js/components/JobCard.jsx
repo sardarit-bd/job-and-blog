@@ -1,6 +1,5 @@
 import { useState } from "react";
 import JobDetailsModal from "./JobDetailsModal";
-import ShareButton from "./ShareButton";
 
 export default function JobCard({ job }) {
   const [isModalOpen, setIsModalOpen] = useState(false);

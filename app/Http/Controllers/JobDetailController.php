@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AllJob;
 use Inertia\Inertia;
+use App\Models\AllJob;
+use Illuminate\Support\Facades\Log;
 
 class JobDetailController extends Controller
 {
@@ -21,6 +22,8 @@ class JobDetailController extends Controller
         ->where('slug', request()->slug)
         ->firstOrFail();
 
+        $isCompanyMember = auth()->check() && auth()->user()->company_id === $jobModel->company_id;
+
         $alreadyApplied = auth()->check()
             ? $jobModel->applications()
                 ->where('user_id', auth()->id())
@@ -32,14 +35,16 @@ class JobDetailController extends Controller
             'title' => $jobModel->title,
             'slug' => $jobModel->slug,
             'description' => $jobModel->description,
+            'can_apply' => !$isCompanyMember,
             'already_applied' => $alreadyApplied,
 
             'company' => [
-                'name' => $jobModel->company?->name,
-                'logo' => $jobModel->company?->image
+                'id' => $jobModel->company_id,
+                'name' => $jobModel->company->name,
+                'logo' => $jobModel->company->image
                     ? asset('storage/' . $jobModel->company->image)
                     : null,
-                'description' => $jobModel->company?->description,
+                'description' => $jobModel->company->description,
             ],
 
             'job_types' => $jobModel->jobTypes->pluck('name'),
@@ -54,6 +59,14 @@ class JobDetailController extends Controller
             'image' => $jobModel->image,
             'posted_at' => $jobModel->created_at->format('m-d-Y'),
         ];
+
+        Log::info('Company Access Debug', [
+            'job_id' => $jobModel->id,
+            'company_id_column' => $jobModel->company_id,
+            'company_direct_id' => $jobModel->company->id,
+            'company_safe_id' => $jobModel->company->id,
+            'company_name' => $jobModel->company->name,
+        ]);
 
         return Inertia::render('JobDetail', [
             'job' => $job,

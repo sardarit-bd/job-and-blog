@@ -40,8 +40,8 @@ export default function Register() {
         
         {/* Background Accents - Positioned relative to this wrapper only */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-indigo-100/40 dark:bg-indigo-900/10 transition-colors" />
-          <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-slate-200/60 dark:bg-slate-900/20 transition-colors" />
+          <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-indigo-900/10 transition-colors" />
+          <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-slate-900/20 transition-colors" />
         </div>
 
         {/* Register Card */}
@@ -52,7 +52,7 @@ export default function Register() {
             <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-['Poppins']">
               Sign up
             </h1>
-            <div className="h-1.5 w-12 bg-indigo-600 rounded-full mt-4" />
+            <div className="h-1.5 w-12 bg-[#F8721B] rounded-full mt-4" />
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -68,7 +68,7 @@ export default function Register() {
                 onChange={handleChange}
                 required
                 autoFocus
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all outline-none"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-[#F8721B] focus:border-transparent transition-all outline-none"
                 placeholder="John Doe"
               />
               {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
@@ -85,7 +85,7 @@ export default function Register() {
                 value={form.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all outline-none"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-[#F8721B] focus:border-transparent transition-all outline-none"
                 placeholder="you@example.com"
               />
               {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
@@ -103,7 +103,7 @@ export default function Register() {
                   value={form.password}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all outline-none"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-[#F8721B] focus:border-transparent transition-all outline-none"
                   placeholder="••••••••"
                 />
                 <button
@@ -133,7 +133,7 @@ export default function Register() {
                   value={form.password_confirmation}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all outline-none"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-[#F8721B] focus:border-transparent transition-all outline-none"
                   placeholder="••••••••"
                 />
                 <button
@@ -154,7 +154,7 @@ export default function Register() {
             <button
               type="submit"
               disabled={processing}
-              className="w-full py-3 px-4 mt-2 rounded-xl font-bold text-white bg-slate-900 dark:bg-indigo-600 hover:bg-slate-800 dark:hover:bg-indigo-700 transition-all active:scale-[0.98] disabled:opacity-70 shadow-lg shadow-slate-200 dark:shadow-none"
+              className="w-full py-3 px-4 mt-2 rounded-xl font-bold text-white bg-[#F8721B] dark:bg-indigo-600 dark:hover:bg-indigo-700 transition-all active:scale-[0.98] disabled:opacity-70 shadow-lg shadow-slate-200 dark:shadow-none cursor-pointer"
             >
               {processing ? "Creating Account..." : "Create Account"}
             </button>
@@ -164,7 +164,7 @@ export default function Register() {
           <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
             <p className="text-slate-600 dark:text-slate-400 text-sm">
               Already have an account?{' '}
-              <a href="/login" className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline underline-offset-4">
+              <a href="/login" className="font-bold text-[#F8721B] dark:text-indigo-400 hover:underline underline-offset-4">
                 Sign in
               </a>
             </p>

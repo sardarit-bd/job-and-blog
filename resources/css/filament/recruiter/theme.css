@@ -109,19 +109,23 @@
 }
 
 .fi-fo-field-label-content, .fi-simple-header-heading, .fi-simple-header-subheading {
-    @apply text-black dark:text-gray-50;
+    @apply text-black dark:text-black;
 }
 
-/* .fi-ac-link-action, .fi-link {
-    @apply text-blue-600;
-} */
+.fi-ac-link-action, .fi-link {
+    @apply text-[#F8721B] dark:text-blue-600;
+}
+
+.fi-ac-btn-action {
+    @apply bg-[#F8721B] dark:bg-[#F8721B] text-white;
+}
 
 .fi-simple-header .fi-logo {
     @apply text-4xl pb-4;
 }
 
 .fi-input-wrp-content-ctn .fi-input, .fi-input-wrp-suffix {
-    @apply bg-white text-black dark:bg-black dark:text-white;
+    @apply bg-white text-black dark:bg-white dark:text-black;
 }
 
 .fi-checkbox-input {

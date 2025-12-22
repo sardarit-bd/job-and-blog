@@ -22,7 +22,7 @@ export default function ShareButton({ job }) {
     <div className="relative inline-block">
       <button
         onClick={handleShare}
-        className="px-4 py-1.5 rounded-lg text-sm border border-gray-300 bg-blue-900 text-white hover:bg-gray-100 hover:text-black transition"
+        className="px-4 py-1.5 rounded-lg text-sm border border-gray-300 bg-black text-white  transition cursor-pointer"
       >
         Share
       </button>

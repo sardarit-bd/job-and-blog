@@ -24,8 +24,8 @@ export default function ForgotPassword({ status }) {
         
         {/* Background Accents */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-indigo-100/40 dark:bg-indigo-900/10 transition-colors" />
-          <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-slate-200/60 dark:bg-slate-900/20 transition-colors" />
+          <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-indigo-900/10 transition-colors" />
+          <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-slate-900/20 transition-colors" />
         </div>
 
         {/* Forgot Password Card */}
@@ -36,7 +36,7 @@ export default function ForgotPassword({ status }) {
             <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-['Poppins']">
               Reset Password
             </h1>
-            <div className="h-1.5 w-12 bg-indigo-600 rounded-full mt-4" />
+            <div className="h-1.5 w-12 bg-[#F8721B] rounded-full mt-4" />
             <p className="mt-4 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
               Enter your email and we'll send you a secure link to reset your account.
             </p>
@@ -73,7 +73,7 @@ export default function ForgotPassword({ status }) {
                 required
                 autoFocus
                 disabled={processing}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all outline-none disabled:opacity-50"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-[#F8721B] focus:border-transparent transition-all outline-none disabled:opacity-50"
                 placeholder="name@company.com"
               />
               
@@ -91,7 +91,7 @@ export default function ForgotPassword({ status }) {
             <button
               type="submit"
               disabled={processing}
-              className="w-full py-3 px-4 rounded-xl font-bold text-white bg-slate-900 dark:bg-indigo-600 hover:bg-slate-800 dark:hover:bg-indigo-700 transition-all active:scale-[0.98] disabled:opacity-70 shadow-lg shadow-slate-200 dark:shadow-none"
+              className="w-full py-2 px-4 rounded-xl font-bold text-white bg-[#F8721B] dark:bg-indigo-600 dark:hover:bg-indigo-700 transition-all active:scale-[0.98] disabled:opacity-70 shadow-lg shadow-slate-200 dark:shadow-none cursor-pointer"
             >
               {processing ? (
                 <span className="flex items-center justify-center gap-2">
@@ -109,7 +109,7 @@ export default function ForgotPassword({ status }) {
 
           {/* Card Footer */}
           <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
-            <a href="/login" className="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline underline-offset-4">
+            <a href="/login" className="text-sm font-bold text-[#F8721B]/90 dark:text-indigo-400 hover:underline underline-offset-4">
               Return to sign in
             </a>
           </div>

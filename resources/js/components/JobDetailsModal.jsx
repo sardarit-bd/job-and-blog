@@ -81,10 +81,10 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
               />
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white capitalize font-['Poppins'] leading-tight">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#F8721B] dark:text-white capitalize font-['Poppins'] leading-tight">
                 {job.title}
               </h2>
-              <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+              <p className="text-sm font-medium text-black dark:text-indigo-400">
                 {job.company.name}
               </p>
             </div>
@@ -110,7 +110,7 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
               {/* Badges */}
               <div className="flex flex-wrap gap-2">
                 {job.remote_statuses?.map((status, i) => (
-                  <span key={i} className="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800">
+                  <span key={i} className="px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest bg-[#F2EBE6]  dark:bg-indigo-900/30 text-black dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800">
                     {status}
                   </span>
                 ))}
@@ -119,7 +119,7 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
               {/* Description Section */}
               <section>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-3">
-                  <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+                  <span className="w-1.5 h-6 bg-[#F8721B] rounded-full" />
                   Job Description
                 </h3>
                 <div 
@@ -132,12 +132,12 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
               {job.specialities?.length > 0 && (
                 <section>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-3">
-                    <span className="w-1.5 h-6 bg-teal-500 rounded-full" />
+                    <span className="w-1.5 h-6 bg-[#F8721B] rounded-full" />
                     Specialities
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {job.specialities.map((spec, i) => (
-                      <span key={i} className="px-4 py-2 rounded-xl text-sm font-semibold bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-100 dark:border-slate-700">
+                      <span key={i} className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#F2EBE6] dark:bg-slate-800 text-black  dark:text-slate-300 border border-slate-100 dark:border-slate-700">
                         {spec}
                       </span>
                     ))}
@@ -146,13 +146,13 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
               )}
 
               {/* Company Info Box */}
-              <section className="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-800">
+              <section className="p-6 bg-[#F2EBE6] dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-800">
                 <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white">{job.company.name}</h3>
                   <a
                     href={`/company/${job.company.id}`}
                     target="_blank"
-                    className="px-5 py-2 rounded-xl text-sm font-bold border border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white dark:border-indigo-400 dark:text-indigo-400 dark:hover:bg-indigo-400 dark:hover:text-slate-900 transition-all"
+                    className="px-5 py-2 rounded-xl text-sm font-bold border border-[#F8721B] text-black hover:bg-[#F8721B] hover:text-white dark:border-indigo-400 dark:text-indigo-400 dark:hover:bg-indigo-400 dark:hover:text-slate-900 transition-all"
                   >
                     View Company Profile
                   </a>
@@ -166,7 +166,7 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
             {/* Right Column: Sidebar Stats & CTA */}
             <div className="lg:col-span-4 space-y-6">
               
-              <div className="p-6 bg-white dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-none space-y-6">
+              <div className="p-6 bg-[#F2EBE6] dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-none space-y-6">
                 <h4 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-widest text-center border-b border-slate-100 dark:border-slate-700 pb-4">Job Summary</h4>
                 
                 <div className="space-y-4">
@@ -198,7 +198,7 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
                   ) : (
                     <button
                       onClick={applyJob}
-                      className="w-full py-3 bg-slate-900 dark:bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
+                      className="w-full py-2 bg-[#F8721B] dark:bg-indigo-600 text-white font-bold rounded-2xl transition-all shadow-lg shadow-indigo-500/20 active:scale-95 cursor-pointer"
                     >
                       Apply Now
                     </button>

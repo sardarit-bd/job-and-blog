@@ -73,7 +73,7 @@ export default function Search({
     const hasActiveFilters = keyword || experience || jobType || schedule || remoteStatus;
 
     return (
-        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-6 sm:p-8 rounded-[2rem] shadow-2xl shadow-slate-200 dark:shadow-none mb-12 border border-slate-100 dark:border-slate-800 transition-all duration-500">
+        <div className="bg-[#F2EBE6] dark:bg-slate-900/80 backdrop-blur-xl p-6 sm:p-8 rounded-[2rem] shadow-2xl shadow-slate-200 dark:shadow-none mb-12 border border-slate-100 dark:border-slate-800 transition-all duration-500">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div>
                     <h2 className="text-2xl font-bold text-slate-900 dark:text-white font-['Poppins'] tracking-tight">
@@ -104,7 +104,7 @@ export default function Search({
                             placeholder="Search by Keyword (e.g. Nursing)..."
                             value={keyword}
                             onChange={(e) => setKeyword(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all outline-none"
+                            className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 focus:ring-1 focus:ring-[#F8721B] focus:border-transparent transition-all outline-none"
                             aria-label="Search jobs by keyword"
                         />
                     </div>
@@ -112,9 +112,9 @@ export default function Search({
                     <button
                         type="button"
                         onClick={() => setShowAdvanced(!showAdvanced)}
-                        className={`flex items-center justify-center px-6 py-3.5 rounded-2xl font-bold transition-all duration-200 gap-2 whitespace-nowrap
+                        className={`flex items-center justify-center px-6 py-3 rounded-2xl font-bold transition-all duration-200 gap-2 whitespace-nowrap
                             ${showAdvanced 
-                                ? "bg-slate-900 dark:bg-blue-600 text-white shadow-lg" 
+                                ? "bg-[#F8721B] dark:bg-blue-600 text-white shadow-lg" 
                                 : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700"
                             }`}
                     >
@@ -144,9 +144,9 @@ export default function Search({
                             <select
                                 value={experience}
                                 onChange={(e) => setExperience(e.target.value)}
-                                className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all cursor-pointer"
+                                className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 focus:ring-1 focus:ring-[#FB721B] outline-none transition-all cursor-pointer"
                             >
-                                <option value="">Any Experience</option>
+                                <option value="" disabled>Select experience</option>
                                 {experiences.map((exp) => (
                                     <option key={exp.id} value={exp.title || exp.name}>
                                         {exp.title || exp.name}
@@ -163,9 +163,9 @@ export default function Search({
                             <select
                                 value={jobType}
                                 onChange={(e) => setJobType(e.target.value)}
-                                className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all cursor-pointer"
+                                className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 focus:ring-1 focus:ring-[#FB721B] outline-none transition-all cursor-pointer"
                             >
-                                <option value="">Any Type</option>
+                                <option value="" disabled>Select job type</option>
                                 {jobTypes.map((type) => (
                                     <option key={type.id} value={type.name}>
                                         {type.name}
@@ -182,9 +182,9 @@ export default function Search({
                             <select
                                 value={schedule}
                                 onChange={(e) => setSchedule(e.target.value)}
-                                className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all cursor-pointer"
+                                className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 focus:ring-1 focus:ring-[#FB721B] outline-none transition-all cursor-pointer"
                             >
-                                <option value="">Any Schedule</option>
+                                <option value="" disabled>Select schedule</option>
                                 {schedules.map((sched) => (
                                     <option key={sched.id} value={sched.name}>
                                         {sched.name}
@@ -196,14 +196,14 @@ export default function Search({
                         {/* Remote Status */}
                         <div className="space-y-2">
                             <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1">
-                                Work Setting
+                                Remote Status
                             </label>
                             <select
                                 value={remoteStatus}
                                 onChange={(e) => setRemoteStatus(e.target.value)}
-                                className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all cursor-pointer"
+                                className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 focus:ring-1 focus:ring-[#FB721B] outline-none transition-all cursor-pointer"
                             >
-                                <option value="">Any Setting</option>
+                                <option value="" disabled>Select remote status</option>
                                 {remoteStatuses.map((status) => (
                                     <option key={status.id} value={status.name}>
                                         {status.name}

@@ -65,7 +65,7 @@ export default function Home() {
 
     return (
         <AppLayout>
-            <section className="py-2 sm:py-24 bg-background bg-gradient-br from-gray-100 to-gray-200">
+            <section className="sm:py-24">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row items-center gap-10">
                         <div className="md:w-1/2 order-2 md:order-1 text-center md:text-left">

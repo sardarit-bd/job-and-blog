@@ -11,7 +11,7 @@ export default function AppLayout({ children }) {
       <Header auth={auth} />
 
       {/* Main content */}
-      <main className="flex-1">
+      <main className="flex-1 bg-gradient-to-br from-gray-50 to-gray-200">
         {children}
       </main>
 

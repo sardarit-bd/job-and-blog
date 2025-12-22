@@ -5,7 +5,7 @@ export default function Header({ auth }) {
     const [open, setOpen] = useState(false);
 
     return (
-        <header className="bg-gray-50 shadow-md sticky top-0 z-50">
+        <header className="bg-white dark:bg-gray-950 shadow-md sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
@@ -17,11 +17,11 @@ export default function Header({ auth }) {
                     <nav className="hidden md:flex space-x-8 items-center">
                         <a 
                             href="#jobs" 
-                            className="text-gray-950 hover:text-primary font-medium"
+                            className="text-gray-950 dark:text-gray-50 hover:text-primary font-medium"
                         >
                             Jobs
                         </a>
-                        <a href="/recruiter" className="text-gray-950 hover:text-primary font-medium">
+                        <a href="/recruiter" className="text-gray-950 dark:text-gray-50 hover:text-primary font-medium">
                             Employers
                         </a>
                     </nav>
@@ -67,11 +67,11 @@ export default function Header({ auth }) {
                         <a 
                             href="#jobs" 
                             onClick={() => setOpen(false)}
-                            className="text-lg text-gray-800 font-medium"
+                            className="text-lg text-gray-950 dark:text-gray-50 font-medium"
                         >
                             Jobs
                         </a>
-                        <a href="/recruiter" className="text-lg text-gray-800 font-medium">
+                        <a href="/recruiter" className="text-lg text-gray-950 dark:text-gray-50 font-medium">
                             Employers
                         </a>
                         {/* Mobile Login/Dashboard link */}

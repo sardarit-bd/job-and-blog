@@ -30,7 +30,7 @@ export default function ResetPassword({ token, email }) {
 
       {/* Container shifted to top with padding-top */}
     <div className="
-        bg-gradient-to-br from-blue-950 to-cyan-700
+        bg-gradient-to-br from-white to-slate-400
         dark:from-slate-950 dark:via-slate-900 dark:to-slate-950
         flex items-start justify-center
         px-4

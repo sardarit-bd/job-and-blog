@@ -33,7 +33,7 @@ export default function Login() {
 
   return (
     <AppLayout>
-      <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] px-4 bg-gray-50 bg-gradient-to-br from-white to-slate-400">
+      <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] px-4 bg-gradient-to-br from-white to-slate-400">
         
         {/* Card */}
         <div className="w-full max-w-md rounded-2xl bg-white shadow-xl p-6 sm:p-8 border border-gray-100">

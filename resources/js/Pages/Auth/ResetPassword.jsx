@@ -88,8 +88,8 @@ export default function ResetPassword({ token, email }) {
             type="email"
             value={data.email}
             onChange={(e) => setData('email', e.target.value)}
-            autoComplete="username"
-            disabled={processing}
+            autoComplete="email"
+            disabled
             className="h-11 bg-slate-50/50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/10 focus:outline-none transition-all duration-200"
           />
           {errors.email && <p className="text-xs font-medium text-red-500 mt-1">{errors.email}</p>}

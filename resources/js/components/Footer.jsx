@@ -40,11 +40,6 @@ export default function Footer() {
                     <div>
                         <h4 className="font-semibold mb-3 text-gray-200">Contact Us</h4>
                         <p className="text-gray-400">47 W 13th St, New York, NY 10011, USA</p>
-                        {/* <ul className="space-y-2 text-sm text-gray-400">
-                            <li className="hover:text-white cursor-pointer transition">Help Center</li>
-                            <li className="hover:text-white cursor-pointer transition">Contact</li>
-                            <li className="hover:text-white cursor-pointer transition">Privacy Policy</li>
-                        </ul> */}
                     </div>
                 </div>
 

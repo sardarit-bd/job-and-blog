@@ -1,38 +1,45 @@
 import DOMPurify from "dompurify";
-import ShareButton from "./ShareButton";
+import { createPortal } from "react-dom";
 import { router, usePage } from "@inertiajs/react";
 import { useState, useEffect } from "react";
+import ShareButton from "./ShareButton";
 
 export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
-  
-  if (!isOpen) return null;
-
   const { flash } = usePage().props;
-
   const [job, setJob] = useState(initialJob);
   const [loadingStatus, setLoadingStatus] = useState(true);
 
+  // Prevent background scroll
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => (document.body.style.overflow = "");
+  }, [isOpen]);
+
+  // Fetch applied status
   useEffect(() => {
     if (isOpen && initialJob?.id) {
       setLoadingStatus(true);
-
       fetch(`/jobs/${initialJob.id}/applied-status`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
+          Accept: "application/json",
+          "X-Requested-With": "XMLHttpRequest",
         },
       })
-        .then((response) => {
-          if (!response.ok) throw new Error('Failed to fetch status');
-          return response.json();
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to fetch status");
+          return res.json();
         })
         .then((data) => {
           setJob((prev) => ({ ...prev, already_applied: data.already_applied }));
           setLoadingStatus(false);
         })
-        .catch((error) => {
-          console.error('Error fetching applied status:', error);
+        .catch((err) => {
+          console.error("Error fetching applied status:", err);
           setLoadingStatus(false);
         });
     }
@@ -45,170 +52,175 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
       {
         preserveScroll: true,
         preserveState: true,
-        onSuccess: () => {
-          setJob((prev) => ({ ...prev, already_applied: true }));
-        },
-        onError: (errors) => {
-          console.error('Apply failed:', errors);
-        },
+        onSuccess: () => setJob((prev) => ({ ...prev, already_applied: true })),
+        onError: (errors) => console.error("Apply failed:", errors),
       }
     );
   };
 
-  return (
+  if (!isOpen) return null;
+
+  return createPortal(
     <div
-      className="font-['Poppins'] fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4 min-h-[100dvh]"
-      onClick={onClose}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-300"
+      onMouseDown={onClose}
     >
       <div
-        className="relative bg-white w-full max-w-5xl rounded-2xl shadow-xl max-h-[calc(100dvh-2rem)] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
+        className="relative bg-white dark:bg-slate-900 w-full max-w-5xl rounded-[2.5rem] shadow-2xl max-h-[90vh] overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col animate-in zoom-in-95 duration-200"
+        onMouseDown={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-4 right-4 z-50 rounded-full p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition"
-          aria-label="Close modal"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        {/* Modal Content */}
-        <div className="p-6 sm:p-8 bg-sky-50">
-          {/* Header */}
-          <div className="grid grid-cols-12 gap-4 items-start">
-            <div className="col-span-12 sm:col-span-3 flex justify-center sm:justify-start">
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-6 py-4 sm:px-10 sm:py-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:flex p-2 w-14 h-14 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 items-center justify-center">
               <img
                 src={job.company.logo}
                 alt={job.company.name}
-                className="w-24 h-24 object-contain rounded-xl border p-2"
-                onError={(e) => (e.currentTarget.src = 'https://placehold.co/96x96/E0F2F1/0D9488?text=Logo')}
+                className="w-full h-full object-contain"
+                onError={(e) => (e.currentTarget.src = "https://placehold.co/96x96/6366f1/ffffff?text=Logo")}
               />
             </div>
-            <div className="col-span-12 sm:col-span-9 space-y-2">
-              <h2 className="text-2xl font-bold text-gray-900 capitalize">{job.title}</h2>
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="text-gray-700 font-semibold">{job.company.name} {job.company.id}</span>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white capitalize font-['Poppins'] leading-tight">
+                {job.title}
+              </h2>
+              <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                {job.company.name}
+              </p>
+            </div>
+          </div>
+          
+          <button
+            onClick={onClose}
+            className="p-2 rounded-full text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
 
-                {/* Apply Button */}
-                {/* {loadingStatus ? (
-                  <span className="text-sm text-gray-500">Checking application status...</span>
-                ) : job.already_applied ? (
-                  <span className="px-4 py-1.5 rounded-lg text-sm bg-green-100 text-green-700">
-                    You already applied this job
+        {/* Scrollable Body */}
+        <div className="overflow-y-auto p-6 sm:p-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12">
+            
+            {/* Left Column: Main Content */}
+            <div className="lg:col-span-8 space-y-10">
+              
+              {/* Badges */}
+              <div className="flex flex-wrap gap-2">
+                {job.remote_statuses?.map((status, i) => (
+                  <span key={i} className="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800">
+                    {status}
                   </span>
-                ) : (
-                  <button
-                    onClick={applyJob}
-                    className="px-4 py-1.5 rounded-lg text-sm bg-teal-600 text-white hover:bg-teal-700 transition"
-                  >
-                    Apply
-                  </button>
-                )} */}
-                {loadingStatus ? (
-                  <span className="text-sm text-gray-500">Checking application status...</span>
-                ) : !job.can_apply ? (
-                  /* New Check: Company users cannot apply */
-                  <span className="px-4 py-1.5 rounded-lg text-sm bg-red-100 text-red-700 border border-red-200">
-                    You cannot apply for this job
-                  </span>
-                ) : job.already_applied ? (
-                  <span className="px-4 py-1.5 rounded-lg text-sm bg-green-100 text-green-700">
-                    You already applied this job
-                  </span>
-                ) : (
-                  <button
-                    onClick={applyJob}
-                    className="px-4 py-1.5 rounded-lg text-sm bg-teal-600 text-white hover:bg-teal-700 transition"
-                  >
-                    Apply
-                  </button>
-                )}
-
-                <ShareButton job={job} />
+                ))}
               </div>
+
+              {/* Description Section */}
+              <section>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-3">
+                  <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+                  Job Description
+                </h3>
+                <div 
+                  className="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-400 leading-relaxed font-['Inter']"
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.description || "") }}
+                />
+              </section>
+
+              {/* Specialities Section */}
+              {job.specialities?.length > 0 && (
+                <section>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-3">
+                    <span className="w-1.5 h-6 bg-teal-500 rounded-full" />
+                    Specialities
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {job.specialities.map((spec, i) => (
+                      <span key={i} className="px-4 py-2 rounded-xl text-sm font-semibold bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-100 dark:border-slate-700">
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Company Info Box */}
+              <section className="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-800">
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">{job.company.name}</h3>
+                  <a
+                    href={`/company/${job.company.id}`}
+                    target="_blank"
+                    className="px-5 py-2 rounded-xl text-sm font-bold border border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white dark:border-indigo-400 dark:text-indigo-400 dark:hover:bg-indigo-400 dark:hover:text-slate-900 transition-all"
+                  >
+                    View Company Profile
+                  </a>
+                </div>
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                  {job.company.description || "No description provided."}
+                </p>
+              </section>
             </div>
-          </div>
 
-          <hr className="my-6" />
+            {/* Right Column: Sidebar Stats & CTA */}
+            <div className="lg:col-span-4 space-y-6">
+              
+              <div className="p-6 bg-white dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-none space-y-6">
+                <h4 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-widest text-center border-b border-slate-100 dark:border-slate-700 pb-4">Job Summary</h4>
+                
+                <div className="space-y-4">
+                  {[
+                    ["Work From", Object.values(job.work_from || {}).join(", ")],
+                    ["License", Object.values(job.licenses || {}).join(", ")],
+                    ["Job Type", job.job_types?.join(", ")],
+                    ["Schedule", job.schedule],
+                    ["Salary Range", job.salary_range],
+                  ].map(([label, value], index) => value && (
+                    <div key={index} className="space-y-1">
+                      <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">{label}</p>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{value}</p>
+                    </div>
+                  ))}
+                </div>
 
-          {/* Flash Success Message */}
-          {/* {flash?.success && (
-            <div className="bg-green-100 text-green-800 p-2 rounded mb-2">
-              {flash.success}
-            </div>
-          )} */}
-
-          {/* Remote Status */}
-          <div className="flex justify-center flex-wrap gap-2 mb-6">
-            {job.remote_statuses?.map((status, i) => (
-              <span key={i} className="px-4 py-1 rounded-full text-sm font-semibold bg-blue-600 text-white">
-                {status}
-              </span>
-            ))}
-          </div>
-
-          {/* Job Meta Info */}
-          <div className="space-y-3 text-sm">
-            {[
-              ['Work From', Object.values(job.work_from || {}).join(', ')],
-              ['License', Object.values(job.licenses || {}).join(', ')],
-              ['Job Type', job.job_types?.join(', ') || 'N/A'],
-              ['Schedule', job.schedule || 'N/A'],
-              ['Salary Transparency', job.salaray_transparency || 'N/A'],
-              ['Salary Range', job.salary_range || 'N/A'],
-            ].map(([label, value], index) => (
-              <div key={index} className="grid grid-cols-12 gap-4 text-md">
-                <div className="col-span-12 sm:col-span-4 text-gray-800 font-bold">{label}</div>
-                <div className="col-span-12 sm:col-span-8 text-gray-900">{value}</div>
+                <div className="pt-4 space-y-3">
+                  {loadingStatus ? (
+                    <div className="w-full py-3.5 bg-slate-100 dark:bg-slate-700 animate-pulse rounded-2xl" />
+                  ) : !job.can_apply ? (
+                    <div className="w-full py-3.5 text-center px-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-2xl text-xs font-bold uppercase border border-red-100 dark:border-red-800/50">
+                      Restricted Access
+                    </div>
+                  ) : job.already_applied ? (
+                    <div className="w-full py-3.5 text-center px-4 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-2xl text-xs font-bold uppercase border border-emerald-100 dark:border-emerald-800/50">
+                      Already Applied
+                    </div>
+                  ) : (
+                    <button
+                      onClick={applyJob}
+                      className="w-full py-3 bg-slate-900 dark:bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
+                    >
+                      Apply Now
+                    </button>
+                  )}
+                  
+                  <div className="flex justify-center pt-2">
+                    <ShareButton job={job} />
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
 
-          {/* Job Description */}
-          <div className="mt-8">
-            <h3 className="text-md font-bold text-black mb-2">Job Description</h3>
-            <p
-              className="text-black leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.description || '') }}
-            />
-          </div>
+              <div className="p-4 border border-dashed border-slate-200 dark:border-slate-700 rounded-2xl text-center">
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
+                  Job posted {job.posted_at}
+                </p>
+              </div>
 
-          {/* Specialities */}
-          <div className="mt-6 grid grid-cols-12 gap-4">
-            <div className="col-span-12 sm:col-span-4 font-semibold text-gray-700">Specialities</div>
-            <div className="col-span-12 sm:col-span-8 flex flex-wrap gap-2">
-              {job.specialities?.map((spec, i) => (
-                <span key={i} className="px-3 py-1 rounded-full text-sm bg-gray-200 text-black font-semibold">
-                  {spec}
-                </span>
-              ))}
             </div>
-          </div>
-
-          <hr className="my-8" />
-
-          {/* Company Info */}
-          <div>
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-              <h3 className="text-lg font-bold text-gray-900">{job.company.name}</h3>
-              <a
-                href={`/company/${job.company.id}`}
-                target="_blank"
-                className="px-4 py-1.5 rounded-lg text-sm border border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white transition"
-              >
-                Company Profile
-              </a>
-            </div>
-            <p className="text-gray-700 text-sm leading-relaxed">
-              {job.company.description || 'No description provided.'}
-            </p>
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

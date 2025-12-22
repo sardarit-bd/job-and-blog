@@ -4,190 +4,177 @@ import AppLayout from "../layouts/AppLayout";
 import { router, usePage } from "@inertiajs/react";
 import ShareButton from "../components/ShareButton";
 
-export default function JobDetail({ job: initialJob}) {
-  const { flash } = usePage().props;
-
+export default function JobDetail({ job: initialJob }) {
   const [job, setJob] = useState(initialJob);
   const [loadingStatus, setLoadingStatus] = useState(true);
-  
-    useEffect(() => {
-      if (initialJob?.id) {
-        setLoadingStatus(true);
-  
-        fetch(`/jobs/${initialJob.id}/applied-status`, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-          },
-        })
-          .then((response) => {
-            if (!response.ok) throw new Error('Failed to fetch status');
-            return response.json();
-          })
-          .then((data) => {
-            setJob((prev) => ({ ...prev, already_applied: data.already_applied }));
-            setLoadingStatus(false);
-          })
-          .catch((error) => {
-            console.error('Error fetching applied status:', error);
-            setLoadingStatus(false);
-          });
-      }
-    }, [initialJob?.id]);
 
-    const applyJob = () => {
-        router.post(
-          `/jobs/${job.id}/apply`,
-          {},
-          {
-            preserveScroll: true,
-            preserveState: true,
-            onSuccess: () => {
-              setJob((prev) => ({ ...prev, already_applied: true }));
-            },
-            onError: (errors) => {
-              console.error('Apply failed:', errors);
-            },
-          }
-        );
-      };
+  useEffect(() => {
+    if (initialJob?.id) {
+      setLoadingStatus(true);
+      fetch(`/jobs/${initialJob.id}/applied-status`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      })
+        .then((res) => (res.ok ? res.json() : Promise.reject()))
+        .then((data) => {
+          setJob((prev) => ({ ...prev, already_applied: data.already_applied }));
+          setLoadingStatus(false);
+        })
+        .catch(() => setLoadingStatus(false));
+    }
+  }, [initialJob?.id]);
+
+  const applyJob = () => {
+    router.post(`/jobs/${job.id}/apply`, {}, {
+      preserveScroll: true,
+      onSuccess: () => setJob((prev) => ({ ...prev, already_applied: true })),
+    });
+  };
 
   return (
     <AppLayout>
-      <div className="font-['Poppins'] bg-gray-50 min-h-screen py-8">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* ================= CARD ================= */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+      <div className="font-['Poppins'] bg-slate-50 dark:bg-[#020617] min-h-screen py-6 sm:py-12 transition-colors duration-300">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            {/* LEFT COLUMN: Main Info */}
+            <div className="lg:col-span-8 space-y-6">
+              <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 sm:p-10 shadow-sm">
+                
+                {/* Header Section */}
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
+                  <div className="relative group">
+                    <div className="absolute -inset-1 bg-gradient-to-tr from-indigo-500 to-teal-400 rounded-2xl blur opacity-20 transition duration-300" />
+                    <div className="relative p-3 w-24 h-24 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center justify-center">
+                      <img
+                        src={job.company.logo}
+                        alt={job.company.name}
+                        className="w-full h-full object-contain"
+                        onError={(e) => (e.currentTarget.src = "https://placehold.co/96x96/6366f1/ffffff?text=Logo")}
+                      />
+                    </div>
+                  </div>
 
-            {/* ================= HEADER ================= */}
-            <div className="flex flex-col sm:flex-row sm:items-start sm:gap-6">
-              {/* Logo */}
-              <div className="flex justify-center sm:justify-start mb-4 sm:mb-0">
-                <img
-                  src={job.company.logo}
-                  alt={job.company.name}
-                  className="w-24 h-24 object-contain rounded-xl border p-2"
-                  onError={(e) =>
-                    (e.currentTarget.src =
-                      "https://placehold.co/96x96/E0F2F1/0D9488?text=Logo")
-                  }
-                />
-              </div>
+                  <div className="flex-1 text-center sm:text-left">
+                    <h1 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white capitalize leading-tight mb-2">
+                      {job.title}
+                    </h1>
+                    <div className="flex flex-wrap justify-center sm:justify-start items-center gap-3">
+                      <span className="text-indigo-600 dark:text-indigo-400 font-bold tracking-wide underline underline-offset-4 decoration-indigo-200">
+                        {job.company.name}
+                      </span>
+                      <div className="hidden sm:block w-1 h-1 bg-slate-300 rounded-full" />
+                      <span className="text-slate-500 dark:text-slate-400 text-sm font-medium">
+                        Posted {job.created_at || "recently"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
-              {/* Job Info */}
-              <div className="flex-1 text-center sm:text-left space-y-2">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 capitalize">
-                  {job.title}
-                </h1>
-
-                <div className="flex flex-col sm:flex-row flex-wrap justify-center sm:justify-start items-center gap-3 mt-2">
-                  <span className="text-gray-700 font-semibold">
-                    {job.company.name}
-                  </span>
-
-                  {loadingStatus ? (
-                    <span className="text-sm text-gray-500">Checking application status...</span>
-                  ) : !job.can_apply ? (
-                    /* Cross-check result: User owns this post */
-                    <span className="px-4 py-1.5 rounded-lg text-sm bg-red-100 text-red-700 border border-red-200">
-                      You cannot apply for this job
+                <div className="flex flex-wrap gap-2 mb-8">
+                  {job.remote_statuses.map((status, i) => (
+                    <span key={i} className="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800">
+                      {status}
                     </span>
-                  ) : job.already_applied ? (
-                    <span className="px-4 py-1.5 rounded-lg text-sm bg-green-100 text-green-700 font-semibold">
-                      You already applied for this job
-                    </span>
-                  ) : (
-                    <button
-                      onClick={applyJob}
-                      className="px-4 py-1.5 rounded-lg text-sm bg-teal-600 text-white hover:bg-teal-700 transition font-medium"
-                    >
-                      Apply Now
-                    </button>
-                  )}
+                  ))}
+                </div>
 
-                  <ShareButton job={job} />
+                {/* Description */}
+                <div className="prose dark:prose-invert max-w-none">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <span className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+                    About the Role
+                  </h3>
+                  <div
+                    className="text-slate-600 dark:text-slate-400 leading-relaxed font-['Inter']"
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.description) }}
+                  />
+                </div>
+
+                {/* Specialities */}
+                <div className="mt-10">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Required Specialities</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {job.specialities.map((spec, i) => (
+                      <span key={i} className="px-4 py-2 rounded-xl text-sm font-semibold bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-100 dark:border-slate-700 hover:border-indigo-500 transition-colors">
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <hr className="my-6" />
-
-            {/* ================= REMOTE STATUS ================= */}
-            <div className="flex justify-center flex-wrap gap-2 mb-6">
-              {job.remote_statuses.map((status, i) => (
-                <span
-                  key={i}
-                  className="px-4 py-1 rounded-full text-sm font-semibold bg-blue-600 text-white"
-                >
-                  {status}
-                </span>
-              ))}
-            </div>
-
-            {/* ================= JOB META INFO ================= */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              {[
-                ["Work From", Object.values(job.work_from).join(", ")],
-                ["License", Object.values(job.licenses).join(", ")],
-                ["Job Type", job.job_types.join(", ")],
-                ["Schedule", job.schedule],
-                ["Salary Transparency", job.salaray_transparency || "N/A"],
-                ["Salary Range", job.salary_range || "N/A"],
-              ].map(([label, value], index) => (
-                <div key={index} className="flex gap-2 sm:gap-4">
-                  <div className="w-1/3 font-bold text-gray-800">{label}</div>
-                  <div className="w-2/3 text-gray-900">{value}</div>
+              {/* Company Section */}
+              <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">About the Provider</h3>
+                  <a href={`/company/${job.company.id}`} className="text-indigo-600 dark:text-indigo-400 font-bold text-sm hover:underline">
+                    View Profile
+                  </a>
                 </div>
-              ))}
-            </div>
-
-            {/* ================= JOB DESCRIPTION ================= */}
-            <div className="mt-8">
-              <h2 className="font-bold text-black mb-3">Job Description</h2>
-              <div
-                className="text-black leading-relaxed prose max-w-none"
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(job.description),
-                }}
-              />
-            </div>
-
-            {/* ================= SPECIALITIES ================= */}
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-12 gap-4">
-              <div className="sm:col-span-4 font-bold text-gray-800">Specialities</div>
-              <div className="sm:col-span-8 flex flex-wrap gap-2">
-                {job.specialities.map((spec, i) => (
-                  <span
-                    key={i}
-                    className="px-3 py-1 rounded-full text-sm bg-gray-200 text-black font-semibold"
-                  >
-                    {spec}
-                  </span>
-                ))}
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                  {job.company.description || "No company description available."}
+                </p>
               </div>
             </div>
 
-            <hr className="my-8" />
+            {/* RIGHT COLUMN: Action Sidebar */}
+            <div className="lg:col-span-4 space-y-6">
+              <div className="sticky top-24 space-y-6">
+                
+                {/* Application Card */}
+                <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 p-6 shadow-xl shadow-slate-200/50 dark:shadow-none">
+                  <div className="space-y-4 mb-6">
+                    {[
+                      ["Work From", Object.values(job.work_from).join(", ")],
+                      ["Job Type", job.job_types.join(", ")],
+                      ["Schedule", job.schedule],
+                      ["Salary", job.salary_range || "Competitive"],
+                    ].map(([label, value], idx) => (
+                      <div key={idx} className="flex flex-col">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">{label}</span>
+                        <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{value}</span>
+                      </div>
+                    ))}
+                  </div>
 
-            {/* ================= COMPANY INFO ================= */}
-            <div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
-                <h2 className="text-lg font-bold text-gray-900">
-                  {job.company.name}
-                </h2>
+                  <div className="space-y-3">
+                    {loadingStatus ? (
+                      <div className="w-full py-3.5 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-2xl" />
+                    ) : !job.can_apply ? (
+                      <div className="w-full py-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-xs font-black uppercase text-center rounded-2xl border border-red-100 dark:border-red-900/50">
+                        Restricted Access
+                      </div>
+                    ) : job.already_applied ? (
+                      <div className="w-full py-4 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-xs font-black uppercase text-center rounded-2xl border border-emerald-100 dark:border-emerald-900/50">
+                        Application Sent
+                      </div>
+                    ) : (
+                      <button
+                        onClick={applyJob}
+                        className="w-full py-3 bg-slate-900 dark:bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
+                      >
+                        Apply for this Job
+                      </button>
+                    )}
+                    <div className="flex justify-center pt-2">
+                        <ShareButton job={job} />
+                    </div>
+                  </div>
+                </div>
 
-                <a
-                  href={`/company/${job.company.id}`}
-                  className="px-4 py-2 rounded-lg text-sm border border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white transition"
-                >
-                  Company Profile
-                </a>
+                {/* License Badge */}
+                <div className="bg-slate-900 dark:bg-indigo-950/40 p-6 rounded-[2rem] text-white">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-3 opacity-60">Required License</h4>
+                  <p className="font-bold text-lg">{Object.values(job.licenses).join(", ")}</p>
+                </div>
+
               </div>
-
-              <p className="text-gray-700 text-sm leading-relaxed">
-                {job.company.description || "No description provided."}
-              </p>
             </div>
           </div>
         </div>

@@ -24,8 +24,8 @@ export default function ForgotPassword({ status }) {
         
         {/* Background Accents */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-indigo-900/10 transition-colors" />
-          <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-slate-900/20 transition-colors" />
+          <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-[#F8721B]/70 transition-colors" />
+          <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-[#F8721B]/70 transition-colors" />
         </div>
 
         {/* Forgot Password Card */}
@@ -91,7 +91,7 @@ export default function ForgotPassword({ status }) {
             <button
               type="submit"
               disabled={processing}
-              className="w-full py-2 px-4 rounded-xl font-bold text-white bg-[#F8721B] dark:bg-indigo-600 dark:hover:bg-indigo-700 transition-all active:scale-[0.98] disabled:opacity-70 shadow-lg shadow-slate-200 dark:shadow-none cursor-pointer"
+              className="w-full py-2 px-4 rounded-xl font-bold text-white bg-[#F8721B] dark:bg-[#F8721B]/70 dark:hover:bg-[#F8721B]/90 transition-all active:scale-[0.98] disabled:opacity-70 shadow-lg shadow-slate-200 dark:shadow-none cursor-pointer"
             >
               {processing ? (
                 <span className="flex items-center justify-center gap-2">
@@ -109,7 +109,7 @@ export default function ForgotPassword({ status }) {
 
           {/* Card Footer */}
           <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
-            <a href="/login" className="text-sm font-bold text-[#F8721B]/90 dark:text-indigo-400 hover:underline underline-offset-4">
+            <a href="/login" className="text-sm font-bold text-[#F8721B]/90 dark:text-[#F8721B]/90 hover:underline underline-offset-4">
               Return to sign in
             </a>
           </div>

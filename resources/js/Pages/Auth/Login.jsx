@@ -38,8 +38,8 @@ export default function Login() {
         
         {/* Background Accents: Opacity is lowered in dark mode to keep it professional and subtle */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-indigo-900/10 transition-colors" />
-          <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-slate-900/20 transition-colors" />
+          <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-[#F8721B]/70 transition-colors" />
+          <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-[#F8721B]/70 transition-colors" />
         </div>
 
         {/* Login Card */}
@@ -113,7 +113,7 @@ export default function Login() {
                 />
                 <span>Stay signed in</span>
               </label>
-              <a href="/forgot-password" size="sm" className="text-sm font-semibold text-[#F8721B] dark:text-indigo-400 hover:underline">
+              <a href="/forgot-password" size="sm" className="text-sm font-semibold text-[#F8721B] dark:text-[#F8721B]/80 hover:underline">
                 Forgot password?
               </a>
             </div>
@@ -122,7 +122,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={processing}
-              className="w-full py-2 px-4 rounded-xl font-bold text-white bg-[#F8721B] dark:bg-indigo-600 dark:hover:bg-indigo-700 transition-all active:scale-[0.98] disabled:opacity-70 shadow-lg shadow-slate-200 dark:shadow-none cursor-pointer"
+              className="w-full py-2 px-4 rounded-xl font-bold text-white bg-[#F8721B] dark:dark:bg-[#F8721B]/70 dark:hover:dark:bg-[#F8721B]/90 transition-all active:scale-[0.98] disabled:opacity-70 shadow-lg shadow-slate-200 dark:shadow-none cursor-pointer"
             >
               {processing ? "Verifying..." : "Sign In"}
             </button>
@@ -132,7 +132,7 @@ export default function Login() {
           <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
             <p className="text-slate-600 dark:text-slate-400 text-sm">
               New here?{' '}
-              <a href="/register" className="font-bold text-[#F8721B] dark:text-indigo-400 hover:underline underline-offset-4">
+              <a href="/register" className="font-bold text-[#F8721B] dark:text-[#F8721B]/90 hover:underline underline-offset-4">
                 Create an account
               </a>
             </p>

@@ -27,8 +27,8 @@ export default function ResetPassword({ token, email }) {
         
         {/* Background Accents */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-indigo-900/10 transition-colors" />
-          <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-slate-900/20 transition-colors" />
+          <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-[#F8721B]/70 transition-colors" />
+          <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-[#F8721B]/70 transition-colors" />
         </div>
 
         {/* Reset Card */}
@@ -106,7 +106,7 @@ export default function ResetPassword({ token, email }) {
             <button
               type="submit"
               disabled={processing}
-              className="w-full py-2 px-4 mt-2 rounded-xl font-bold text-white bg-[#F8721B] dark:bg-indigo-600 dark:hover:bg-indigo-700 transition-all active:scale-[0.98] disabled:opacity-70 shadow-lg shadow-slate-200 dark:shadow-none cursor-pointer"
+              className="w-full py-2 px-4 mt-2 rounded-xl font-bold text-white bg-[#F8721B] dark:bg-[#F8721B]/90 dark:hover:bg-[#F8721B]/70 transition-all active:scale-[0.98] disabled:opacity-70 shadow-lg shadow-slate-200 dark:shadow-none cursor-pointer"
             >
               {processing ? (
                 <span className="flex items-center justify-center gap-2">
@@ -124,7 +124,7 @@ export default function ResetPassword({ token, email }) {
 
           {/* Card Footer */}
           <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
-            <a href="/login" className="text-sm font-bold text-[#F8721B] dark:text-slate-400 dark:hover:text-indigo-400 transition-colors">
+            <a href="/login" className="text-sm font-bold text-[#F8721B] dark:text-[#F8721B] dark:hover:text-[#F8721B] transition-colors">
               Return to sign in
             </a>
           </div>

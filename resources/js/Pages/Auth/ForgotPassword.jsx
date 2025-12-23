@@ -20,24 +20,24 @@ export default function ForgotPassword({ status }) {
       <Head title="Forgot Password" />
       
       {/* Background Wrapper */}
-      <div className="relative flex items-center justify-center min-h-[calc(100vh-8rem)] px-4 overflow-hidden transition-colors duration-500 bg-slate-50 dark:bg-slate-950">
+      <div className="relative flex items-center justify-center min-h-[calc(100vh-8rem)] px-4 overflow-hidden bg-slate-50">
         
         {/* Background Accents */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-[#F8721B]/70 transition-colors" />
-          <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/40 dark:bg-[#F8721B]/70 transition-colors" />
+          <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/70 transition-colors" />
+          <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/70 transition-colors" />
         </div>
 
         {/* Forgot Password Card */}
-        <div className="relative z-10 w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl shadow-slate-200 dark:shadow-none border border-slate-200 dark:border-slate-800 p-8 transition-all">
+        <div className="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-2xl shadow-slate-200 border border-slate-200 p-8 transition-all">
           
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-['Poppins']">
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900 font-['Poppins']">
               Reset Password
             </h1>
             <div className="h-1.5 w-12 bg-[#F8721B] rounded-full mt-4" />
-            <p className="mt-4 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+            <p className="mt-4 text-sm text-slate-500 leading-relaxed">
               Enter your email and we'll send you a secure link to reset your account.
             </p>
           </div>
@@ -45,14 +45,14 @@ export default function ForgotPassword({ status }) {
           {/* Alerts Area */}
           <div className="space-y-4 mb-6">
             {(flash?.success || status) && (
-              <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 text-sm flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
+              <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-50 text-emerald-700 text-sm flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 {flash?.success || status}
               </div>
             )}
 
             {flash?.error && (
-              <div className="p-4 rounded-xl border border-red-500/20 bg-red-50/50 dark:bg-red-950/20 text-red-700 dark:text-red-400 text-sm animate-in fade-in slide-in-from-top-2">
+              <div className="p-4 rounded-xl border border-red-500/20 bg-red-50 text-red-700 text-sm animate-in fade-in slide-in-from-top-2">
                 {flash.error}
               </div>
             )}
@@ -61,7 +61,7 @@ export default function ForgotPassword({ status }) {
           <form onSubmit={submit} className="space-y-6">
             {/* Email Field */}
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="email" className="text-sm font-semibold text-slate-700">
                 Email Address
               </label>
               <input
@@ -73,7 +73,7 @@ export default function ForgotPassword({ status }) {
                 required
                 autoFocus
                 disabled={processing}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-[#F8721B] focus:border-transparent transition-all outline-none disabled:opacity-50"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-[#F8721B] focus:border-transparent transition-all outline-none disabled:opacity-50"
                 placeholder="name@company.com"
               />
               
@@ -91,7 +91,7 @@ export default function ForgotPassword({ status }) {
             <button
               type="submit"
               disabled={processing}
-              className="w-full py-2 px-4 rounded-xl font-bold text-white bg-[#F8721B] dark:bg-[#F8721B]/70 dark:hover:bg-[#F8721B]/90 transition-all active:scale-[0.98] disabled:opacity-70 shadow-lg shadow-slate-200 dark:shadow-none cursor-pointer"
+              className="w-full py-2 px-4 rounded-xl font-bold text-white bg-[#F8721B] hover:bg-[#e06317] transition-all active:scale-[0.98] disabled:opacity-70 shadow-lg shadow-orange-100 cursor-pointer"
             >
               {processing ? (
                 <span className="flex items-center justify-center gap-2">
@@ -108,8 +108,8 @@ export default function ForgotPassword({ status }) {
           </form>
 
           {/* Card Footer */}
-          <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
-            <a href="/login" className="text-sm font-bold text-[#F8721B]/90 dark:text-[#F8721B]/90 hover:underline underline-offset-4">
+          <div className="mt-8 pt-6 border-t border-slate-100 text-center">
+            <a href="/login" className="text-sm font-bold text-[#F8721B] hover:underline underline-offset-4">
               Return to sign in
             </a>
           </div>

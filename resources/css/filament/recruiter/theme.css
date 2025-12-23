@@ -112,13 +112,13 @@
     @apply text-black dark:text-black;
 }
 
-.fi-ac-link-action, .fi-link {
+/* .fi-ac-link-action, .fi-link {
     @apply text-[#F8721B] dark:text-blue-600;
-}
+} */
 
-.fi-ac-btn-action {
+/* .fi-ac-btn-action {
     @apply bg-[#F8721B] dark:bg-[#F8721B] text-white;
-}
+} */
 
 .fi-simple-header .fi-logo {
     @apply text-4xl pb-4;

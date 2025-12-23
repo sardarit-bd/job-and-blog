@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             UsStatesSeeder::class,
             LicenseTypeSeeder::class,
             JobTypeSeeder::class,
+            IndustrySeeder::class,
         ]);
         
     }

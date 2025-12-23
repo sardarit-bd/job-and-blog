@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class AllJob extends Model
 {
+    protected $appends = ['image_url'];
+
     protected $fillable = [
         'company_id',
         'user_id',
@@ -27,6 +30,15 @@ class AllJob extends Model
                 $job->user_id = auth()->id();
             }
         });
+    }
+
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return asset('images/jobs/png/Dualtone Icons-01.png');
+        }
+
+        return Storage::url($this->image);
     }
 
     public function company()
@@ -67,6 +79,11 @@ class AllJob extends Model
             'all_job_id',
             'experience_id'
         );
+    }
+
+    public function industries()
+    {
+        return $this->belongsToMany(Industry::class, 'all_job_industry', 'all_job_id', 'industry_id');
     }
 
     public function applications()

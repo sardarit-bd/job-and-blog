@@ -137,7 +137,7 @@ export default function Home() {
                                 Latest Openings
                             </h3>
                         </div>
-                        <span className="text-sm font-bold text-blue-600 bg-blue-50 px-4 py-1.5 rounded-full">
+                        <span className="text-sm text-black bg-[#BCD0CA] px-4 py-1.5 rounded-full">
                             {allJobs.length} Position(s) found
                         </span>
                     </div>

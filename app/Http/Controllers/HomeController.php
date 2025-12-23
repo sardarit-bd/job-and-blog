@@ -90,7 +90,7 @@ class HomeController extends Controller
             'salary_range' => $job->salary_range,
             'salaray_transparency' => $job->salaray_transparency,
             'schedule' => $job->schedule,
-            'image' => $job->image,
+            'image' => $job->image_url,
             'posted_at' => date('m-d-Y', strtotime($job->created_at)),
         ];
         });

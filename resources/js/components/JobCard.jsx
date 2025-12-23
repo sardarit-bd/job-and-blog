@@ -30,7 +30,7 @@ export default function JobCard({ job }) {
           <div className="md:col-span-2 w-full flex justify-center">
             <div className="relative p-2 w-20 h-20 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center transition-transform group-hover:scale-105">
               <img
-                src={job.company.logo}
+                src={job.image}
                 alt={job.company?.name || "Company Logo"}
                 className="w-full h-full object-contain rounded-lg"
                 onError={(e) => {

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AllJobs\Schemas;
 
 use App\Models\Company;
 use App\Models\Experience;
+use App\Models\Industry;
 use App\Models\JobType;
 use App\Models\Schedule;
 use App\Models\LicensedIn;
@@ -26,9 +27,20 @@ class AllJobForm
         return $schema
             ->components([
                 Select::make('company_id')
-                ->label('Company')
-                ->relationship('company', 'name', fn (Builder $query) => $query->where('user_id', auth()->id()))
-                ->required(),
+                    ->label('Company')
+                    ->relationship('company', 'name', fn (Builder $query) => $query->where('user_id', auth()->id()))
+                    ->required()
+                    ->preload()
+                    ->selectablePlaceholder(false),
+
+                Select::make('industries')
+                    ->required()
+                    ->multiple()
+                    ->preload()
+                    ->relationship(
+                        name: 'industries',
+                        titleAttribute: 'name',
+                    ),
                 
                 TextInput::make('title')
                     ->required()

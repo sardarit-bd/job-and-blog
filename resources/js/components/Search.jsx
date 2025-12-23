@@ -4,19 +4,16 @@ import { useDebouncedCallback } from "use-debounce";
 
 export default function Search({
     filters = {},
-    experiences = [],
-    jobTypes = [],
-    remoteStatuses = [],
+    industries = [],
     workFroms = [],
-    schedules = [],
+    licensedIns = [],
 }) {
     const [showAdvanced, setShowAdvanced] = useState(false);
 
     const [keyword, setKeyword] = useState(filters.keyword || "");
-    const [experience, setExperience] = useState(filters.experience || "");
-    const [jobType, setJobType] = useState(filters.jobType || "");
-    const [schedule, setSchedule] = useState(filters.schedule || "");
-    const [remoteStatus, setRemoteStatus] = useState(filters.remoteStatus || "");
+    const [industry, setIndustry] = useState(filters.industry || "");
+    const [workFrom, setWorkFrom] = useState(filters.workFrom || "");
+    const [licensedIn, setLicensedIn] = useState(filters.licensedIn || "");
 
     const debouncedSearch = useDebouncedCallback((keywordValue) => {
         submitSearch({ keyword: keywordValue });
@@ -25,10 +22,9 @@ export default function Search({
     const submitSearch = (updatedParams = {}) => {
         const params = {
             ...(keyword ? { keyword } : {}),
-            experience: experience || undefined,
-            jobType: jobType || undefined,
-            schedule: schedule || undefined,
-            remoteStatus: remoteStatus || undefined,
+            industry: industry || undefined,
+            workFrom: workFrom || undefined,
+            licensedIn: licensedIn || undefined,
             ...updatedParams,
         };
 
@@ -39,29 +35,24 @@ export default function Search({
         });
     };
 
-    // Auto search on keyword (debounced)
     useEffect(() => {
-    if (keyword) {
-        debouncedSearch(keyword);
-    } else {
-        submitSearch({ keyword: undefined });
-    }
-}, [keyword, debouncedSearch]);
+        if (keyword) {
+            debouncedSearch(keyword);
+        } else {
+            submitSearch({ keyword: undefined });
+        }
+    }, [keyword, debouncedSearch]);
 
-    // Auto search on dropdown changes
     useEffect(() => {
         submitSearch();
-    }, [experience, jobType, schedule, remoteStatus]);
+    }, [industry, workFrom, licensedIn]);
 
-    // Reset all filters
     const handleReset = () => {
         setKeyword("");
-        setExperience("");
-        setJobType("");
-        setSchedule("");
-        setRemoteStatus("");
+        setIndustry("");
+        setWorkFrom("");
+        setLicensedIn("");
 
-        // Immediately reload the page without any query params
         router.get('/', {}, {
             preserveState: true,
             preserveScroll: true,
@@ -69,8 +60,8 @@ export default function Search({
         });
     };
 
-    // Check if any filter is active
-    const hasActiveFilters = keyword || experience || jobType || schedule || remoteStatus;
+    // Check if any filter is activ
+    const hasActiveFilters = keyword || industry || workFrom || licensedIn;
 
     return (
         <div className="bg-[#F2EBE6] backdrop-blur-xl p-6 sm:p-8 rounded-[2rem] shadow-2xl shadow-slate-200 mb-12 border border-slate-100 transition-all duration-500">
@@ -93,15 +84,16 @@ export default function Search({
             </div>
 
             <div className="space-y-6">
-                {/* Main Search Bar Row */}
-                <div className="flex flex-col md:flex-row gap-3">
-                    <div className="relative flex-1">
+                {/* Main Search Bar Row - Now includes Industry and Location */}
+                <div className="flex flex-col lg:flex-row gap-3">
+                    {/* Keyword Search */}
+                    <div className="relative flex-[2]">
                         <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                         <input
                             type="text"
-                            placeholder="Search by Keyword (e.g. Nursing)..."
+                            placeholder="Search by Keyword"
                             value={keyword}
                             onChange={(e) => setKeyword(e.target.value)}
                             className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:ring-1 focus:ring-[#F8721B] focus:border-transparent transition-all outline-none"
@@ -109,6 +101,35 @@ export default function Search({
                         />
                     </div>
 
+                    {/* Industry Selector - Main Row */}
+                    <div className="flex-1">
+                        <select
+                            value={industry}
+                            onChange={(e) => setIndustry(e.target.value)}
+                            className="w-full p-3 bg-white border border-slate-200 rounded-2xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer h-full"
+                        >
+                            <option value="" disabled>Select Industry</option>
+                            {industries.map((item) => (
+                                <option key={item.id} value={item.name}>{item.name}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* State/Location Selector - Main Row */}
+                    <div className="flex-1">
+                        <select
+                            value={workFrom}
+                            onChange={(e) => setWorkFrom(e.target.value)}
+                            className="w-full p-3 bg-white border border-slate-200 rounded-2xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer h-full"
+                        >
+                            <option value="" disabled>Select Location</option>
+                            {workFroms.map((item) => (
+                                <option key={item.id} value={item.name}>{item.name}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Advanced Toggle Button */}
                     <button
                         type="button"
                         onClick={() => setShowAdvanced(!showAdvanced)}
@@ -133,81 +154,21 @@ export default function Search({
                     </button>
                 </div>
 
-                {/* Advanced Filters Panel */}
+                {/* Advanced Filters Panel - Licensed In only */}
                 {showAdvanced && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 p-6 bg-white/50 rounded-[1.5rem] border border-slate-200/60 animate-in fade-in slide-in-from-top-4 duration-300">
-                        {/* Experience Level */}
-                        <div className="space-y-2">
+                    <div className="p-6 bg-white/50 rounded-[1.5rem] border border-slate-200/60 animate-in fade-in slide-in-from-top-4 duration-300">
+                        <div className="max-w-xs space-y-2">
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
-                                Experience
+                                Licensed In
                             </label>
                             <select
-                                value={experience}
-                                onChange={(e) => setExperience(e.target.value)}
+                                value={licensedIn}
+                                onChange={(e) => setLicensedIn(e.target.value)}
                                 className="w-full p-3 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
                             >
-                                <option value="" disabled>Select experience</option>
-                                {experiences.map((exp) => (
-                                    <option key={exp.id} value={exp.title || exp.name}>
-                                        {exp.title || exp.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Job Type */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
-                                Job Type
-                            </label>
-                            <select
-                                value={jobType}
-                                onChange={(e) => setJobType(e.target.value)}
-                                className="w-full p-3 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
-                            >
-                                <option value="" disabled>Select job type</option>
-                                {jobTypes.map((type) => (
-                                    <option key={type.id} value={type.name}>
-                                        {type.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Schedule Type */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
-                                Schedule
-                            </label>
-                            <select
-                                value={schedule}
-                                onChange={(e) => setSchedule(e.target.value)}
-                                className="w-full p-3 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
-                            >
-                                <option value="" disabled>Select schedule</option>
-                                {schedules.map((sched) => (
-                                    <option key={sched.id} value={sched.name}>
-                                        {sched.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Remote Status */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
-                                Remote Status
-                            </label>
-                            <select
-                                value={remoteStatus}
-                                onChange={(e) => setRemoteStatus(e.target.value)}
-                                className="w-full p-3 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
-                            >
-                                <option value="" disabled>Select remote status</option>
-                                {remoteStatuses.map((status) => (
-                                    <option key={status.id} value={status.name}>
-                                        {status.name}
-                                    </option>
+                                <option value="" disabled>Select State</option>
+                                {licensedIns.map((item) => (
+                                    <option key={item.id} value={item.name}>{item.name}</option>
                                 ))}
                             </select>
                         </div>

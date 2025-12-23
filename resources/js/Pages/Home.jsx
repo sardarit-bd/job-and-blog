@@ -7,14 +7,22 @@ import Search from "../components/Search";
 
 export default function Home() {
     const { props } = usePage();
+    // const {
+    //     jobs: pageJobs,
+    //     filters,
+    //     experiences,
+    //     jobTypes,
+    //     remoteStatuses,
+    //     workFroms,
+    //     schedules,
+    // } = props;
+
     const {
         jobs: pageJobs,
         filters,
-        experiences,
-        jobTypes,
-        remoteStatuses,
+        industries,
         workFroms,
-        schedules,
+        licensedIns,
     } = props;
 
     const [allJobs, setAllJobs] = useState(pageJobs.data);
@@ -122,11 +130,9 @@ export default function Home() {
                 <div className="mb-12">
                     <Search
                         filters={filters}
-                        experiences={experiences}
-                        jobTypes={jobTypes}
-                        remoteStatuses={remoteStatuses}
+                        industries={industries}
                         workFroms={workFroms}
-                        schedules={schedules}
+                        licensedIns={licensedIns}
                     />
                 </div>
 

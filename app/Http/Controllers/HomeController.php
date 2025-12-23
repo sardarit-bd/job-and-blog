@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\AllJob;
 use App\Models\JobType;
+use App\Models\Industry;
 use App\Models\Schedule;
 use App\Models\Experience;
 use App\Models\LicensedIn;
@@ -19,6 +20,7 @@ class HomeController extends Controller
         
         $query = AllJob::with([
             'company',
+            'industries',
             'jobTypes',
             'specialities',
             'jobLicensedIns',
@@ -30,24 +32,22 @@ class HomeController extends Controller
         if ($request->filled('keyword')) {
             $query->where(function ($q) use ($request) {
                 $q->where('title', 'like', "%{$request->keyword}%")
-                ->orWhere('description', 'like', "%{$request->keyword}%");
+                ->orWhere('description', 'like', "%{$request->keyword}%")
+                ->orWhere('license_type', 'like', "%{$request->keyword}%")
+                ->orWhere('schedule', 'like', "%{$request->keyword}%");
             });
         }
 
-        if ($request->filled('experience')) {
-            $query->whereHas('experiences', fn($q) => $q->where('title', $request->experience));
+        if ($request->filled('industry')) {
+            $query->whereHas('industries', fn($q) => $q->where('name', $request->industry));
         }
 
-        if ($request->filled('jobType')) {
-            $query->whereHas('jobTypes', fn($q) => $q->where('name', $request->jobType));
+        if ($request->filled('workFrom')) {
+            $query->whereHas('jobWorkFroms', fn($q) => $q->where('name', $request->workFrom));
         }
 
-        if ($request->filled('remoteStatus')) {
-            $query->whereHas('jobRemoteStatuses', fn($q) => $q->where('name', $request->remoteStatus));
-        }
-
-        if ($request->filled('schedule')) {
-            $query->where('schedule', $request->schedule);
+        if ($request->filled('licensedIn')) {
+            $query->whereHas('jobLicensedIns', fn($q) => $q->where('name', $request->licensedIn));
         }
 
         $userCompanyId = auth()->check() ? auth()->user()->id : null;
@@ -98,11 +98,9 @@ class HomeController extends Controller
         return Inertia::render('Home', [
             'jobs' => $jobs,
             'filters' => $request->all(),
-            'experiences' => Experience::all(['id', 'title']),
-            'jobTypes' => JobType::all(['id', 'name']),
-            'remoteStatuses' => RemoteStatus::all(['id', 'name']),
+            'industries' => Industry::all(['id', 'name']),
             'workFroms' => LicensedIn::all(['id', 'name', 'short']),
-            'schedules' => Schedule::all(['id', 'name']),
+            'licensedIns' => LicensedIn::all(['id', 'name', 'short']),
         ]);
     }
 }

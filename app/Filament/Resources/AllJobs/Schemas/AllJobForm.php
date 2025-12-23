@@ -41,6 +41,15 @@ class AllJobForm
                         name: 'industries',
                         titleAttribute: 'name',
                     ),
+
+                TextInput::make('physician')
+                    ->maxLength(255)
+                    ->live(onBlur: true),
+
+                TextInput::make('allied_health')
+                    ->maxLength(255)
+                    ->live(onBlur: true),
+             
                 
                 TextInput::make('title')
                     ->required()
@@ -126,7 +135,6 @@ class AllJobForm
                     ->required()
                     ->columnSpanFull()
                     ->extraInputAttributes([
-                        // 'class' => 'min-h-[300px] h-auto overflow-hidden prose',
                         'style' => 'height:auto !important;',
                         'class' => 'prose max-w-none',
                     ]),

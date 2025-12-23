@@ -52,7 +52,7 @@ export default function JobDetail({ job: initialJob }) {
               <div className="absolute -inset-1 bg-gradient-to-tr from-orange-400 to-yellow-200 rounded-2xl blur opacity-20 transition duration-300" />
               <div className="relative p-3 w-24 h-24 bg-white rounded-xl border border-slate-100 flex items-center justify-center">
                 <img
-                  src={job.company.logo}
+                  src={job.image}
                   alt={job.company.name}
                   className="w-full h-full object-contain"
                   onError={(e) => (e.currentTarget.src = "https://placehold.co/96x96/f8721b/ffffff?text=Logo")}
@@ -145,7 +145,7 @@ export default function JobDetail({ job: initialJob }) {
                 <div className="w-full py-3.5 bg-slate-100 animate-pulse rounded-2xl" />
               ) : !job.can_apply ? (
                 <div className="w-full py-4 bg-red-50 text-red-600 text-xs font-black uppercase text-center rounded-2xl border border-red-100">
-                  Restricted Access
+                  You can not apply this job
                 </div>
               ) : job.already_applied ? (
                 <div className="w-full py-4 bg-emerald-50 text-emerald-600 text-xs font-black uppercase text-center rounded-2xl border border-emerald-100">

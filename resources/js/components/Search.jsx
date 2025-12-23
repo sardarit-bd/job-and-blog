@@ -7,6 +7,9 @@ export default function Search({
     industries = [],
     workFroms = [],
     licensedIns = [],
+    licensedTypes = [],
+    physicians = [],
+    alliedHealthOptions = [],
 }) {
     const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -14,6 +17,10 @@ export default function Search({
     const [industry, setIndustry] = useState(filters.industry || "");
     const [workFrom, setWorkFrom] = useState(filters.workFrom || "");
     const [licensedIn, setLicensedIn] = useState(filters.licensedIn || "");
+    const [licensedType, setLicensedType] = useState(filters.licensedType || "");
+    const [selectedPhysician, setSelectedPhysician] = useState(filters.physician || "");
+    const [selectedAlliedHealth, setSelectedAlliedHealth] = useState(filters.allied_health || "");
+
 
     const debouncedSearch = useDebouncedCallback((keywordValue) => {
         submitSearch({ keyword: keywordValue });
@@ -25,6 +32,9 @@ export default function Search({
             industry: industry || undefined,
             workFrom: workFrom || undefined,
             licensedIn: licensedIn || undefined,
+            licensedType: licensedType || undefined,
+            selectedPhysician: selectedPhysician || undefined,
+            selectedAlliedHealth: selectedAlliedHealth || undefined,
             ...updatedParams,
         };
 
@@ -45,13 +55,17 @@ export default function Search({
 
     useEffect(() => {
         submitSearch();
-    }, [industry, workFrom, licensedIn]);
+    }, [industry, workFrom, licensedIn, licensedType, selectedPhysician, selectedAlliedHealth]);
+
 
     const handleReset = () => {
         setKeyword("");
         setIndustry("");
         setWorkFrom("");
         setLicensedIn("");
+        setLicensedType("");
+        setSelectedPhysician("");
+        setSelectedAlliedHealth(""); 
 
         router.get('/', {}, {
             preserveState: true,
@@ -60,11 +74,16 @@ export default function Search({
         });
     };
 
-    // Check if any filter is activ
-    const hasActiveFilters = keyword || industry || workFrom || licensedIn;
+    useEffect(() => {
+        setLicensedType(filters.licensedType || "");
+    }, [filters.licensedType]);
+
+
+    const hasActiveFilters = keyword || industry || workFrom || licensedIn || licensedType || selectedPhysician || selectedAlliedHealth;
 
     return (
         <div className="bg-[#F2EBE6] backdrop-blur-xl p-6 sm:p-8 rounded-[2rem] shadow-2xl shadow-slate-200 mb-12 border border-slate-100 transition-all duration-500">
+            {/* Header and Reset Button */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div>
                     <h2 className="text-2xl font-bold text-slate-900 font-['Poppins'] tracking-tight">
@@ -72,7 +91,6 @@ export default function Search({
                     </h2>
                 </div>
 
-                {/* Reset Button */}
                 {hasActiveFilters && (
                     <button
                         onClick={handleReset}
@@ -84,9 +102,9 @@ export default function Search({
             </div>
 
             <div className="space-y-6">
-                {/* Main Search Bar Row - Now includes Industry and Location */}
+                {/* Main Search Row */}
                 <div className="flex flex-col lg:flex-row gap-3">
-                    {/* Keyword Search */}
+                    {/* Keyword */}
                     <div className="relative flex-[2]">
                         <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -97,11 +115,10 @@ export default function Search({
                             value={keyword}
                             onChange={(e) => setKeyword(e.target.value)}
                             className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:ring-1 focus:ring-[#F8721B] focus:border-transparent transition-all outline-none"
-                            aria-label="Search jobs by keyword"
                         />
                     </div>
 
-                    {/* Industry Selector - Main Row */}
+                    {/* Industry */}
                     <div className="flex-1">
                         <select
                             value={industry}
@@ -115,21 +132,21 @@ export default function Search({
                         </select>
                     </div>
 
-                    {/* State/Location Selector - Main Row */}
+                    {/* Location (workFrom) */}
                     <div className="flex-1">
                         <select
                             value={workFrom}
                             onChange={(e) => setWorkFrom(e.target.value)}
                             className="w-full p-3 bg-white border border-slate-200 rounded-2xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer h-full"
                         >
-                            <option value="" disabled>Select Location</option>
+                            <option value="" disabled>Select State/Location</option>
                             {workFroms.map((item) => (
                                 <option key={item.id} value={item.name}>{item.name}</option>
                             ))}
                         </select>
                     </div>
 
-                    {/* Advanced Toggle Button */}
+                    {/* Advanced Toggle */}
                     <button
                         type="button"
                         onClick={() => setShowAdvanced(!showAdvanced)}
@@ -142,70 +159,77 @@ export default function Search({
                         <span className="hidden sm:inline">
                             {showAdvanced ? "Hide Filters" : "Advanced Search"}
                         </span>
-                        <svg
-                            className={`w-5 h-5 transition-transform duration-300 ${showAdvanced ? "rotate-180" : ""}`}
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
+                        <svg className={`w-5 h-5 transition-transform duration-300 ${showAdvanced ? "rotate-180" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
                 </div>
 
-                {/* Advanced Filters Panel - Licensed In only */}
+                {/* Advanced Filters Panel */}
                 {showAdvanced && (
-                    <div className="p-6 bg-white/50 rounded-[1.5rem] border border-slate-200/60 animate-in fade-in slide-in-from-top-4 duration-300 flex flex-col sm:flex-row gap-4">
-                        {/* First Select Group */}
-                        <div className="flex-1 space-y-2">
+                    <div className="p-6 bg-white/50 rounded-[1.5rem] border border-slate-200/60 animate-in fade-in slide-in-from-top-4 duration-300 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+
+                        {/* Licensed Type - NEW SEPARATE FILTER */}
+                        <div className="space-y-2">
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
-                                Licensed In
+                                Licensed Type
                             </label>
                             <select
-                                value={licensedIn}
-                                onChange={(e) => setLicensedIn(e.target.value)}
-                                className="w-full p-3 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
+                                value={licensedType}
+                                onChange={(e) => setLicensedType(e.target.value)}
+                                className="w-full p-2 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
                             >
-                                <option value="" disabled>Select State</option>
-                                {licensedIns.map((item) => (
-                                    <option key={item.id} value={item.name}>{item.name}</option>
+                                <option value="" disabled>Select Type</option>
+                                {licensedTypes.map((type, index) => (
+                                    <option key={index} value={type}>
+                                        {type}
+                                    </option>
                                 ))}
                             </select>
                         </div>
 
-                        {/* Second Select Group */}
-                        <div className="flex-1 space-y-2">
+                        <div className="space-y-2">
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
                                 Physician
                             </label>
+
                             <select
-                                value={licensedIn}
-                                onChange={(e) => setLicensedIn(e.target.value)}
-                                className="w-full p-3 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
+                                value={selectedPhysician} 
+                                onChange={(e) => setSelectedPhysician(e.target.value)}
+                                className="w-full p-2 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
                             >
-                                <option value="" disabled>Select State</option>
-                                {licensedIns.map((item) => (
-                                    <option key={item.id} value={item.name}>{item.name}</option>
+                                <option value="">Select Physicians</option>
+                                {physicians.map((item, index) => (
+                                    <option key={index} value={item}>
+                                        {item}
+                                    </option>
                                 ))}
                             </select>
                         </div>
 
-                        <div className="flex-1 space-y-2">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
-                                Allied Health
-                            </label>
-                            <select
-                                value={licensedIn}
-                                onChange={(e) => setLicensedIn(e.target.value)}
-                                className="w-full p-3 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
-                            >
-                                <option value="" disabled>Select State</option>
-                                {licensedIns.map((item) => (
-                                    <option key={item.id} value={item.name}>{item.name}</option>
-                                ))}
-                            </select>
-                        </div>
+
+                        <div className="space-y-2">
+    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
+        Allied Health
+    </label>
+
+    <select
+        value={selectedAlliedHealth}
+        onChange={(e) => setSelectedAlliedHealth(e.target.value)}
+        className="w-full p-2 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
+    >
+        <option value="">All Allied Health</option>
+        {alliedHealthOptions.map((item, index) => (
+            <option key={index} value={item}>
+                {item}
+            </option>
+        ))}
+    </select>
+</div>
+
+
+
                     </div>
                 )}
             </div>

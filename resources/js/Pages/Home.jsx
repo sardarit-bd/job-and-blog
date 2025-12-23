@@ -15,9 +15,11 @@ export default function Home() {
         industries,
         workFroms,
         licensedIns,
+        licensedTypes,
+        physicians,
+        alliedHealthOptions,
     } = props;
 
-    console.log(hero);
 
     const [allJobs, setAllJobs] = useState(pageJobs.data);
     const [nextPageUrl, setNextPageUrl] = useState(pageJobs.next_page_url);
@@ -137,7 +139,11 @@ export default function Home() {
                         industries={industries}
                         workFroms={workFroms}
                         licensedIns={licensedIns}
+                        licensedTypes={licensedTypes}
+                        physicians={physicians}
+                        alliedHealthOptions={alliedHealthOptions}
                     />
+
                 </div>
 
                 <section id="jobs">

@@ -80,7 +80,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
                     {/* LEFT SIDE: Profile Section */}
                     <div className="lg:col-span-5 space-y-6">
                         <Card className="border-none shadow-xl bg-white overflow-hidden ring-1 ring-slate-100 p-0">
-                            <div className="h-28 bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600" />
+                            <div className="h-28 bg-gradient-to-br from-[#eb620c] to-[#f79f68]" />
                             <CardContent className="relative pt-0 px-6 pb-8">
                                   
                                 <form onSubmit={handleProfileSubmit}>
@@ -109,7 +109,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
                                                 onChange={handleImageChange}
                                             />
                                         </div>
-                                        <p className="mt-2 text-xs font-medium text-indigo-600">Click to change photo (upto 5MB). Supported files: JPEG,JPG,PNG,GIF,WEBP</p>
+                                        <p className="mt-2 text-xs font-medium text-slate-800">Click to change photo (upto 5MB). Supported files: JPEG,JPG,PNG,GIF,WEBP</p>
                                     </div>
 
                                     {flash.success?.scope === "profile" && (
@@ -174,7 +174,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
                                         <Button 
                                             type="submit" 
                                             disabled={profileForm.processing}
-                                            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl h-11 cursor-pointer"
+                                            className="w-full bg-[#fb721b] text-white rounded-xl h-11 cursor-pointer"
                                         >
                                             <Save className="mr-2 h-4 w-4" />
                                             {profileForm.processing ? "Saving..." : "Update Profile"}
@@ -188,7 +188,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
                     {/* RIGHT SIDE: Resume Section */}
                     <div className="lg:col-span-7 space-y-6">
                         <Card className="border-none shadow-lg bg-white ring-1 ring-slate-100 py-0">
-                            <CardHeader className="bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 py-7 rounded-t-xl ">
+                            <CardHeader className="bg-gradient-to-br from-[#eb620c] to-[#f79f68] py-7 rounded-t-xl ">
                                 <CardTitle className="text-xl font-bold flex items-center text-gray-50">
                                     <FileUp className="mr-3 h-6 w-6 text-gray-50" />
                                     Upload Resume
@@ -226,7 +226,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
                                             onChange={(e) => resumeForm.setData('resume', e.target.files[0])}
                                         />
                                         <div className="h-16 w-16 bg-white rounded-full shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                            <UploadCloud className="h-8 w-8 text-indigo-500" />
+                                            <UploadCloud className="h-8 w-8 text-[#fb721b]" />
                                         </div>
                                         <p className="text-sm font-semibold text-slate-700">
                                             {resumeForm.data.resume ? resumeForm.data.resume.name : "Upload new resume version"}
@@ -243,7 +243,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
                                     <Button 
                                         type="submit" 
                                         disabled={resumeForm.processing || !resumeForm.data.resume}
-                                        className="w-full text-gray-100 bg-indigo-600 hover:bg-indigo-700 h-11 rounded-xl shadow-lg shadow-indigo-100"
+                                        className="w-full text-gray-100 bg-[#fb721b] h-11 rounded-xl shadow-lg shadow-indigo-100 cursor-pointer"
                                     >
                                         {resumeForm.processing ? "Uploading File..." : "Confirm Upload"}
                                     </Button>
@@ -255,7 +255,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
                                     {resume_path ? (
                                         <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200 group">
                                             <div className="flex items-center space-x-4 min-w-0">
-                                                <div className="h-10 w-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-indigo-600 shadow-sm">
+                                                <div className="h-10 w-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-[#fb721b] shadow-sm">
                                                     <FileText size={20} />
                                                 </div>
                                                 <div className="min-w-0">
@@ -263,7 +263,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
                                                     <p className="text-[10px] font-medium text-slate-400 uppercase tracking-tight">Standard CV Format</p>
                                                 </div>
                                             </div>
-                                            <Button variant="ghost" size="sm" asChild className="text-indigo-600 border hover:bg-white hover:shadow-sm rounded-lg">
+                                            <Button variant="ghost" size="sm" asChild className="text-[#fb721b] border hover:bg-white hover:shadow-sm rounded-lg">
                                                 <a href={`/storage/${resume_path}`} target="_blank" rel="noopener noreferrer">
                                                     <ExternalLink size={16} className="mr-2" />
                                                     View

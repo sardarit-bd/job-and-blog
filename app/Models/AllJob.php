@@ -21,6 +21,8 @@ class AllJob extends Model
         'fern_notes',
         'description',
         'image',
+        'physician',
+        'allied_health',
     ];
 
     protected static function booted()

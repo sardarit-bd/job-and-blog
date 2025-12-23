@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hero;
 use Inertia\Inertia;
 use App\Models\AllJob;
 use App\Models\JobType;
 use App\Models\Industry;
 use App\Models\Schedule;
 use App\Models\Experience;
-use App\Models\Hero;
 use App\Models\LicensedIn;
+use App\Models\LicensedType;
 use App\Models\RemoteStatus;
 use Illuminate\Http\Request;
 
@@ -51,11 +52,25 @@ class HomeController extends Controller
             $query->whereHas('jobLicensedIns', fn($q) => $q->where('name', $request->licensedIn));
         }
 
+        if ($request->filled('licensedType')) {
+            $query->where('license_type', $request->licensedType);
+        }
+
+        if ($request->filled('selectedPhysician')) {
+            $query->where('physician', $request->selectedPhysician);
+        }
+
+        if ($request->filled('selectedAlliedHealth')) {
+            $query->where('allied_health', $request->selectedAlliedHealth);
+        }
+
+
+
+
         $userCompanyId = auth()->check() ? auth()->user()->id : null;
         $userId = auth()->id();
 
         $jobs = $query->latest()->simplePaginate(10)->through(function ($job) use ($userId) {
-            // Check if the current user is the owner of the job post
         $isOwner = ($userId !== null && (int)$userId === (int)$job->user_id);
 
         $alreadyApplied = false;
@@ -71,8 +86,6 @@ class HomeController extends Controller
             'slug' => $job->slug,
             'description' => $job->description,
             'already_applied' => $alreadyApplied,
-            
-            // A user cannot apply if they are the owner OR if they already applied
             'can_apply' => !$isOwner, 
             
             'company' => [
@@ -81,7 +94,6 @@ class HomeController extends Controller
                 'logo' => $job->company?->image ? asset('storage/' . $job->company->image) : null,
                 'description' => $job->company?->description,
             ],
-            // ... rest of your mapping code
             'job_types' => $job->jobTypes->pluck('name'),
             'specialities' => $job->specialities->pluck('name'),
             'licenses' => $job->jobLicensedIns->pluck('name', 'short'),
@@ -105,6 +117,26 @@ class HomeController extends Controller
             'industries' => Industry::all(['id', 'name']),
             'workFroms' => LicensedIn::all(['id', 'name', 'short']),
             'licensedIns' => LicensedIn::all(['id', 'name', 'short']),
+            'licensedTypes' => LicensedType::orderBy('id')
+                ->pluck('name'),
+            'physicians' => AllJob::query()
+                ->whereNotNull('physician')
+                ->where('physician', '!=', '')
+                ->distinct()
+                ->orderBy('physician')
+                ->pluck('physician')
+                ->values(),
+
+            'alliedHealthOptions' => AllJob::query()
+                ->whereNotNull('allied_health')
+                ->where('allied_health', '!=', '')
+                ->distinct()
+                ->orderBy('allied_health')
+                ->pluck('allied_health')
+                ->values(),
+
+
         ]);
+
     }
 }

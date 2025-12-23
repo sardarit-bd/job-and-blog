@@ -56,7 +56,7 @@ class JobDetailController extends Controller
             'salary_range' => $jobModel->salary_range,
             'salaray_transparency' => $jobModel->salaray_transparency,
             'schedule' => $jobModel->schedule,
-            'image' => $jobModel->image,
+            'image' => $jobModel->image_url,
             'posted_at' => $jobModel->created_at->format('m-d-Y'),
         ];
 

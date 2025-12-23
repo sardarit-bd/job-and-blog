@@ -7,23 +7,17 @@ import Search from "../components/Search";
 
 export default function Home() {
     const { props } = usePage();
-    // const {
-    //     jobs: pageJobs,
-    //     filters,
-    //     experiences,
-    //     jobTypes,
-    //     remoteStatuses,
-    //     workFroms,
-    //     schedules,
-    // } = props;
 
     const {
         jobs: pageJobs,
+        hero,
         filters,
         industries,
         workFroms,
         licensedIns,
     } = props;
+
+    console.log(hero);
 
     const [allJobs, setAllJobs] = useState(pageJobs.data);
     const [nextPageUrl, setNextPageUrl] = useState(pageJobs.next_page_url);
@@ -85,19 +79,29 @@ export default function Home() {
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-100 mb-6">
                             <span className="flex h-2 w-2 rounded-full bg-teal-500 animate-pulse" />
                             <span className="text-xs font-bold uppercase tracking-widest text-teal-700">
-                                The Pulse of Nursing Careers
+                                {hero?.moto || 'The Pulse of Nursing Careers'}
                             </span>
                         </div>
+                        
 
-                        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
+                        {/* <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
                             Your Future in <br />
                             <span className="text-transparent bg-clip-text bg-[#F8721B]">
                                 Remote Nursing
                             </span>
+                        </h1> */}
+                        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1]">
+                            <div 
+                                className="inline-block [&_.color]:text-[var(--color)] [&_strong]:font-extrabold"
+                                dangerouslySetInnerHTML={{
+                                    __html: hero?.heading || 
+                                        '<strong>Your Future in<br><span class="color" style="--color: #F8721B; --dark-color: #F97316;">Remote Nursing</span></strong>'
+                                }}
+                            />
                         </h1>
 
                         <p className="mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-['Inter']">
-                            Curated remote, hybrid, and alternative nursing positions. Whether you are bedside-weary or a digital health enthusiast, find your next chapter here.
+                            {hero?.sub_heading || 'Curated remote, hybrid, and alternative nursing positions. Whether you are bedside-weary or a digital health enthusiast, find your next chapter here.'}
                         </p>
 
                         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
@@ -112,7 +116,7 @@ export default function Home() {
                         <div className="absolute inset-0 bg-gradient-to-tr from-blue-500 to-teal-400 blur-3xl opacity-20 rounded-full" />
                         <div className="relative rounded-[2rem] overflow-hidden border-8 border-white shadow-2xl transition-transform duration-700 hover:rotate-2">
                             <img
-                                src="/images/nurse.jpg"
+                                src={`/storage/${hero.image}` || 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800'}
                                 alt="Modern Nurse"
                                 className="w-full h-[400px] sm:h-[500px] object-cover"
                                 onError={(e) => e.currentTarget.src = 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800'}

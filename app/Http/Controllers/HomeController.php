@@ -8,6 +8,7 @@ use App\Models\JobType;
 use App\Models\Industry;
 use App\Models\Schedule;
 use App\Models\Experience;
+use App\Models\Hero;
 use App\Models\LicensedIn;
 use App\Models\RemoteStatus;
 use Illuminate\Http\Request;
@@ -95,7 +96,10 @@ class HomeController extends Controller
         ];
         });
 
+        $hero = Hero::latest()->first();
+
         return Inertia::render('Home', [
+            'hero' => $hero,
             'jobs' => $jobs,
             'filters' => $request->all(),
             'industries' => Industry::all(['id', 'name']),

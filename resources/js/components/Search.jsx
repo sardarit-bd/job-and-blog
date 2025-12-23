@@ -156,10 +156,44 @@ export default function Search({
 
                 {/* Advanced Filters Panel - Licensed In only */}
                 {showAdvanced && (
-                    <div className="p-6 bg-white/50 rounded-[1.5rem] border border-slate-200/60 animate-in fade-in slide-in-from-top-4 duration-300">
-                        <div className="max-w-xs space-y-2">
+                    <div className="p-6 bg-white/50 rounded-[1.5rem] border border-slate-200/60 animate-in fade-in slide-in-from-top-4 duration-300 flex flex-col sm:flex-row gap-4">
+                        {/* First Select Group */}
+                        <div className="flex-1 space-y-2">
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
                                 Licensed In
+                            </label>
+                            <select
+                                value={licensedIn}
+                                onChange={(e) => setLicensedIn(e.target.value)}
+                                className="w-full p-3 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
+                            >
+                                <option value="" disabled>Select State</option>
+                                {licensedIns.map((item) => (
+                                    <option key={item.id} value={item.name}>{item.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Second Select Group */}
+                        <div className="flex-1 space-y-2">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
+                                Physician
+                            </label>
+                            <select
+                                value={licensedIn}
+                                onChange={(e) => setLicensedIn(e.target.value)}
+                                className="w-full p-3 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
+                            >
+                                <option value="" disabled>Select State</option>
+                                {licensedIns.map((item) => (
+                                    <option key={item.id} value={item.name}>{item.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="flex-1 space-y-2">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
+                                Allied Health
                             </label>
                             <select
                                 value={licensedIn}

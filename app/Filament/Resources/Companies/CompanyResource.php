@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class CompanyResource extends Resource
 {
@@ -20,6 +21,8 @@ class CompanyResource extends Resource
 
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice;
+
+    protected static string | UnitEnum | null $navigationGroup = 'Company & Industry';
 
     public static function form(Schema $schema): Schema
     {

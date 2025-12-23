@@ -1,36 +1,40 @@
 <?php
 
-namespace App\Filament\Resources\Industries;
+namespace App\Filament\Resources\Heroes;
 
-use App\Filament\Resources\Industries\Pages\ManageIndustries;
-use App\Models\Industry;
+use App\Filament\Resources\Heroes\Pages\ManageHeroes;
+use App\Models\Hero;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use UnitEnum;
 
-class IndustryResource extends Resource
+class HeroResource extends Resource
 {
-    protected static ?string $model = Industry::class;
+    protected static ?string $model = Hero::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
-
-    protected static string | UnitEnum | null $navigationGroup = 'Company & Industry';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                TextInput::make('name')
+                TextInput::make('heading')
                     ->required(),
+                TextInput::make('sub_heading')
+                    ->required(),
+                TextInput::make('moto'),
+                FileUpload::make('image')
+                    ->image(),
             ]);
     }
 
@@ -38,8 +42,13 @@ class IndustryResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('heading')
                     ->searchable(),
+                TextColumn::make('sub_heading')
+                    ->searchable(),
+                TextColumn::make('moto')
+                    ->searchable(),
+                ImageColumn::make('image'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -66,7 +75,7 @@ class IndustryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ManageIndustries::route('/'),
+            'index' => ManageHeroes::route('/'),
         ];
     }
 }

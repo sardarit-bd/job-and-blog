@@ -3,11 +3,11 @@ import AppLayout from "../layouts/AppLayout";
 export default function CompanyAbout({ company }) {
   return (
     <AppLayout>
-      <div className="font-['Poppins'] bg-slate-50 min-h-screen py-12 transition-colors duration-300">
+      <div className="font-['Poppins'] bg-slate-200 min-h-screen py-12 transition-colors duration-300">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Main Profile Card */}
-          <div className="bg-[#F2EBE6] rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-200 p-6 sm:p-10 relative overflow-hidden">
+          <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-200 p-6 sm:p-10 relative overflow-hidden">
             
             {/* Top Decorative Glow */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 blur-3xl rounded-full -mr-16 -mt-16" />
@@ -68,7 +68,7 @@ export default function CompanyAbout({ company }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
                 {/* Email Tile */}
-                <div className="p-6 rounded-2xl bg-white/50 border border-slate-200/60 group transition-colors hover:border-[#F8721B]/30">
+                <div className="p-6 rounded-2xl bg-white/50 border border-slate-200/60 transition-all duration-300 hover:border-2 hover:border-[#F8721B]">
                   <div className="flex items-center gap-4">
                     <div className="p-3 bg-white rounded-xl shadow-sm text-[#F8721B]">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,7 +85,7 @@ export default function CompanyAbout({ company }) {
                 </div>
 
                 {/* Address Tile */}
-                <div className="p-6 rounded-2xl bg-white/50 border border-slate-200/60 group transition-colors hover:border-[#F8721B]/30">
+                <div className="p-6 rounded-2xl bg-white/50 border border-slate-200/60 transition-all duration-300 hover:border-2 hover:border-[#F8721B]">
                   <div className="flex items-center gap-4">
                     <div className="p-3 bg-white rounded-xl shadow-sm text-teal-600">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

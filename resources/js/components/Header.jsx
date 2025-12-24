@@ -80,11 +80,11 @@ export default function Header({ auth }) {
                 className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out bg-white border-b border-slate-200
                 ${open ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
             >
-                <div className="flex flex-col space-y-3 px-4">
+                <div className="flex flex-col space-y-1 px-4">
                     <a
                         href="/#jobs"
                         onClick={() => setOpen(false)}
-                        className="px-4 pt-2 rounded-xl font-bold text-slate-600 hover:bg-[#FB721B] hover:text-white"
+                        className="text-center pt-2 rounded-xl font-bold text-slate-600 hover:bg-[#FB721B] hover:text-white"
                     >
                         Browse Jobs
                     </a>
@@ -104,7 +104,7 @@ export default function Header({ auth }) {
                                 <Link
                                     href="/login"
                                     onClick={() => setOpen(false)}
-                                    className="flex justify-center px-5 py-2 rounded-2xl text-sm font-bold shadow-sm bg-white text-[#F8721B] border border-[#F8721B] hover:bg-[#F8721B] hover:text-white transition-all active:scale-95"
+                                    className="flex justify-center px-5 py-2 rounded-2xl text-sm font-bold shadow-sm bg-[#F8721B] text-white hover:text-white transition-all active:scale-95"
                                 >
                                     Login
                                 </Link>

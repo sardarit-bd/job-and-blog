@@ -24,7 +24,7 @@ class HeroResource extends Resource
 {
     protected static ?string $model = Hero::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog;
 
     protected static string | UnitEnum | null $navigationGroup = 'Settings';
 

@@ -38,20 +38,27 @@ export default function Search({
             ...updatedParams,
         };
 
-        router.get('/', params, {
+        const queryParams = Object.fromEntries(
+            Object.entries(params).filter(([_, v]) => v !== '' && v !== undefined)
+        );
+
+        const scrollPosition = window.scrollY;
+
+        router.visit(window.location.pathname, {
+            method: 'get',
+            data: queryParams,
+            only: ['jobs', 'filters'],
             preserveState: true,
             preserveScroll: true,
             replace: true,
         });
     };
 
+
     useEffect(() => {
-        if (keyword) {
-            debouncedSearch(keyword);
-        } else {
-            submitSearch({ keyword: undefined });
-        }
+        debouncedSearch(keyword);
     }, [keyword, debouncedSearch]);
+
 
     useEffect(() => {
         submitSearch();
@@ -59,20 +66,26 @@ export default function Search({
 
 
     const handleReset = () => {
-        setKeyword("");
-        setIndustry("");
-        setWorkFrom("");
-        setLicensedIn("");
-        setLicensedType("");
-        setSelectedPhysician("");
-        setSelectedAlliedHealth(""); 
+    setKeyword("");
+    setIndustry("");
+    setWorkFrom("");
+    setLicensedIn("");
+    setLicensedType("");
+    setSelectedPhysician("");
+    setSelectedAlliedHealth("");
 
-        router.get('/', {}, {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
+    setTimeout(() => {
+        submitSearch({ 
+            keyword: undefined,
+            industry: undefined,
+            workFrom: undefined,
+            licensedIn: undefined,
+            licensedType: undefined,
+            selectedPhysician: undefined,
+            selectedAlliedHealth: undefined,
         });
-    };
+    }, 0);
+};
 
     useEffect(() => {
         setLicensedType(filters.licensedType || "");
@@ -210,23 +223,23 @@ export default function Search({
 
 
                         <div className="space-y-2">
-    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
-        Allied Health
-    </label>
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
+                            Allied Health
+                        </label>
 
-    <select
-        value={selectedAlliedHealth}
-        onChange={(e) => setSelectedAlliedHealth(e.target.value)}
-        className="w-full p-2 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
-    >
-        <option value="">All Allied Health</option>
-        {alliedHealthOptions.map((item, index) => (
-            <option key={index} value={item}>
-                {item}
-            </option>
-        ))}
-    </select>
-</div>
+                        <select
+                            value={selectedAlliedHealth}
+                            onChange={(e) => setSelectedAlliedHealth(e.target.value)}
+                            className="w-full p-2 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
+                        >
+                            <option value="">All Allied Health</option>
+                            {alliedHealthOptions.map((item, index) => (
+                                <option key={index} value={item}>
+                                    {item}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
 
 

@@ -38,12 +38,12 @@ export default function Login() {
         
       {/* Background Accents */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/70 transition-colors" />
-        <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/70 transition-colors" />
+        <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/80 transition-colors" />
+        <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[#F8721B]/80 transition-colors" />
       </div>
 
       {/* Login Card */}
-      <div className="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-2xl shadow-slate-200 border border-slate-200 p-8 transition-all">
+      <div className="relative z-10 w-full max-w-md bg-white rounded-2xl border border-slate-200 p-8 transition-all">
         
         {/* Header */}
         <div className="mb-10">

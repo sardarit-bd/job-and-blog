@@ -86,12 +86,6 @@ export default function Home() {
                         </div>
                         
 
-                        {/* <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
-                            Your Future in <br />
-                            <span className="text-transparent bg-clip-text bg-[#F8721B]">
-                                Remote Nursing
-                            </span>
-                        </h1> */}
                         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1]">
                             <div 
                                 className="inline-block [&_.color]:text-[var(--color)] [&_strong]:font-extrabold"
@@ -146,7 +140,7 @@ export default function Home() {
 
                 </div>
 
-                <section id="jobs">
+                <section id="jobs" className="min-h-[100vh]">
                     <div className="flex items-center justify-between mb-8 border-b border-slate-200 pb-6">
                         <div>
                             <h3 className="text-3xl font-bold text-slate-900 font-['Poppins'] tracking-tight">

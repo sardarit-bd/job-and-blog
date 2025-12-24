@@ -71,13 +71,13 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
       onMouseDown={onClose}
     >
       <div
-        className="relative bg-white w-full max-w-5xl rounded-[2.5rem] shadow-2xl max-h-[90vh] overflow-hidden border border-slate-200 flex flex-col animate-in zoom-in-95 duration-200"
+        className="relative bg-white w-full max-w-5xl rounded-[1rem] shadow-2xl max-h-[90vh] overflow-hidden border border-slate-200 flex flex-col animate-in zoom-in-95 duration-200"
         onMouseDown={(e) => e.stopPropagation()}
       >
         {/* Sticky Header */}
         <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md px-6 py-4 sm:px-10 sm:py-6 border-b border-slate-100 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <div className="hidden sm:flex p-2 w-14 h-14 bg-slate-50 rounded-2xl border border-slate-100 items-center justify-center">
+            <div className="flex p-2 w-12 h-12 sm:w-14 sm:h-14 bg-slate-50 rounded-2xl border border-slate-100 items-center justify-center">
               <img
                 src={job.image}
                 alt={job.company.name}
@@ -180,14 +180,14 @@ export default function JobDetailsModal({ job: initialJob, isOpen, onClose }) {
 
             {/* Right Column */}
             <div className="lg:col-span-4 space-y-6">
-              <div className="p-6 bg-[#F2EBE6] rounded-[2rem] border border-slate-200/50 shadow-xl shadow-slate-200/30 space-y-6">
+              <div className="p-6 bg-gray-100 rounded-[2rem] border border-slate-200/50 shadow-xl shadow-slate-200/30 space-y-6">
                 <h4 className="font-bold text-slate-900 text-xs uppercase tracking-widest text-center border-b border-slate-200 pb-4">
                   Job Summary
                 </h4>
 
                 <div className="space-y-4">
                   {[
-                    ["Physician", job.physician], // ✅ Added physician
+                    ["Physician", job.physician],
                     ["Work From", Object.values(job.work_from || {}).join(", ")],
                     ["License", Object.values(job.licenses || {}).join(", ")],
                     ["Job Type", job.job_types?.join(", ")],

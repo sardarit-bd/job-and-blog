@@ -86,7 +86,7 @@ export function ApplicantStatsOverview({ stats }: { stats: StatsData }) {
         value={data.interviews}
         description="Upcoming or shortlisted"
         icon={<Users className="h-4 w-4 text-muted-foreground" />}
-        className="bg-emerald-50/80 border-emerald-200"  
+        className="bg-[#738678]/50 border-[#738678]"  
       />
 
       <StatCard

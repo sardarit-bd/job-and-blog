@@ -6,12 +6,8 @@
 
 
 
-.fi-sidebar {
-    @apply bg-sky-900 dark:bg-slate-900;
-}
-
-.fi-topbar {
-    @apply bg-sky-900 dark:bg-slate-900;
+.fi-sidebar, .fi-topbar {
+    @apply bg-[#4d5d53];
 }
 
 .fi-logo {

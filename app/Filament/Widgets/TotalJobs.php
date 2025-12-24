@@ -22,7 +22,7 @@ class TotalJobs extends StatsOverviewWidget
             })
             ->description('Total Jobs of you companies')
             ->extraAttributes([
-                'class' => 'bg-sky-300 text-white dark:bg-gray-900 rounded-xl shadow-lg',
+                'class' => 'bg-[#f2ebe6] text-white rounded-xl shadow-lg',
             ]),
 
             Stat::make('Total Applications', function() {
@@ -30,13 +30,13 @@ class TotalJobs extends StatsOverviewWidget
             })
             ->description('All applications for your companies')
             ->extraAttributes([
-                'class' => 'bg-violet-500 text-white dark:bg-gray-900 rounded-xl shadow-lg cursor-pointer',
+                'class' => 'bg-[#f2cfc2] text-white rounded-xl shadow-lg cursor-pointer',
             ]),
 
             Stat::make('Total Job Types', JobType::count())
             ->description('Various job types like remote, hybrid, onsite etc.')
             ->extraAttributes([
-                'class' => 'bg-sky-500 text-white dark:bg-gray-900 rounded-xl shadow-lg cursor-pointer',
+                'class' => 'bg-[#bcd0ca] text-white rounded-xl shadow-lg cursor-pointer',
             ]),
 
         ];

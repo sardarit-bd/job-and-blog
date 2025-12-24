@@ -19,7 +19,7 @@ const Header = ({ toggleSidebar, auth }) => {
   };
 
   return (
-    <header className="flex items-center justify-between h-16 bg-slate-800 border-b border-gray-200 px-4 sm:px-6 lg:px-8 shadow-sm">
+    <header className="flex items-center justify-between h-16 bg-[#2e3a33] border-b border-gray-200 px-4 sm:px-6 lg:px-8 shadow-sm">
       
       {/* Mobile menu button */}
       {toggleSidebar && (
@@ -36,13 +36,13 @@ const Header = ({ toggleSidebar, auth }) => {
       {/* User dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center gap-2 rounded-full p-1 hover:bg-gray-100 hover:text-black transition focus:outline-none">
+          <button className="group flex items-center gap-2 rounded-full p-1 hover:bg-gray-100 transition focus:outline-none">
             <img
               className="h-8 w-8 rounded-full object-cover border border-gray-300"
               src={`https://ui-avatars.com/api/?name=${userName}&background=5008C3&color=FFFFFF&bold=true`}
               alt="User Avatar"
             />
-            <span className="hidden sm:block text-sm font-medium text-gray-200 hover:text-black">
+            <span className="hidden sm:block text-sm font-medium text-gray-200 group-hover:text-black transition-colors">
               {userName}
             </span>
           </button>

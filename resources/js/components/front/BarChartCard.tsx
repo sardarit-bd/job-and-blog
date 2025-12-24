@@ -50,7 +50,7 @@ const BarChartCard: React.FC<BarChartCardProps> = ({
   description = "Monthly overview",
 }) => {
   return (
-    <Card className="mt-5 border border-gray-200 dark:border-gray-700">
+    <Card className="mt-5 border-gray-200">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

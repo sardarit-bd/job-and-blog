@@ -141,17 +141,19 @@ export default function Home() {
                 </div>
 
                 <section id="jobs" className="min-h-[100vh]">
-                    <div className="flex items-center justify-between mb-8 border-b border-slate-200 pb-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 border-b border-slate-200 pb-6">
                         <div>
                             <h3 className="text-3xl font-bold text-slate-900 font-['Poppins'] tracking-tight">
                                 Latest Openings
                             </h3>
                         </div>
-                        <span className="text-sm text-black bg-[#BCD0CA] px-4 py-1.5 rounded-full">
-                            {allJobs.length} Position(s) found
-                        </span>
-                    </div>
 
+                        <div className="self-start sm:self-center mt-4 sm:mt-0">
+                            <span className="inline-block text-sm text-black bg-[#BCD0CA] px-4 py-1.5 rounded-full">
+                                {allJobs.length} Position(s) found
+                            </span>
+                        </div>
+                    </div>
                     <div className="grid grid-cols-1 gap-6">
                         {allJobs.length > 0 ? (
                             <>

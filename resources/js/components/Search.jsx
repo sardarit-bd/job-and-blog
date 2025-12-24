@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { router } from "@inertiajs/react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -20,6 +20,8 @@ export default function Search({
     const [licensedType, setLicensedType] = useState(filters.licensedType || "");
     const [selectedPhysician, setSelectedPhysician] = useState(filters.physician || "");
     const [selectedAlliedHealth, setSelectedAlliedHealth] = useState(filters.allied_health || "");
+
+    const isManualChange = useRef(false);
 
 
     const debouncedSearch = useDebouncedCallback((keywordValue) => {
@@ -58,6 +60,7 @@ export default function Search({
     useEffect(() => {
         debouncedSearch(keyword);
     }, [keyword, debouncedSearch]);
+    
 
 
     useEffect(() => {
@@ -65,27 +68,23 @@ export default function Search({
     }, [industry, workFrom, licensedIn, licensedType, selectedPhysician, selectedAlliedHealth]);
 
 
-    const handleReset = () => {
-    setKeyword("");
-    setIndustry("");
-    setWorkFrom("");
-    setLicensedIn("");
-    setLicensedType("");
-    setSelectedPhysician("");
-    setSelectedAlliedHealth("");
+    const isResetting = useRef(false);
 
-    setTimeout(() => {
-        submitSearch({ 
-            keyword: undefined,
-            industry: undefined,
-            workFrom: undefined,
-            licensedIn: undefined,
-            licensedType: undefined,
-            selectedPhysician: undefined,
-            selectedAlliedHealth: undefined,
+    const handleReset = () => {
+        isResetting.current = true;
+
+        const states = [setKeyword, setIndustry, setWorkFrom, setLicensedIn, setLicensedType, setSelectedPhysician, setSelectedAlliedHealth];
+        states.forEach(fn => fn(""));
+
+        router.get(window.location.pathname, {}, {
+            preserveState: false,
+            preserveScroll: true,
+            replace: true,
+            onFinish: () => {
+                isResetting.current = false;
+            }
         });
-    }, 0);
-};
+    };
 
     useEffect(() => {
         setLicensedType(filters.licensedType || "");
@@ -169,7 +168,7 @@ export default function Search({
                                 : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50"
                             }`}
                     >
-                        <span className="hidden sm:inline">
+                        <span className=" sm:inline">
                             {showAdvanced ? "Hide Filters" : "Advanced Search"}
                         </span>
                         <svg className={`w-5 h-5 transition-transform duration-300 ${showAdvanced ? "rotate-180" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -9,7 +9,7 @@ export default function Footer() {
                     Job Board
                     </h4>
                     <p className="text-sm text-gray-300">
-                    Connecting nurses with top healthcare providers.
+                    A Safer, Smarter Job Board That Helps You Get Hired
                     </p>
                 </div>
 

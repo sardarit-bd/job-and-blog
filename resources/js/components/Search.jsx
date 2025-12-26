@@ -94,19 +94,27 @@ export default function Search({
     const hasActiveFilters = keyword || industry || workFrom || licensedIn || licensedType || selectedPhysician || selectedAlliedHealth;
 
     return (
-        <div className="bg-[#F2EBE6] backdrop-blur-xl p-6 sm:p-8 rounded-[2rem] shadow-2xl shadow-slate-200 mb-12 border border-slate-100 transition-all duration-500">
-            {/* Header and Reset Button */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-                <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-['Poppins'] tracking-tight">
-                        Find Your Perfect Role
-                    </h2>
-                </div>
+        <>
+        <div className="text-center font-['Poppins'] space-y-2 pb-6">
+            <p className="text-xl pb-8">REAL QUICK</p>
+            <p className="text-4xl font-semibold">Here’s What You</p>
+            <p className="text-4xl text-[#FB721B] font-semibold border-b-4 border-[#FB721B] inline-block pb-7">Need to Know</p>
+        </div>
 
+        <div className="text-center pb-6">
+            <p className="text-black text-[17px] font-['Poppins'] opacity-75 tracking-tight leading-relaxed">
+                Search by keyword, location, industry, job type. Our job board features opportunities from every major industry—including healthcare, legal, finance, tech, IT, construction, and more. This page contains a curated mix of remote, hybrid, and onsite positions for professionals at all experience levels. <br />
+                Begin your search below!
+            </p>
+        </div>
+        <div className="bg-[#F2EBE6] backdrop-blur-xl p-6 sm:p-8 rounded-[2rem] shadow-2xl shadow-slate-200 mb-12 border border-slate-100 transition-all duration-500">
+
+            {/* Header and Reset Button */}
+            <div className="flex flex-col gap-6 mb-6">
                 {hasActiveFilters && (
                     <button
                         onClick={handleReset}
-                        className="text-xs px-5 py-2.5 bg-red-50 text-red-600 rounded-full hover:bg-red-100 transition-all font-bold tracking-wide uppercase"
+                        className="w-full sm:w-fit sm:self-end text-xs px-5 py-2.5 bg-red-50 text-red-600 rounded-full hover:bg-red-100 transition-all font-bold tracking-wide uppercase text-center"
                     >
                         Clear All Filters
                     </button>
@@ -158,8 +166,22 @@ export default function Search({
                         </select>
                     </div>
 
+                    {/* healthcare filters */}
+                    <div className="flex-1">
+                        <select
+                            value={workFrom}
+                            onChange={(e) => setWorkFrom(e.target.value)}
+                            className="w-full p-3 bg-white border border-slate-200 rounded-2xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer h-full"
+                        >
+                            <option value="" disabled>Select healthcare</option>
+                            {workFroms.map((item) => (
+                                <option key={item.id} value={item.name}>{item.name}</option>
+                            ))}
+                        </select>
+                    </div>
+
                     {/* Advanced Toggle */}
-                    <button
+                    {/* <button
                         type="button"
                         onClick={() => setShowAdvanced(!showAdvanced)}
                         className={`flex items-center justify-center px-6 py-3 rounded-2xl font-bold transition-all duration-200 gap-2 whitespace-nowrap
@@ -174,77 +196,13 @@ export default function Search({
                         <svg className={`w-5 h-5 transition-transform duration-300 ${showAdvanced ? "rotate-180" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
-                    </button>
+                    </button> */}
                 </div>
 
                 {/* Advanced Filters Panel */}
-                {showAdvanced && (
-                    <div className="p-6 bg-white/50 rounded-[1.5rem] border border-slate-200/60 animate-in fade-in slide-in-from-top-4 duration-300 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-
-                        {/* Licensed Type - NEW SEPARATE FILTER */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
-                                Licensed Type
-                            </label>
-                            <select
-                                value={licensedType}
-                                onChange={(e) => setLicensedType(e.target.value)}
-                                className="w-full p-2 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
-                            >
-                                <option value="" disabled>Select Type</option>
-                                {licensedTypes.map((type, index) => (
-                                    <option key={index} value={type}>
-                                        {type}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
-                                Physician
-                            </label>
-
-                            <select
-                                value={selectedPhysician} 
-                                onChange={(e) => setSelectedPhysician(e.target.value)}
-                                className="w-full p-2 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
-                            >
-                                <option value="">Select Physicians</option>
-                                {physicians.map((item, index) => (
-                                    <option key={index} value={item}>
-                                        {item}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-
-                        <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
-                            Allied Health
-                        </label>
-
-                        <select
-                            value={selectedAlliedHealth}
-                            onChange={(e) => setSelectedAlliedHealth(e.target.value)}
-                            className="w-full p-2 bg-white border border-slate-200 rounded-xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer"
-                        >
-                            <option value="">All Allied Health</option>
-                            {alliedHealthOptions.map((item, index) => (
-                                <option key={index} value={item}>
-                                    {item}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-
-
-                    </div>
-                )}
+                
             </div>
         </div>
+        </>
     );
 }

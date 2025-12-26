@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Pages\Dashboard;
+use Filament\Support\Enums\Width;
 use Filament\Support\Colors\Color;
 use App\Filament\Widgets\TotalJobs;
 use App\Filament\Widgets\JobPostsChart;
@@ -32,7 +33,7 @@ class RecruiterPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/recruiter/theme.css')
             ->darkMode(false, true)
             ->sidebarWidth('16rem')
-            ->maxContentWidth('full')
+            ->maxContentWidth(Width::Full)
             ->login()
             ->passwordReset()
             ->authGuard('web')

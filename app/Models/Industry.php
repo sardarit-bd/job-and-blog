@@ -16,4 +16,8 @@ class Industry extends Model
             'all_job_id'
         );
     }
+
+    public function healthcares() {
+        return $this->hasMany(Healthcare::class);
+    }
 }

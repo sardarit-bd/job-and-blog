@@ -96,8 +96,8 @@ export default function Home() {
                             />
                         </h1>
 
-                        <p className="mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-['Inter']">
-                            {hero?.sub_heading || 'Curated remote, hybrid, and alternative nursing positions. Whether you are bedside-weary or a digital health enthusiast, find your next chapter here.'}
+                        <p className="mt-2 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-['Inter']">
+                            {hero?.sub_heading || 'Explore a premier job board featuring curated opportunities across every major industry, including healthcare, legal, finance, tech, and construction. Our platform offers a strategic mix of remote, hybrid, and onsite positions designed for professionals at every experience level. Whether you are looking to advance in your current field or transition into a new environment, our specialized listings provide the flexibility and variety you need to find your perfect fit.'}
                         </p>
 
                         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">

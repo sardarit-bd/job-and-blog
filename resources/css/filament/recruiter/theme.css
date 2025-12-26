@@ -4,6 +4,9 @@
 @source '../../../../resources/views/filament/**/*';
 @source '../../../../vendor/diogogpinto/filament-auth-ui-enhancer/resources/**/*.blade.php';
 
+html {
+    scrollbar-gutter: stable;
+}
 
 
 .fi-sidebar, .fi-topbar {

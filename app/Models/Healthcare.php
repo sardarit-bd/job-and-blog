@@ -21,4 +21,15 @@ class Healthcare extends Model
     {
         return $this->belongsTo(Industry::class);
     }
+
+    protected $casts = [
+        'rn' => 'array',
+        'physician' => 'array',
+        'allied_health' => 'array',
+    ];
+
+    public function allJob()
+    {
+        return $this->hasOne(AllJob::class);
+    }
 }

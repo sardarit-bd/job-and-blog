@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('industry_id')->constrained('industries')->onDelete('cascade');
             $table->string('name');
-            $table->string('rn')->nullable();
-            $table->string('physician')->nullable();
-            $table->string('allied_health')->nullable();
+            $table->json('rn')->nullable();
+            $table->json('physician')->nullable();
+            $table->json('allied_health')->nullable();
             $table->string('administrator')->nullable();
             $table->timestamps();
         });

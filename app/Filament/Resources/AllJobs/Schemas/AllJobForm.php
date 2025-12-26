@@ -42,13 +42,17 @@ class AllJobForm
                         titleAttribute: 'name',
                     ),
 
-                TextInput::make('physician')
-                    ->maxLength(255)
-                    ->live(onBlur: true),
+                // TextInput::make('physician')
+                //     ->maxLength(255)
+                //     ->live(onBlur: true),
 
-                TextInput::make('allied_health')
-                    ->maxLength(255)
-                    ->live(onBlur: true),
+                // TextInput::make('allied_health')
+                //     ->maxLength(255)
+                //     ->live(onBlur: true),
+
+                Select::make('healthcare_id')
+                    ->relationship('healthcare', 'name')
+                    ->preload(),
              
                 
                 TextInput::make('title')

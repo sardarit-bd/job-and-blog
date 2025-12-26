@@ -14,6 +14,7 @@ class AllJob extends Model
         'user_id',
         'title',
         'slug',
+        'healthcare_id',
         'license_type',
         'schedule',
         'salaray_transparency',
@@ -98,5 +99,10 @@ class AllJob extends Model
         return $this->belongsToMany(User::class, 'job_applications')
             ->withPivot('status')
             ->withTimestamps();
+    }
+
+    public function healthcare()
+    {
+        return $this->belongsTo(Healthcare::class, 'healthcare_id');
     }
 }

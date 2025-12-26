@@ -18,6 +18,7 @@ export default function Home() {
         licensedTypes,
         physicians,
         alliedHealthOptions,
+        healthcares = [],
     } = props;
 
 
@@ -136,6 +137,7 @@ export default function Home() {
                         licensedTypes={licensedTypes}
                         physicians={physicians}
                         alliedHealthOptions={alliedHealthOptions}
+                        healthcares={healthcares}
                     />
 
                 </div>
@@ -154,14 +156,14 @@ export default function Home() {
                             </span>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 gap-6">
+                    <div className="grid grid-cols-1 gap-6 relative">
                         {allJobs.length > 0 ? (
                             <>
                                 {allJobs.map((job, index) => (
                                     <div
                                         key={job.id}
                                         ref={index === allJobs.length - 1 ? lastJobRef : null}
-                                        className="group transition-all duration-300 hover:-translate-y-1"
+                                        className="group relative transition-all duration-300 hover:-translate-y-1 hover:z-50"
                                     >
                                         <JobCard job={job} />
                                     </div>

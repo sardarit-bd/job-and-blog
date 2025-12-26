@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { router } from "@inertiajs/react";
 import { useDebouncedCallback } from "use-debounce";
+import Portal from './Portal';
 
 export default function Search({
     filters = {},
@@ -10,6 +11,7 @@ export default function Search({
     licensedTypes = [],
     physicians = [],
     alliedHealthOptions = [],
+    healthcares = [],
 }) {
     const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -20,6 +22,67 @@ export default function Search({
     const [licensedType, setLicensedType] = useState(filters.licensedType || "");
     const [selectedPhysician, setSelectedPhysician] = useState(filters.physician || "");
     const [selectedAlliedHealth, setSelectedAlliedHealth] = useState(filters.allied_health || "");
+
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [hoveredHealthcare, setHoveredHealthcare] = useState(null);
+    const [selectedSubType, setSelectedSubType] = useState(null);
+    const [selectedDisplay, setSelectedDisplay] = useState("");
+    const [showOptionsList, setShowOptionsList] = useState(false);
+
+const [isHoveringDropdown, setIsHoveringDropdown] = useState(false);
+
+const closeTimeoutRef = useRef(null);
+
+// Clear timeout on any interaction
+const clearCloseTimeout = () => {
+  if (closeTimeoutRef.current) {
+    clearTimeout(closeTimeoutRef.current);
+    closeTimeoutRef.current = null;
+  }
+};
+
+// Delayed close
+const delayedClose = () => {
+  clearCloseTimeout();
+  closeTimeoutRef.current = setTimeout(() => {
+    setIsDropdownOpen(false);
+    setIsHoveringDropdown(false);
+  }, 200); // 200ms delay — enough to move mouse down
+};
+
+// Open immediately
+const openDropdown = () => {
+  clearCloseTimeout();
+  setIsDropdownOpen(true);
+};
+
+// Close on outside click (keep your existing useEffect for clicks)
+useEffect(() => {
+  const handleClickOutside = (e) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      setIsDropdownOpen(false);
+      setIsHoveringDropdown(false);
+    }
+  };
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => document.removeEventListener('mousedown', handleClickOutside);
+}, []);
+
+// Also close on escape key (optional bonus)
+useEffect(() => {
+  const handleEscape = (e) => {
+    if (e.key === 'Escape') {
+      setIsDropdownOpen(false);
+      setIsHoveringDropdown(false);
+    }
+  };
+  if (isDropdownOpen) {
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }
+}, [isDropdownOpen]);
+
+    const dropdownRef = useRef(null);
 
     const isManualChange = useRef(false);
 
@@ -68,6 +131,38 @@ export default function Search({
     }, [industry, workFrom, licensedIn, licensedType, selectedPhysician, selectedAlliedHealth]);
 
 
+    useEffect(() => {
+        if (!selectedSubType) {
+            setSelectedDisplay("");
+            return;
+        }
+
+        const { healthcare, type } = selectedSubType;
+        setSelectedDisplay(`${type} → ${healthcare}`);
+
+        // Map to existing filter fields
+        if (selectedSubType.key === 'physician') {
+            setSelectedPhysician(""); // Reset first
+            // We'll need a second dropdown or modal for final pick
+            // For now, just show category selected
+        } else if (selectedSubType.key === 'allied_health') {
+            setSelectedAlliedHealth("");
+        }
+        // Extend later for RN/admin if you add fields
+    }, [selectedSubType]);
+
+
+    useEffect(() => {
+    const handleClickOutside = (e) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+            setIsDropdownOpen(false);
+        }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+}, []);
+
+
     const isResetting = useRef(false);
 
     const handleReset = () => {
@@ -84,6 +179,11 @@ export default function Search({
                 isResetting.current = false;
             }
         });
+
+        setSelectedDisplay("");
+        setHoveredHealthcare(null);
+        setSelectedSubType(null);
+        setShowOptionsList(false);
     };
 
     useEffect(() => {
@@ -166,19 +266,146 @@ export default function Search({
                         </select>
                     </div>
 
-                    {/* healthcare filters */}
-                    <div className="flex-1">
-                        <select
-                            value={workFrom}
-                            onChange={(e) => setWorkFrom(e.target.value)}
-                            className="w-full p-3 bg-white border border-slate-200 rounded-2xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer h-full"
+
+                    {/* Nested Healthcare Dropdown */}
+                    <div 
+    className="flex-1 relative" 
+    ref={dropdownRef}
+    // LEVEL 1 HOVER
+    onMouseEnter={() => setIsDropdownOpen(true)}
+    onMouseLeave={() => {
+        setIsDropdownOpen(false);
+        setHoveredHealthcare(null); // Reset sub-menus when leaving the main area
+        setShowOptionsList(false);
+    }}
+>
+    <button
+        type="button"
+        className="w-full p-3 bg-white border border-slate-200 rounded-2xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer h-full text-left pl-4 flex items-center justify-between"
+    >
+        <span className={selectedDisplay ? "text-slate-900 font-medium" : "text-slate-500"}>
+            {selectedDisplay || "Select Healthcare"}
+        </span>
+        <svg 
+            className={`w-5 h-5 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} 
+            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+        </svg>
+    </button>
+
+    {/* MAIN DROPDOWN (Level 1 Menu) */}
+    {isDropdownOpen && (
+        <div 
+            className="absolute left-0 right-0 w-full bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
+            style={{ top: 'calc(100% - 1px)', zIndex: 2147483647 }}
+        >
+            <div className="max-h-96 overflow-y-auto">
+                {healthcares.length === 0 ? (
+                    <div className="px-5 py-8 text-center text-slate-500">No categories</div>
+                ) : (
+                    healthcares.map((hc) => (
+                        <div 
+                            key={hc.id} 
+                            className="border-b border-slate-100 last:border-0"
+                            // LEVEL 2 HOVER: Show sub-types when hovering a category
+                            onMouseEnter={() => setHoveredHealthcare(hc)}
                         >
-                            <option value="" disabled>Select healthcare</option>
-                            {workFroms.map((item) => (
-                                <option key={item.id} value={item.name}>{item.name}</option>
-                            ))}
-                        </select>
-                    </div>
+                            <div className="w-full px-5 py-3 hover:bg-slate-50 text-left font-medium text-slate-800 flex items-center justify-between transition-colors cursor-default">
+                                <span>{hc.name}</span>
+                                <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+
+                            {/* LEVEL 2: Sub-types List */}
+                            {hoveredHealthcare?.id === hc.id && (
+                                <div className="bg-slate-50 border-t border-slate-200">
+                                    {[
+                                        { key: 'rn', label: 'Registered Nurse (RN)' },
+                                        { key: 'physician', label: 'Physician' },
+                                        { key: 'allied_health', label: 'Allied Health' },
+                                        { key: 'administrator', label: 'Administrator' },
+                                    ].map(({ key, label }) => {
+                                        const options = hc[key] || [];
+                                        if (options.length === 0) return null;
+
+                                        return (
+                                            <div
+                                                key={key}
+                                                // LEVEL 3 HOVER: Show options list when hovering a sub-type
+                                                onMouseEnter={() => {
+                                                    setSelectedSubType({
+                                                        healthcare: hc.name,
+                                                        type: label,
+                                                        options,
+                                                        key,
+                                                    });
+                                                    setShowOptionsList(true);
+                                                }}
+                                                className="w-full px-8 py-3 text-left hover:bg-orange-100 text-slate-700 flex justify-between items-center transition-colors cursor-default"
+                                            >
+                                                <div>
+                                                    <div className="font-medium">{label}</div>
+                                                    <div className="text-xs text-slate-500">{options.length} options</div>
+                                                </div>
+                                                <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    )}
+
+    {/* LEVEL 3: Options List (Floating Sidebar) */}
+    {showOptionsList && selectedSubType && (
+        <div 
+            className="absolute bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
+            // Position this to the RIGHT of the main menu for a true fly-out feel
+            style={{ 
+                top: 'calc(100% - 1px)', 
+                left: '100%', 
+                marginLeft: '10px',
+                width: '300px',
+                zIndex: 2147483647 
+            }}
+            // Stay open while hovering the list
+            onMouseEnter={() => setShowOptionsList(true)}
+        >
+            <div className="max-h-96 overflow-y-auto">
+                <div className="px-6 py-4 bg-orange-50 border-b border-slate-200 sticky top-0 z-10">
+                    <h3 className="text-sm font-bold text-slate-900">{selectedSubType.type}</h3>
+                </div>
+                <div className="p-2">
+                    {selectedSubType.options.map((option, i) => {
+                        const displayText = typeof option === 'string' ? option : option?.name;
+                        return (
+                            <button
+                                key={i}
+                                type="button"
+                                onClick={() => {
+                                    setSelectedDisplay(displayText);
+                                    setIsDropdownOpen(false);
+                                    setShowOptionsList(false);
+                                }}
+                                className="w-full text-left px-4 py-2 rounded-lg hover:bg-orange-100 transition-all text-sm text-slate-800"
+                            >
+                                {displayText}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+        </div>
+    )}
+</div>
 
                     {/* Advanced Toggle */}
                     {/* <button

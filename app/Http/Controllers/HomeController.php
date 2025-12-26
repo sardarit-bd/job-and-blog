@@ -9,6 +9,7 @@ use App\Models\JobType;
 use App\Models\Industry;
 use App\Models\Schedule;
 use App\Models\Experience;
+use App\Models\Healthcare;
 use App\Models\LicensedIn;
 use App\Models\LicensedType;
 use App\Models\RemoteStatus;
@@ -62,6 +63,10 @@ class HomeController extends Controller
 
         if ($request->filled('selectedAlliedHealth')) {
             $query->where('allied_health', $request->selectedAlliedHealth);
+        }
+
+        if ($request->filled('healthcareId')) {
+            $query->where('healthcare_id', $request->healthcareId);
         }
 
 
@@ -135,6 +140,7 @@ class HomeController extends Controller
                 ->pluck('allied_health')
                 ->values(),
 
+            'healthcares' => Healthcare::select(['id', 'name', 'rn', 'physician', 'allied_health', 'administrator'])->get(),
 
         ]);
 

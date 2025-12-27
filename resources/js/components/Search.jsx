@@ -25,11 +25,35 @@ export default function Search({
     const [licensedType, setLicensedType] = useState(filters.licensedType || "");
     const [selectedPhysician, setSelectedPhysician] = useState(filters.physician || "");
     const [selectedAlliedHealth, setSelectedAlliedHealth] = useState(filters.allied_health || "");
+    const [isInsideDropdown, setIsInsideDropdown] = useState(false);
+    const [isFinalSelection, setIsFinalSelection] = useState(false);
 
     const dropdownRef = useRef(null);
+    const closeTimeoutRef = useRef(null);
 
-    // Helper to get button position for the Portal
+    // Track if this is the initial load to prevent immediate search
+    const isInitialMount = useRef(true);
+
+    const cancelClose = () => {
+        if (closeTimeoutRef.current) {
+            clearTimeout(closeTimeoutRef.current);
+            closeTimeoutRef.current = null;
+        }
+    };
+
+    const scheduleClose = () => {
+        cancelClose();
+        // Increased timeout to 150ms to give the user time to click before the portal unmounts
+        closeTimeoutRef.current = setTimeout(() => {
+            setIsDropdownOpen(false);
+            setHoveredHealthcare(null);
+            setShowOptionsList(false);
+            setIsInsideDropdown(false);
+        }, 150);
+    };
+
     const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
+    const [subTypeCoords, setSubTypeCoords] = useState(null);
 
     const updateCoords = () => {
         if (dropdownRef.current) {
@@ -43,24 +67,22 @@ export default function Search({
         }
     };
 
-    const debouncedSearch = useDebouncedCallback((keywordValue) => {
-        submitSearch({ keyword: keywordValue });
-    }, 500);
-
     const submitSearch = (updatedParams = {}) => {
         const params = {
-            ...(keyword ? { keyword } : {}),
+            keyword: keyword || undefined,
             industry: industry || undefined,
             workFrom: workFrom || undefined,
             licensedIn: licensedIn || undefined,
             licensedType: licensedType || undefined,
-            selectedPhysician: selectedPhysician || undefined,
-            selectedAlliedHealth: selectedAlliedHealth || undefined,
+            physician: selectedPhysician || undefined,
+            allied_health: selectedAlliedHealth || undefined,
             ...updatedParams,
         };
+
         const queryParams = Object.fromEntries(
             Object.entries(params).filter(([_, v]) => v !== '' && v !== undefined)
         );
+
         router.visit(window.location.pathname, {
             method: 'get',
             data: queryParams,
@@ -71,18 +93,24 @@ export default function Search({
         });
     };
 
-    useEffect(() => { debouncedSearch(keyword); }, [keyword]);
-    useEffect(() => { submitSearch(); }, [industry, workFrom, licensedIn, licensedType, selectedPhysician, selectedAlliedHealth]);
+    const debouncedSearch = useDebouncedCallback((val) => {
+        submitSearch({ keyword: val });
+    }, 500);
 
     useEffect(() => {
-        if (!selectedSubType) {
-            setSelectedDisplay("");
+        if (isInitialMount.current) return;
+        debouncedSearch(keyword);
+    }, [keyword]);
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
             return;
         }
-        const { healthcare, type } = selectedSubType;
-        setSelectedDisplay(`${type} → ${healthcare}`);
-    }, [selectedSubType]);
+        submitSearch();
+    }, [industry, workFrom, licensedIn, licensedType, selectedPhysician, selectedAlliedHealth]);
 
+    // Handle clicks outside to close dropdown
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -95,13 +123,43 @@ export default function Search({
     }, []);
 
     const handleReset = () => {
-        const states = [setKeyword, setIndustry, setWorkFrom, setLicensedIn, setLicensedType, setSelectedPhysician, setSelectedAlliedHealth];
-        states.forEach(fn => fn(""));
-        router.get(window.location.pathname, {}, { preserveState: false, preserveScroll: true });
+        setKeyword("");
+        setIndustry("");
+        setWorkFrom("");
+        setLicensedIn("");
+        setLicensedType("");
+        setSelectedPhysician("");
+        setSelectedAlliedHealth("");
         setSelectedDisplay("");
+        setIsFinalSelection(false);
         setHoveredHealthcare(null);
         setSelectedSubType(null);
         setShowOptionsList(false);
+        router.get(window.location.pathname, {}, { preserveState: false, preserveScroll: true });
+    };
+
+    const handleLevel3Click = (displayText, key) => {
+        cancelClose(); // Stop any pending close actions
+        setIsFinalSelection(true);
+        setSelectedDisplay(displayText);
+        
+        // Reset both before setting the specific one to avoid filter conflicts
+        setSelectedPhysician("");
+        setSelectedAlliedHealth("");
+
+        if (key === 'physician') {
+            setSelectedPhysician(displayText);
+        } else if (key === 'allied_health') {
+            setSelectedAlliedHealth(displayText);
+        } else {
+            // For RN or Admin where you just want the display text but no specific physician/allied ID
+            submitSearch(); 
+        }
+
+        // Close everything
+        setIsDropdownOpen(false);
+        setShowOptionsList(false);
+        setIsInsideDropdown(false);
     };
 
     const hasActiveFilters = keyword || industry || workFrom || licensedIn || licensedType || selectedPhysician || selectedAlliedHealth;
@@ -162,19 +220,16 @@ export default function Search({
                             </select>
                         </div>
 
-                        {/* Healthcare Dropdown Toggle Area */}
+                        {/* Healthcare Dropdown */}
                         <div 
                             className="flex-1 relative" 
                             ref={dropdownRef}
                             onMouseEnter={() => {
                                 updateCoords();
                                 setIsDropdownOpen(true);
+                                cancelClose();
                             }}
-                            onMouseLeave={() => {
-                                setIsDropdownOpen(false);
-                                setHoveredHealthcare(null);
-                                setShowOptionsList(false);
-                            }}
+                            onMouseLeave={scheduleClose}
                         >
                             <button type="button" className="w-full p-3 bg-white border border-slate-200 rounded-2xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer h-full text-left pl-4 flex items-center justify-between">
                                 <span className={selectedDisplay ? "text-slate-900 font-medium" : "text-slate-500"}>
@@ -185,19 +240,22 @@ export default function Search({
                                 </svg>
                             </button>
 
-                            {/* PORTAL: Level 1 & 2 Menu */}
+                            {/* Level 1 & 2 Menu */}
                             {isDropdownOpen && createPortal(
                                 <div 
                                     className="absolute bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
                                     style={{ 
                                         position: 'absolute',
-                                        top: coords.top,
+                                        top: coords.top + 5,
                                         left: coords.left,
                                         width: coords.width,
                                         zIndex: 9999
                                     }}
-                                    onMouseEnter={() => setIsDropdownOpen(true)}
-                                    onMouseLeave={() => setIsDropdownOpen(false)}
+                                    onMouseEnter={() => {
+                                        cancelClose();
+                                        setIsInsideDropdown(true);
+                                    }}
+                                    onMouseLeave={scheduleClose}
                                 >
                                     <div className="max-h-96 overflow-y-auto">
                                         {healthcares.map((hc) => (
@@ -209,16 +267,27 @@ export default function Search({
                                                 {hoveredHealthcare?.id === hc.id && (
                                                     <div className="bg-slate-50 border-t border-slate-200">
                                                         {[{ key: 'rn', label: 'Registered Nurse (RN)' }, { key: 'physician', label: 'Physician' }, { key: 'allied_health', label: 'Allied Health' }, { key: 'administrator', label: 'Administrator' }].map(({ key, label }) => {
-                                                            const options = hc[key] || [];
+                                                            const raw = hc[key];
+                                                            const options = Array.isArray(raw) ? raw : (raw ? [{ name: raw }] : []);
                                                             if (options.length === 0) return null;
+
                                                             return (
-                                                                <div key={key} className="w-full px-8 py-3 text-left hover:bg-orange-100 text-slate-700 flex justify-between items-center transition-colors cursor-default"
-                                                                    onMouseEnter={() => {
+                                                                <div
+                                                                    key={key}
+                                                                    className="w-full px-8 py-3 text-left hover:bg-orange-100 text-slate-700 flex justify-between items-center transition-colors cursor-default"
+                                                                    onMouseEnter={(e) => {
+                                                                        const rect = e.currentTarget.getBoundingClientRect();
+                                                                        setSubTypeCoords({
+                                                                            top: rect.top + window.scrollY,
+                                                                            left: rect.left + window.scrollX,
+                                                                            right: rect.right + window.scrollX,
+                                                                            height: rect.height,
+                                                                        });
                                                                         setSelectedSubType({ healthcare: hc.name, type: label, options, key });
                                                                         setShowOptionsList(true);
                                                                     }}
                                                                 >
-                                                                    <div><div className="font-medium text-sm">{label}</div></div>
+                                                                    <div className="font-medium text-sm">{label}</div>
                                                                     <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
                                                                 </div>
                                                             );
@@ -232,47 +301,47 @@ export default function Search({
                                 document.body
                             )}
 
-                            {/* PORTAL: Level 3 Fly-out */}
+                            {/* Level 3 Fly-out */}
                             {showOptionsList && selectedSubType && createPortal(
                                 <div 
                                     className="absolute bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
-                                    style={{ 
+                                    style={{
                                         position: 'absolute',
-                                        top: coords.top, 
-                                        left: coords.right + 10, 
+                                        top: subTypeCoords ? subTypeCoords.top : coords.top,
+                                        left: (() => {
+                                            const gap = 10;
+                                            const menuWidth = 300;
+                                            const parentLeft = subTypeCoords ? subTypeCoords.left : coords.left;
+                                            const preferredLeft = parentLeft - menuWidth - gap;
+                                            return preferredLeft < 0 ? (subTypeCoords?.right ?? coords.right) + gap : preferredLeft;
+                                        })(),
                                         width: '300px',
-                                        zIndex: 10000 
+                                        zIndex: 10000,
                                     }}
-                                    onMouseEnter={() => setShowOptionsList(true)}
-                                    onMouseLeave={() => setShowOptionsList(false)}
+                                    onMouseEnter={() => {
+                                        cancelClose();
+                                        setIsInsideDropdown(true);
+                                    }}
+                                    onMouseLeave={scheduleClose}
                                 >
                                     <div className="max-h-96 overflow-y-auto">
                                         <div className="px-6 py-4 bg-orange-50 border-b border-slate-200 sticky top-0 z-10">
                                             <h3 className="text-sm font-bold text-slate-900">{selectedSubType.type}</h3>
                                         </div>
                                         <div className="p-2">
-                                            {/* ADD THE ARRAY CHECK HERE */}
-                                            {Array.isArray(selectedSubType.options) ? (
-                                                selectedSubType.options.map((option, i) => {
-                                                    const displayText = typeof option === 'string' ? option : option?.name;
-                                                    return (
-                                                        <button 
-                                                            key={i} 
-                                                            type="button" 
-                                                            className="w-full text-left px-4 py-2 rounded-lg hover:bg-orange-100 transition-all text-sm text-slate-800"
-                                                            onClick={() => {
-                                                                setSelectedDisplay(displayText);
-                                                                setIsDropdownOpen(false);
-                                                                setShowOptionsList(false);
-                                                            }}
-                                                        >
-                                                            {displayText}
-                                                        </button>
-                                                    );
-                                                })
-                                            ) : (
-                                                <div className="px-4 py-2 text-sm text-slate-500">No options available</div>
-                                            )}
+                                            {selectedSubType.options.map((option, i) => {
+                                                const displayText = typeof option === 'string' ? option : option?.name;
+                                                return (
+                                                    <button 
+                                                        key={i} 
+                                                        type="button" 
+                                                        className="w-full text-left px-4 py-2 rounded-lg hover:bg-orange-100 transition-all text-sm text-slate-800"
+                                                        onClick={() => handleLevel3Click(displayText, selectedSubType.key)}
+                                                    >
+                                                        {displayText}
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 </div>,

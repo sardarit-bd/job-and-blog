@@ -124,21 +124,21 @@ class HomeController extends Controller
             'licensedIns' => LicensedIn::all(['id', 'name', 'short']),
             'licensedTypes' => LicensedType::orderBy('id')
                 ->pluck('name'),
-            'physicians' => AllJob::query()
-                ->whereNotNull('physician')
-                ->where('physician', '!=', '')
-                ->distinct()
-                ->orderBy('physician')
-                ->pluck('physician')
-                ->values(),
+            // 'physicians' => AllJob::query()
+            //     ->whereNotNull('physician')
+            //     ->where('physician', '!=', '')
+            //     ->distinct()
+            //     ->orderBy('physician')
+            //     ->pluck('physician')
+            //     ->values(),
 
-            'alliedHealthOptions' => AllJob::query()
-                ->whereNotNull('allied_health')
-                ->where('allied_health', '!=', '')
-                ->distinct()
-                ->orderBy('allied_health')
-                ->pluck('allied_health')
-                ->values(),
+            // 'alliedHealthOptions' => AllJob::query()
+            //     ->whereNotNull('allied_health')
+            //     ->where('allied_health', '!=', '')
+            //     ->distinct()
+            //     ->orderBy('allied_health')
+            //     ->pluck('allied_health')
+            //     ->values(),
 
             'healthcares' => Healthcare::select(['id', 'name', 'rn', 'physician', 'allied_health', 'administrator'])->get(),
 

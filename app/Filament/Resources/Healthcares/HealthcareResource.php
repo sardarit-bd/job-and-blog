@@ -18,12 +18,15 @@ use Filament\Forms\Components\Repeater;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use App\Filament\Resources\Healthcares\Pages\ManageHealthcares;
+use UnitEnum;
 
 class HealthcareResource extends Resource
 {
     protected static ?string $model = Healthcare::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEyeDropper;
+
+    protected static string | UnitEnum | null $navigationGroup = 'Company & Industry';
 
     public static function form(Schema $schema): Schema
     {
@@ -68,7 +71,7 @@ class HealthcareResource extends Resource
                 ->label('Allied Health')
                 ->schema([
                     TextInput::make('name')
-                        ->label('Allied Health Professional')
+                        ->label('Allied Health')
                         ->required(),
                 ])
                 ->columns(1)

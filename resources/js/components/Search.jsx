@@ -14,6 +14,8 @@ export default function Search({
     healthcares = [],
 }) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isIndustryDropdownOpen, setIsIndustryDropdownOpen] = useState(false);
+    const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
     const [hoveredHealthcare, setHoveredHealthcare] = useState(null);
     const [selectedSubType, setSelectedSubType] = useState(null);
     const [selectedDisplay, setSelectedDisplay] = useState("");
@@ -25,16 +27,21 @@ export default function Search({
     const [licensedType, setLicensedType] = useState(filters.licensedType || "");
     const [selectedPhysician, setSelectedPhysician] = useState(filters.physician || "");
     const [selectedAlliedHealth, setSelectedAlliedHealth] = useState(filters.allied_health || "");
+    const [selectedRn, setSelectedRn] = useState(filters.rn || "");
+    const [selectedAdministrator, setSelectedAdministrator] = useState(filters.administrator || "");
     const [isInsideDropdown, setIsInsideDropdown] = useState(false);
     const [isFinalSelection, setIsFinalSelection] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [expandedSubType, setExpandedSubType] = useState(null);
 
     const dropdownRef = useRef(null);
+    const industryDropdownRef = useRef(null);
+    const locationDropdownRef = useRef(null);
     const closeTimeoutRef = useRef(null);
+    const industryCloseTimeoutRef = useRef(null);
+    const locationCloseTimeoutRef = useRef(null);
     const isInitialMount = useRef(true);
 
-    // Detect mobile view
     useEffect(() => {
         const checkMobile = () => {
             setIsMobile(window.innerWidth < 768);
@@ -51,6 +58,20 @@ export default function Search({
         }
     };
 
+    const cancelIndustryClose = () => {
+        if (industryCloseTimeoutRef.current) {
+            clearTimeout(industryCloseTimeoutRef.current);
+            industryCloseTimeoutRef.current = null;
+        }
+    };
+
+    const cancelLocationClose = () => {
+        if (locationCloseTimeoutRef.current) {
+            clearTimeout(locationCloseTimeoutRef.current);
+            locationCloseTimeoutRef.current = null;
+        }
+    };
+
     const scheduleClose = () => {
         cancelClose();
         closeTimeoutRef.current = setTimeout(() => {
@@ -62,13 +83,53 @@ export default function Search({
         }, 150);
     };
 
+    const scheduleIndustryClose = () => {
+        cancelIndustryClose();
+        industryCloseTimeoutRef.current = setTimeout(() => {
+            setIsIndustryDropdownOpen(false);
+        }, 150);
+    };
+
+    const scheduleLocationClose = () => {
+        cancelLocationClose();
+        locationCloseTimeoutRef.current = setTimeout(() => {
+            setIsLocationDropdownOpen(false);
+        }, 150);
+    };
+
     const [coords, setCoords] = useState({ top: 0, left: 0, width: 0, right: 0 });
+    const [industryCoords, setIndustryCoords] = useState({ top: 0, left: 0, width: 0, right: 0 });
+    const [locationCoords, setLocationCoords] = useState({ top: 0, left: 0, width: 0, right: 0 });
     const [subTypeCoords, setSubTypeCoords] = useState(null);
 
     const updateCoords = () => {
         if (dropdownRef.current) {
             const rect = dropdownRef.current.getBoundingClientRect();
             setCoords({
+                top: rect.bottom + window.scrollY,
+                left: rect.left + window.scrollX,
+                width: rect.width,
+                right: rect.right + window.scrollX
+            });
+        }
+    };
+
+    const updateIndustryCoords = () => {
+        if (industryDropdownRef.current) {
+            const rect = industryDropdownRef.current.getBoundingClientRect();
+            setIndustryCoords({
+                top: rect.bottom + window.scrollY,
+                left: rect.left + window.scrollX,
+                width: rect.width,
+                right: rect.right + window.scrollX
+            });
+        }
+    };
+
+    const updateLocationCoords = () => {
+        if (locationDropdownRef.current) {
+            const rect = locationDropdownRef.current.getBoundingClientRect();
+            setLocationCoords({
                 top: rect.bottom + window.scrollY,
                 left: rect.left + window.scrollX,
                 width: rect.width,
@@ -86,6 +147,8 @@ export default function Search({
             licensedType: licensedType || undefined,
             physician: selectedPhysician || undefined,
             allied_health: selectedAlliedHealth || undefined,
+            rn: selectedRn || undefined,
+            administrator: selectedAdministrator || undefined,
             ...updatedParams,
         };
 
@@ -118,7 +181,7 @@ export default function Search({
             return;
         }
         submitSearch();
-    }, [industry, workFrom, licensedIn, licensedType, selectedPhysician, selectedAlliedHealth]);
+    }, [industry, workFrom, licensedIn, licensedType, selectedPhysician, selectedAlliedHealth, selectedRn, selectedAdministrator]);
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -136,6 +199,28 @@ export default function Search({
                     setExpandedSubType(null);
                 }
             }
+
+            if (industryDropdownRef.current && !industryDropdownRef.current.contains(e.target)) {
+                const portaledDropdowns = document.querySelectorAll('div[data-portal-dropdown]');
+                const clickedInsidePortal = Array.from(portaledDropdowns).some(
+                    (el) => el.contains(e.target)
+                );
+
+                if (!clickedInsidePortal) {
+                    setIsIndustryDropdownOpen(false);
+                }
+            }
+
+            if (locationDropdownRef.current && !locationDropdownRef.current.contains(e.target)) {
+                const portaledDropdowns = document.querySelectorAll('div[data-portal-dropdown]');
+                const clickedInsidePortal = Array.from(portaledDropdowns).some(
+                    (el) => el.contains(e.target)
+                );
+
+                if (!clickedInsidePortal) {
+                    setIsLocationDropdownOpen(false);
+                }
+            }
         };
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -149,6 +234,8 @@ export default function Search({
         setLicensedType("");
         setSelectedPhysician("");
         setSelectedAlliedHealth("");
+        setSelectedRn("");
+        setSelectedAdministrator("");
         setSelectedDisplay("");
         setIsFinalSelection(false);
         setHoveredHealthcare(null);
@@ -163,21 +250,49 @@ export default function Search({
         setIsFinalSelection(true);
         setSelectedDisplay(displayText);
         
-        setSelectedPhysician("");
-        setSelectedAlliedHealth("");
+        // Prepare the updated params
+        const updatedParams = {
+            physician: undefined,
+            allied_health: undefined,
+            rn: undefined,
+            administrator: undefined,
+        };
 
+        // Set the selected value
         if (key === 'physician') {
+            updatedParams.physician = displayText;
             setSelectedPhysician(displayText);
+            setSelectedAlliedHealth("");
+            setSelectedRn("");
+            setSelectedAdministrator("");
         } else if (key === 'allied_health') {
+            updatedParams.allied_health = displayText;
             setSelectedAlliedHealth(displayText);
-        } else {
-            submitSearch(); 
+            setSelectedPhysician("");
+            setSelectedRn("");
+            setSelectedAdministrator("");
+        } else if (key === 'rn') {
+            updatedParams.rn = displayText;
+            setSelectedRn(displayText);
+            setSelectedPhysician("");
+            setSelectedAlliedHealth("");
+            setSelectedAdministrator("");
+        } else if (key === 'administrator') {
+            updatedParams.administrator = displayText;
+            setSelectedAdministrator(displayText);
+            setSelectedPhysician("");
+            setSelectedAlliedHealth("");
+            setSelectedRn("");
         }
 
+        // Close dropdowns
         setIsDropdownOpen(false);
         setShowOptionsList(false);
         setIsInsideDropdown(false);
         setExpandedSubType(null);
+
+        // Trigger search immediately with the new value
+        submitSearch(updatedParams);
     };
 
     const toggleSubTypeExpansion = (hcName, typeKey) => {
@@ -185,7 +300,7 @@ export default function Search({
         setExpandedSubType(expandedSubType === key ? null : key);
     };
 
-    const hasActiveFilters = keyword || industry || workFrom || licensedIn || licensedType || selectedPhysician || selectedAlliedHealth;
+    const hasActiveFilters = keyword || industry || workFrom || licensedIn || licensedType || selectedPhysician || selectedAlliedHealth || selectedRn || selectedAdministrator;
 
     return (
         <>
@@ -215,7 +330,7 @@ export default function Search({
                     <div className="flex flex-col lg:flex-row gap-3">
                         {/* Keyword */}
                         <div className="relative flex-[2]">
-                            <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                             <input
@@ -223,24 +338,163 @@ export default function Search({
                                 placeholder="Search by Keyword"
                                 value={keyword}
                                 onChange={(e) => setKeyword(e.target.value)}
+                                style={{ caretColor: '#0f172a' }}
                                 className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:ring-1 focus:ring-[#F8721B] focus:border-transparent transition-all outline-none"
                             />
                         </div>
 
                         {/* Industry */}
-                        <div className="flex-1">
-                            <select value={industry} onChange={(e) => setIndustry(e.target.value)} className="w-full p-3 bg-white border border-slate-200 rounded-2xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer h-full">
-                                <option value="" disabled>Select Industry</option>
-                                {industries.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}
-                            </select>
+                        <div 
+                            className="flex-1 relative"
+                            ref={industryDropdownRef}
+                            onMouseEnter={() => {
+                                if (!isMobile) {
+                                    updateIndustryCoords();
+                                    setIsIndustryDropdownOpen(true);
+                                    cancelIndustryClose();
+                                }
+                            }}
+                            onMouseLeave={() => {
+                                if (!isMobile) {
+                                    scheduleIndustryClose();
+                                }
+                            }}
+                        >
+                            <button 
+                                type="button" 
+                                className="w-full p-3 bg-white border border-slate-200 rounded-2xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer h-full text-left pl-4 flex items-center justify-between"
+                                onClick={() => {
+                                    if (isMobile) {
+                                        updateIndustryCoords();
+                                        setIsIndustryDropdownOpen(!isIndustryDropdownOpen);
+                                    }
+                                }}
+                            >
+                                <span className={industry ? "text-slate-900 font-medium" : "text-slate-500"}>
+                                    {industry || "Select Industry"}
+                                </span>
+                                <svg className={`w-5 h-5 transition-transform ${isIndustryDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+
+                            {isIndustryDropdownOpen && createPortal(
+                                <div 
+                                    data-portal-dropdown
+                                    className="absolute bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
+                                    style={{ 
+                                        position: 'absolute',
+                                        top: industryCoords.top + 5,
+                                        left: industryCoords.left,
+                                        width: industryCoords.width,
+                                        zIndex: 9999
+                                    }}
+                                    onMouseEnter={() => {
+                                        if (!isMobile) {
+                                            cancelIndustryClose();
+                                        }
+                                    }}
+                                    onMouseLeave={() => {
+                                        if (!isMobile) {
+                                            scheduleIndustryClose();
+                                        }
+                                    }}
+                                >
+                                    <div className="max-h-96 overflow-y-auto">
+                                        {industries.map((item) => (
+                                            <button
+                                                key={item.id}
+                                                type="button"
+                                                className="w-full px-5 py-3 hover:bg-orange-100 text-left text-slate-800 transition-colors border-b border-slate-100 last:border-0"
+                                                onClick={() => {
+                                                    setIndustry(item.name);
+                                                    setIsIndustryDropdownOpen(false);
+                                                }}
+                                            >
+                                                {item.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>,
+                                document.body
+                            )}
                         </div>
 
                         {/* Location */}
-                        <div className="flex-1">
-                            <select value={workFrom} onChange={(e) => setWorkFrom(e.target.value)} className="w-full p-3 bg-white border border-slate-200 rounded-2xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer h-full">
-                                <option value="" disabled>Select State/Location</option>
-                                {workFroms.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}
-                            </select>
+                        <div 
+                            className="flex-1 relative"
+                            ref={locationDropdownRef}
+                            onMouseEnter={() => {
+                                if (!isMobile) {
+                                    updateLocationCoords();
+                                    setIsLocationDropdownOpen(true);
+                                    cancelLocationClose();
+                                }
+                            }}
+                            onMouseLeave={() => {
+                                if (!isMobile) {
+                                    scheduleLocationClose();
+                                }
+                            }}
+                        >
+                            <button 
+                                type="button" 
+                                className="w-full p-3 bg-white border border-slate-200 rounded-2xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer h-full text-left pl-4 flex items-center justify-between"
+                                onClick={() => {
+                                    if (isMobile) {
+                                        updateLocationCoords();
+                                        setIsLocationDropdownOpen(!isLocationDropdownOpen);
+                                    }
+                                }}
+                            >
+                                <span className={workFrom ? "text-slate-900 font-medium" : "text-slate-500"}>
+                                    {workFrom || "Select State/Location"}
+                                </span>
+                                <svg className={`w-5 h-5 transition-transform ${isLocationDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+
+                            {isLocationDropdownOpen && createPortal(
+                                <div 
+                                    data-portal-dropdown
+                                    className="absolute bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
+                                    style={{ 
+                                        position: 'absolute',
+                                        top: locationCoords.top + 5,
+                                        left: locationCoords.left,
+                                        width: locationCoords.width,
+                                        zIndex: 9999
+                                    }}
+                                    onMouseEnter={() => {
+                                        if (!isMobile) {
+                                            cancelLocationClose();
+                                        }
+                                    }}
+                                    onMouseLeave={() => {
+                                        if (!isMobile) {
+                                            scheduleLocationClose();
+                                        }
+                                    }}
+                                >
+                                    <div className="max-h-96 overflow-y-auto">
+                                        {workFroms.map((item) => (
+                                            <button
+                                                key={item.id}
+                                                type="button"
+                                                className="w-full px-5 py-3 hover:bg-orange-100 text-left text-slate-800 transition-colors border-b border-slate-100 last:border-0"
+                                                onClick={() => {
+                                                    setWorkFrom(item.name);
+                                                    setIsLocationDropdownOpen(false);
+                                                }}
+                                            >
+                                                {item.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>,
+                                document.body
+                            )}
                         </div>
 
                         {/* Healthcare Dropdown */}
@@ -278,7 +532,6 @@ export default function Search({
                                 </svg>
                             </button>
 
-                            {/* Level 1 & 2 Menu */}
                             {isDropdownOpen && createPortal(
                                 <div 
                                     data-portal-dropdown
@@ -361,7 +614,6 @@ export default function Search({
                                                                         </svg>
                                                                     </div>
                                                                     
-                                                                    {/* Mobile Accordion Content */}
                                                                     {isMobile && isExpanded && (
                                                                         <div className="bg-orange-50 border-t border-orange-100">
                                                                             {options.map((option, i) => {
@@ -391,7 +643,6 @@ export default function Search({
                                 document.body
                             )}
 
-                            {/* Level 3 Fly-out — Desktop Only */}
                             {!isMobile && showOptionsList && selectedSubType && createPortal(
                                 <div 
                                     data-portal-dropdown

@@ -30,8 +30,10 @@ class HomeController extends Controller
             'jobRemoteStatuses',
             'jobWorkFroms',
             'experiences',
+            'healthcare.industry', // Load healthcare with industry relationship
         ]);
 
+        // Keyword search
         if ($request->filled('keyword')) {
             $query->where(function ($q) use ($request) {
                 $q->where('title', 'like', "%{$request->keyword}%")
@@ -41,76 +43,94 @@ class HomeController extends Controller
             });
         }
 
+        // Industry filter - filter by healthcare's industry
         if ($request->filled('industry')) {
-            $query->whereHas('industries', fn($q) => $q->where('name', $request->industry));
+            $query->whereHas('healthcare.industry', function($q) use ($request) {
+                $q->where('name', $request->industry);
+            });
         }
 
+        // Work From (Location/State) filter
         if ($request->filled('workFrom')) {
             $query->whereHas('jobWorkFroms', fn($q) => $q->where('name', $request->workFrom));
         }
 
+        // Licensed In filter
         if ($request->filled('licensedIn')) {
             $query->whereHas('jobLicensedIns', fn($q) => $q->where('name', $request->licensedIn));
         }
 
+        // Licensed Type filter
         if ($request->filled('licensedType')) {
             $query->where('license_type', $request->licensedType);
         }
 
-        if ($request->filled('selectedPhysician')) {
-            $query->where('physician', $request->selectedPhysician);
+        // Healthcare specialty filters - filtering through healthcare relationship
+        if ($request->filled('rn')) {
+            $query->whereHas('healthcare', function($q) use ($request) {
+                $q->whereJsonContains('rn', ['name' => $request->rn]);
+            });
         }
 
-        if ($request->filled('selectedAlliedHealth')) {
-            $query->where('allied_health', $request->selectedAlliedHealth);
+        if ($request->filled('physician')) {
+            $query->whereHas('healthcare', function($q) use ($request) {
+                $q->whereJsonContains('physician', ['name' => $request->physician]);
+            });
         }
 
+        if ($request->filled('allied_health')) {
+            $query->whereHas('healthcare', function($q) use ($request) {
+                $q->whereJsonContains('allied_health', ['name' => $request->allied_health]);
+            });
+        }
+
+        if ($request->filled('administrator')) {
+            $query->whereHas('healthcare', function($q) use ($request) {
+                $q->where('administrator', $request->administrator);
+            });
+        }
+
+        // Healthcare ID filter
         if ($request->filled('healthcareId')) {
             $query->where('healthcare_id', $request->healthcareId);
         }
 
-
-
-
-        $userCompanyId = auth()->check() ? auth()->user()->id : null;
-        $userId = auth()->id();
-
         $jobs = $query->latest()->simplePaginate(10)->through(function ($job) use ($userId) {
-        $isOwner = ($userId !== null && (int)$userId === (int)$job->user_id);
+            $isOwner = ($userId !== null && (int)$userId === (int)$job->user_id);
 
-        $alreadyApplied = false;
-        if ($userId) {
-            $alreadyApplied = $job->applications()
-                ->where('user_id', $userId)
-                ->exists();
-        }
+            $alreadyApplied = false;
+            if ($userId) {
+                $alreadyApplied = $job->applications()
+                    ->where('user_id', $userId)
+                    ->exists();
+            }
 
-        return [
-            'id' => $job->id,
-            'title' => $job->title,
-            'slug' => $job->slug,
-            'description' => $job->description,
-            'already_applied' => $alreadyApplied,
-            'can_apply' => !$isOwner, 
-            
-            'company' => [
-                'id' => $job->company_id,
-                'name' => $job->company?->name,
-                'logo' => $job->company?->image ? asset('storage/' . $job->company->image) : null,
-                'description' => $job->company?->description,
-            ],
-            'job_types' => $job->jobTypes->pluck('name'),
-            'specialities' => $job->specialities->pluck('name'),
-            'licenses' => $job->jobLicensedIns->pluck('name', 'short'),
-            'remote_statuses' => $job->jobRemoteStatuses->pluck('name'),
-            'work_from' => $job->jobWorkFroms->pluck('name', 'short'),
-            'experiences' => $job->experiences->pluck('title'),
-            'salary_range' => $job->salary_range,
-            'salaray_transparency' => $job->salaray_transparency,
-            'schedule' => $job->schedule,
-            'image' => $job->image_url,
-            'posted_at' => date('m-d-Y', strtotime($job->created_at)),
-        ];
+            return [
+                'id' => $job->id,
+                'title' => $job->title,
+                'slug' => $job->slug,
+                'description' => $job->description,
+                'already_applied' => $alreadyApplied,
+                'can_apply' => !$isOwner, 
+                
+                'company' => [
+                    'id' => $job->company_id,
+                    'name' => $job->company?->name,
+                    'logo' => $job->company?->image ? asset('storage/' . $job->company->image) : null,
+                    'description' => $job->company?->description,
+                ],
+                'job_types' => $job->jobTypes->pluck('name'),
+                'specialities' => $job->specialities->pluck('name'),
+                'licenses' => $job->jobLicensedIns->pluck('name', 'short'),
+                'remote_statuses' => $job->jobRemoteStatuses->pluck('name'),
+                'work_from' => $job->jobWorkFroms->pluck('name', 'short'),
+                'experiences' => $job->experiences->pluck('title'),
+                'salary_range' => $job->salary_range,
+                'salaray_transparency' => $job->salaray_transparency,
+                'schedule' => $job->schedule,
+                'image' => $job->image_url,
+                'posted_at' => date('m-d-Y', strtotime($job->created_at)),
+            ];
         });
 
         $hero = Hero::latest()->first();
@@ -124,25 +144,7 @@ class HomeController extends Controller
             'licensedIns' => LicensedIn::all(['id', 'name', 'short']),
             'licensedTypes' => LicensedType::orderBy('id')
                 ->pluck('name'),
-            // 'physicians' => AllJob::query()
-            //     ->whereNotNull('physician')
-            //     ->where('physician', '!=', '')
-            //     ->distinct()
-            //     ->orderBy('physician')
-            //     ->pluck('physician')
-            //     ->values(),
-
-            // 'alliedHealthOptions' => AllJob::query()
-            //     ->whereNotNull('allied_health')
-            //     ->where('allied_health', '!=', '')
-            //     ->distinct()
-            //     ->orderBy('allied_health')
-            //     ->pluck('allied_health')
-            //     ->values(),
-
             'healthcares' => Healthcare::select(['id', 'name', 'rn', 'physician', 'allied_health', 'administrator'])->get(),
-
         ]);
-
     }
 }

@@ -70,7 +70,7 @@ export default function Home() {
 
     return (
     <AppLayout>
-        <Head title="Remote Nursing Jobs" />
+        <Head title="Remote Jobs | Job Board" />
 
         {/* --- HERO SECTION --- */}
         <section className="relative pt-5 pb-5 sm:pt-24 sm:pb-20 overflow-hidden">

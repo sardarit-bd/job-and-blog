@@ -233,29 +233,80 @@ export default function Search({
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+
     const handleReset = () => {
-        setKeyword("");
-        setIndustry("");
-        setWorkFrom("");
-        setLicensedIn("");
-        setLicensedType("");
-        setSelectedPhysician("");
-        setSelectedAlliedHealth("");
-        setSelectedRn("");
-        setSelectedAdministrator("");
-        setSelectedDisplay("");
-        setIsFinalSelection(false);
-        setHoveredHealthcare(null);
-        setSelectedSubType(null);
-        setShowOptionsList(false);
-        setExpandedSubType(null);
-        setExpandedHealthcare(null);
+    
+    
+    const scrollPosition = window.scrollY;
+    
+    // Close ALL dropdowns FIRST before any state changes
+    setIsDropdownOpen(false);
+    setIsIndustryDropdownOpen(false);
+    setIsLocationDropdownOpen(false);
+
+    // Clear all pending timeouts to prevent any delayed dropdown actions
+    cancelClose();
+    cancelIndustryClose();
+    cancelLocationClose();
+
+    // Reset all filter values
+    setKeyword("");
+    setIndustry("");
+    setWorkFrom("");
+    setLicensedIn("");
+    setLicensedType("");
+    setSelectedPhysician("");
+    setSelectedAlliedHealth("");
+    setSelectedRn("");
+    setSelectedAdministrator("");
+    setSelectedDisplay("");
+    setIsFinalSelection(false);
+    setHoveredHealthcare(null);
+    setSelectedSubType(null);
+    setShowOptionsList(false);
+    setExpandedSubType(null);
+    setExpandedHealthcare(null);
+
+    
+    
+    // Monitor scroll changes
+    let scrollCheckInterval;
+    const startScrollMonitoring = () => {
+        scrollCheckInterval = setInterval(() => {
+           
+        }, 100);
         
-        router.get(window.location.pathname, {}, { 
-            preserveState: false, 
-            preserveScroll: (page) => true
-        });
+        setTimeout(() => {
+            clearInterval(scrollCheckInterval);
+            
+        }, 2000);
     };
+    
+    router.get(window.location.pathname, {}, {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+        only: ['jobs', 'filters'],
+        onBefore: () => {
+            
+        },
+        onStart: () => {
+            
+        },
+        onSuccess: () => {
+         
+            window.scrollTo(0, scrollPosition);
+            startScrollMonitoring();
+        },
+        onFinish: () => {
+            
+            requestAnimationFrame(() => {
+                window.scrollTo(0, scrollPosition);
+                
+            });
+        }
+    });
+};
 
     const handleLevel3Click = (displayText, key) => {
         cancelClose();
@@ -656,14 +707,14 @@ export default function Search({
                                                                         </div>
                                                                         
                                                                         {isMobile && isSubExpanded && (
-                                                                            <div className="bg-orange-50 border-t border-orange-100">
+                                                                            <div className="bg-white">
                                                                                 {options.map((option, i) => {
                                                                                     const displayText = typeof option === 'string' ? option : option?.name;
                                                                                     return (
                                                                                         <button 
                                                                                             key={i} 
                                                                                             type="button" 
-                                                                                            className="w-full text-left px-12 py-2.5 hover:bg-orange-100 transition-all text-sm text-slate-800 border-b border-orange-100 last:border-0"
+                                                                                            className="w-full text-left px-12 py-2.5 hover:bg-orange-100 transition-all text-sm text-slate-800 border-b border-gray-200 last:border-0"
                                                                                             onClick={() => handleLevel3Click(displayText, key)}
                                                                                         >
                                                                                             {displayText}

@@ -30,23 +30,43 @@ export default function Home() {
     const isFilteringRef = useRef(false);
     const searchSectionRef = useRef(null);
     const savedScrollPosition = useRef(null);
+    const preventScrollRestore = useRef(false);
 
     useEffect(() => {
         
-        if (allJobs.length > 0 && pageJobs.data.length !== allJobs.length) {
+        // Capture current scroll immediately
+        const currentScroll = window.scrollY;
+        
+        // Check if this is a reset (no filters at all)
+        const hasNoFilters = !filters.keyword && !filters.industry && !filters.workFrom && 
+                             !filters.licensedIn && !filters.licensedType && !filters.physician && 
+                             !filters.allied_health && !filters.rn && !filters.administrator;
+        
+        
+        if (hasNoFilters) {
+          
+            preventScrollRestore.current = true;
+            savedScrollPosition.current = null;  // Clear any saved scroll position
+        }
+        
+        // Only save scroll position if NOT in prevent mode
+        if (!preventScrollRestore.current && allJobs.length > 0 && pageJobs.data.length !== allJobs.length) {
+            
             savedScrollPosition.current = window.scrollY;
         }
         
         // Check if this is a filter change (jobs reset to first page)
         if (pageJobs.data.length > 0 && allJobs.length > pageJobs.data.length) {
+            
             isFilteringRef.current = true;
         }
         
         setAllJobs(pageJobs.data);
         setNextPageUrl(pageJobs.next_page_url);
         
-        // Restore scroll position after render
-        if (savedScrollPosition.current !== null) {
+        // Restore scroll position after render ONLY if not in prevent mode
+        if (!preventScrollRestore.current && savedScrollPosition.current !== null) {
+           
             requestAnimationFrame(() => {
                 window.scrollTo(0, savedScrollPosition.current);
               
@@ -55,6 +75,32 @@ export default function Home() {
                     savedScrollPosition.current = null;
                 }, 0);
             });
+        } else {
+           
+            // If we're in reset mode, force maintain the current scroll
+            if (preventScrollRestore.current && currentScroll > 0) {
+                
+                requestAnimationFrame(() => {
+                    window.scrollTo(0, currentScroll);
+                    setTimeout(() => {
+                        window.scrollTo(0, currentScroll);
+                    }, 0);
+                    setTimeout(() => {
+                        window.scrollTo(0, currentScroll);
+                    }, 50);
+                    setTimeout(() => {
+                        window.scrollTo(0, currentScroll);
+                    }, 100);
+                });
+            }
+        }
+        
+        // Reset the prevent flag after a delay
+        if (preventScrollRestore.current) {
+            setTimeout(() => {
+                
+                preventScrollRestore.current = false;
+            }, 500);
         }
         
         // Reset filtering flag after a brief delay
@@ -63,7 +109,9 @@ export default function Home() {
                 isFilteringRef.current = false;
             }, 100);
         }
-    }, [pageJobs.data, pageJobs.next_page_url]);
+        
+        
+    }, [pageJobs.data, pageJobs.next_page_url, filters]);
 
     const observerRef = useRef();
 
@@ -159,7 +207,12 @@ export default function Home() {
         </section>
 
         {/* --- SEARCH & LISTINGS --- */}
-        <main id="job-listings" className="py-10 sm:py-20 bg-slate-50/50 backdrop-blur-sm border-t border-slate-200">
+        <main
+            id="job-listings"
+            className="py-10 sm:py-20 bg-slate-50/50 backdrop-blur-sm border-t border-slate-200"
+            style={{ overflowAnchor: "none" }}
+        >
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <div className="mb-12">

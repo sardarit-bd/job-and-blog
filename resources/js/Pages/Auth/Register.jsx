@@ -46,7 +46,7 @@ export default function Register() {
         </div>
 
         {/* Register Card */}
-        <div className="relative z-10 w-full max-w-md bg-white rounded-2xl border border-slate-200 p-8 transition-all">
+        <div className="relative z-10 w-full max-w-md bg-white rounded-2xl border border-slate-200 p-8 my-4 transition-all">
           
           {/* Header */}
           <div className="mb-8">

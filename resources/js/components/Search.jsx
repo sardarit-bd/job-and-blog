@@ -33,6 +33,7 @@ export default function Search({
     const [isFinalSelection, setIsFinalSelection] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [expandedSubType, setExpandedSubType] = useState(null);
+    const [expandedHealthcare, setExpandedHealthcare] = useState(null);
 
     const dropdownRef = useRef(null);
     const industryDropdownRef = useRef(null);
@@ -80,6 +81,7 @@ export default function Search({
             setShowOptionsList(false);
             setIsInsideDropdown(false);
             setExpandedSubType(null);
+            setExpandedHealthcare(null);
         }, 150);
     };
 
@@ -197,6 +199,7 @@ export default function Search({
                     setHoveredHealthcare(null);
                     setSelectedSubType(null);
                     setExpandedSubType(null);
+                    setExpandedHealthcare(null);
                 }
             }
 
@@ -242,6 +245,7 @@ export default function Search({
         setSelectedSubType(null);
         setShowOptionsList(false);
         setExpandedSubType(null);
+        setExpandedHealthcare(null);
         router.get(window.location.pathname, {}, { preserveState: false, preserveScroll: true });
     };
 
@@ -290,9 +294,18 @@ export default function Search({
         setShowOptionsList(false);
         setIsInsideDropdown(false);
         setExpandedSubType(null);
+        setExpandedHealthcare(null);
 
         // Trigger search immediately with the new value
         submitSearch(updatedParams);
+    };
+
+    const toggleHealthcareExpansion = (hcId) => {
+        setExpandedHealthcare(expandedHealthcare === hcId ? null : hcId);
+        // Reset level 3 expansion when toggling level 2
+        if (expandedHealthcare !== hcId) {
+            setExpandedSubType(null);
+        }
     };
 
     const toggleSubTypeExpansion = (hcName, typeKey) => {
@@ -556,88 +569,109 @@ export default function Search({
                                     }}
                                 >
                                     <div className="max-h-96 overflow-y-auto">
-                                        {healthcares.map((hc) => (
-                                            <div 
-                                                key={hc.id} 
-                                                className="border-b border-slate-100 last:border-0" 
-                                                onMouseEnter={() => {
-                                                    if (!isMobile) {
-                                                        setHoveredHealthcare(hc);
-                                                    }
-                                                }}
-                                            >
-                                                <div className="w-full px-5 py-3 hover:bg-slate-50 text-left font-medium text-slate-800 flex items-center justify-between transition-colors cursor-default">
-                                                    <span>{hc.name}</span>
-                                                    <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
-                                                </div>
-                                                {((isMobile && isDropdownOpen) || (!isMobile && hoveredHealthcare?.id === hc.id)) && (
-                                                    <div className="bg-slate-50 border-t border-slate-200">
-                                                        {[{ key: 'rn', label: 'Registered Nurse (RN)' }, { key: 'physician', label: 'Physician' }, { key: 'allied_health', label: 'Allied Health' }, { key: 'administrator', label: 'Administrator' }].map(({ key, label }) => {
-                                                            const raw = hc[key];
-                                                            const options = Array.isArray(raw) ? raw : (raw ? [{ name: raw }] : []);
-                                                            if (options.length === 0) return null;
+                                        {healthcares.map((hc) => {
+                                            const isExpanded = isMobile && expandedHealthcare === hc.id;
+                                            const isHovered = !isMobile && hoveredHealthcare?.id === hc.id;
+                                            
+                                            return (
+                                                <div 
+                                                    key={hc.id} 
+                                                    className="border-b border-slate-100 last:border-0" 
+                                                    onMouseEnter={() => {
+                                                        if (!isMobile) {
+                                                            setHoveredHealthcare(hc);
+                                                        }
+                                                    }}
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        className="w-full px-5 py-3 hover:bg-slate-50 text-left font-medium text-slate-800 flex items-center justify-between transition-colors"
+                                                        onClick={() => {
+                                                            if (isMobile) {
+                                                                toggleHealthcareExpansion(hc.id);
+                                                            }
+                                                        }}
+                                                    >
+                                                        <span>{hc.name}</span>
+                                                        <svg 
+                                                            className={`w-4 h-4 text-slate-400 transition-transform ${isMobile && isExpanded ? 'rotate-90' : ''}`} 
+                                                            fill="none" 
+                                                            stroke="currentColor" 
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                                        </svg>
+                                                    </button>
+                                                    
+                                                    {(isExpanded || isHovered) && (
+                                                        <div className="bg-slate-50 border-t border-slate-200">
+                                                            {[{ key: 'rn', label: 'Registered Nurse (RN)' }, { key: 'physician', label: 'Physician' }, { key: 'allied_health', label: 'Allied Health' }, { key: 'administrator', label: 'Administrator' }].map(({ key, label }) => {
+                                                                const raw = hc[key];
+                                                                const options = Array.isArray(raw) ? raw : (raw ? [{ name: raw }] : []);
+                                                                if (options.length === 0) return null;
 
-                                                            const expansionKey = `${hc.name}-${key}`;
-                                                            const isExpanded = expandedSubType === expansionKey;
+                                                                const expansionKey = `${hc.name}-${key}`;
+                                                                const isSubExpanded = expandedSubType === expansionKey;
 
-                                                            return (
-                                                                <div key={key}>
-                                                                    <div
-                                                                        className="w-full px-8 py-3 text-left hover:bg-orange-100 text-slate-700 flex justify-between items-center transition-colors cursor-pointer"
-                                                                        onMouseEnter={(e) => {
-                                                                            if (!isMobile) {
-                                                                                const rect = e.currentTarget.getBoundingClientRect();
-                                                                                setSubTypeCoords({
-                                                                                    top: rect.top + window.scrollY,
-                                                                                    left: rect.left + window.scrollX,
-                                                                                    right: rect.right + window.scrollX,
-                                                                                    height: rect.height,
-                                                                                });
-                                                                                setSelectedSubType({ healthcare: hc.name, type: label, options, key });
-                                                                                setShowOptionsList(true);
-                                                                            }
-                                                                        }}
-                                                                        onClick={() => {
-                                                                            if (isMobile) {
-                                                                                toggleSubTypeExpansion(hc.name, key);
-                                                                            }
-                                                                        }}
-                                                                    >
-                                                                        <div className="font-medium text-sm">{label}</div>
-                                                                        <svg 
-                                                                            className={`w-4 h-4 text-slate-400 transition-transform ${isMobile && isExpanded ? 'rotate-90' : ''}`} 
-                                                                            fill="none" 
-                                                                            stroke="currentColor" 
-                                                                            viewBox="0 0 24 24"
+                                                                return (
+                                                                    <div key={key}>
+                                                                        <div
+                                                                            className="w-full px-8 py-3 text-left hover:bg-orange-100 text-slate-700 flex justify-between items-center transition-colors cursor-pointer"
+                                                                            onMouseEnter={(e) => {
+                                                                                if (!isMobile) {
+                                                                                    const rect = e.currentTarget.getBoundingClientRect();
+                                                                                    setSubTypeCoords({
+                                                                                        top: rect.top + window.scrollY,
+                                                                                        left: rect.left + window.scrollX,
+                                                                                        right: rect.right + window.scrollX,
+                                                                                        height: rect.height,
+                                                                                    });
+                                                                                    setSelectedSubType({ healthcare: hc.name, type: label, options, key });
+                                                                                    setShowOptionsList(true);
+                                                                                }
+                                                                            }}
+                                                                            onClick={() => {
+                                                                                if (isMobile) {
+                                                                                    toggleSubTypeExpansion(hc.name, key);
+                                                                                }
+                                                                            }}
                                                                         >
-                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                                                        </svg>
-                                                                    </div>
-                                                                    
-                                                                    {isMobile && isExpanded && (
-                                                                        <div className="bg-orange-50 border-t border-orange-100">
-                                                                            {options.map((option, i) => {
-                                                                                const displayText = typeof option === 'string' ? option : option?.name;
-                                                                                return (
-                                                                                    <button 
-                                                                                        key={i} 
-                                                                                        type="button" 
-                                                                                        className="w-full text-left px-12 py-2.5 hover:bg-orange-100 transition-all text-sm text-slate-800 border-b border-orange-100 last:border-0"
-                                                                                        onClick={() => handleLevel3Click(displayText, key)}
-                                                                                    >
-                                                                                        {displayText}
-                                                                                    </button>
-                                                                                );
-                                                                            })}
+                                                                            <div className="font-medium text-sm">{label}</div>
+                                                                            <svg 
+                                                                                className={`w-4 h-4 text-slate-400 transition-transform ${isMobile && isSubExpanded ? 'rotate-90' : ''}`} 
+                                                                                fill="none" 
+                                                                                stroke="currentColor" 
+                                                                                viewBox="0 0 24 24"
+                                                                            >
+                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                                                            </svg>
                                                                         </div>
-                                                                    )}
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
+                                                                        
+                                                                        {isMobile && isSubExpanded && (
+                                                                            <div className="bg-white">
+                                                                                {options.map((option, i) => {
+                                                                                    const displayText = typeof option === 'string' ? option : option?.name;
+                                                                                    return (
+                                                                                        <button 
+                                                                                            key={i} 
+                                                                                            type="button" 
+                                                                                            className="w-full text-left px-12 py-2.5 hover:bg-orange-100 transition-all text-sm text-slate-800 border-b border-gray-200 last:border-0"
+                                                                                            onClick={() => handleLevel3Click(displayText, key)}
+                                                                                        >
+                                                                                            {displayText}
+                                                                                        </button>
+                                                                                    );
+                                                                                })}
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>,
                                 document.body

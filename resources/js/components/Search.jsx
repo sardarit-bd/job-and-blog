@@ -43,7 +43,6 @@ export default function Search({
 
     const scheduleClose = () => {
         cancelClose();
-        // Increased timeout to 150ms to give the user time to click before the portal unmounts
         closeTimeoutRef.current = setTimeout(() => {
             setIsDropdownOpen(false);
             setHoveredHealthcare(null);
@@ -114,8 +113,18 @@ export default function Search({
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-                setIsDropdownOpen(false);
-                setShowOptionsList(false);
+                // Check if click happened inside any of the portaled dropdown menus
+                const portaledDropdowns = document.querySelectorAll('div[data-portal-dropdown]');
+                const clickedInsidePortal = Array.from(portaledDropdowns).some(
+                    (el) => el.contains(e.target)
+                );
+
+                if (!clickedInsidePortal) {
+                    setIsDropdownOpen(false);
+                    setShowOptionsList(false);
+                    setHoveredHealthcare(null);
+                    setSelectedSubType(null);
+                }
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -243,6 +252,7 @@ export default function Search({
                             {/* Level 1 & 2 Menu */}
                             {isDropdownOpen && createPortal(
                                 <div 
+                                    data-portal-dropdown
                                     className="absolute bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
                                     style={{ 
                                         position: 'absolute',
@@ -304,6 +314,7 @@ export default function Search({
                             {/* Level 3 Fly-out */}
                             {showOptionsList && selectedSubType && createPortal(
                                 <div 
+                                    data-portal-dropdown
                                     className="absolute bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
                                     style={{
                                         position: 'absolute',
@@ -318,11 +329,9 @@ export default function Search({
                                         width: '300px',
                                         zIndex: 10000,
                                     }}
-                                    onMouseEnter={() => {
-                                        cancelClose();
-                                        setIsInsideDropdown(true);
-                                    }}
+                                    onMouseEnter={cancelClose}
                                     onMouseLeave={scheduleClose}
+                                    onClick={cancelClose}
                                 >
                                     <div className="max-h-96 overflow-y-auto">
                                         <div className="px-6 py-4 bg-orange-50 border-b border-slate-200 sticky top-0 z-10">

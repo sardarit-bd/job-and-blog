@@ -36,7 +36,7 @@ export default function Header({ auth }) {
                         {auth?.user ? (
                             <Link
                                 href="/dashboard"
-                                className="px-5 py-2 rounded-2xl text-sm font-bold shadow-sm bg-white text-[#F8721B] border border-[#F8721B] hover:bg-[#F8721B] hover:text-white transition-all active:scale-95"
+                                className="px-5 py-2 rounded-3xl text-sm font-bold shadow-sm bg-white text-[#F8721B] border border-[#F8721B] hover:bg-[#F8721B] hover:text-white transition-all active:scale-95"
                             >
                                 Dashboard
                             </Link>
@@ -44,14 +44,14 @@ export default function Header({ auth }) {
                             <>
                                 <Link
                                     href="/login"
-                                    className="px-5 py-2 rounded-2xl text-sm font-bold shadow-sm bg-white text-[#F8721B] border border-[#F8721B] hover:bg-[#F8721B] hover:text-white transition-all active:scale-95"
+                                    className="px-5 py-2 rounded-3xl text-sm font-bold shadow-sm bg-white text-[#F8721B] border border-[#F8721B] hover:bg-[#F8721B] hover:text-white transition-all active:scale-95"
                                 >
                                     Login
                                 </Link>
 
                                 <Link
                                     href="/register"
-                                    className="px-5 py-2 rounded-2xl text-sm font-bold shadow-sm bg-white text-[#F8721B] border border-[#F8721B] hover:bg-[#F8721B] hover:text-white transition-all active:scale-95"
+                                    className="px-5 py-2 rounded-3xl text-sm font-bold shadow-sm bg-white text-[#F8721B] border border-[#F8721B] hover:bg-[#F8721B] hover:text-white transition-all active:scale-95"
                                 >
                                     Register
                                 </Link>
@@ -95,7 +95,7 @@ export default function Header({ auth }) {
                             <Link
                                 href="/dashboard"
                                 onClick={() => setOpen(false)}
-                                className="flex justify-center w-full px-5 py-2 rounded-2xl text-sm font-bold shadow-sm bg-white text-[#F8721B] border border-[#F8721B] hover:bg-[#F8721B] hover:text-white transition-all active:scale-95"
+                                className="flex justify-center w-full px-5 py-2 rounded-3xl text-sm font-bold shadow-sm bg-white text-[#F8721B] border border-[#F8721B] hover:bg-[#F8721B] hover:text-white transition-all active:scale-95"
                             >
                                 Dashboard
                             </Link>
@@ -104,7 +104,7 @@ export default function Header({ auth }) {
                                 <Link
                                     href="/login"
                                     onClick={() => setOpen(false)}
-                                    className="flex justify-center px-5 py-2 rounded-2xl text-sm font-bold shadow-sm bg-[#F8721B] text-white hover:text-white transition-all active:scale-95"
+                                    className="flex justify-center px-5 py-2 rounded-3xl text-sm font-bold shadow-sm bg-[#F8721B] text-white hover:text-white transition-all active:scale-95"
                                 >
                                     Login
                                 </Link>
@@ -112,7 +112,7 @@ export default function Header({ auth }) {
                                 <Link
                                     href="/register"
                                     onClick={() => setOpen(false)}
-                                    className="flex justify-center px-5 py-2 rounded-2xl text-sm font-bold shadow-sm bg-white text-[#F8721B] border border-[#F8721B] hover:bg-[#F8721B] hover:text-white transition-all active:scale-95"
+                                    className="flex justify-center px-5 py-2 rounded-3xl text-sm font-bold shadow-sm bg-white text-[#F8721B] border border-[#F8721B] hover:bg-[#F8721B] hover:text-white transition-all active:scale-95"
                                 >
                                     Register
                                 </Link>

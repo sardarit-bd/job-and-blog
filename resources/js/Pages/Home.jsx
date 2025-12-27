@@ -26,9 +26,52 @@ export default function Home() {
     const [nextPageUrl, setNextPageUrl] = useState(pageJobs.next_page_url);
     const [loading, setLoading] = useState(false);
 
+    // Use a ref to track if we're filtering
+    const isFilteringRef = useRef(false);
+    const searchSectionRef = useRef(null);
+    const savedScrollPosition = useRef(null);
+
     useEffect(() => {
+        console.log('🏠 Home useEffect triggered');
+        console.log('🏠 Previous jobs count:', allJobs.length);
+        console.log('🏠 New jobs count:', pageJobs.data.length);
+        console.log('🏠 Current scroll position:', window.scrollY);
+        
+        // Save scroll position before update
+        if (allJobs.length > 0 && pageJobs.data.length !== allJobs.length) {
+            savedScrollPosition.current = window.scrollY;
+            console.log('🏠 Saved scroll position:', savedScrollPosition.current);
+        }
+        
+        // Check if this is a filter change (jobs reset to first page)
+        if (pageJobs.data.length > 0 && allJobs.length > pageJobs.data.length) {
+            isFilteringRef.current = true;
+            console.log('🏠 Detected filtering action');
+        }
+        
         setAllJobs(pageJobs.data);
         setNextPageUrl(pageJobs.next_page_url);
+        
+        // Restore scroll position after render
+        if (savedScrollPosition.current !== null) {
+            requestAnimationFrame(() => {
+                window.scrollTo(0, savedScrollPosition.current);
+                console.log('🏠 Restored scroll to:', savedScrollPosition.current);
+                setTimeout(() => {
+                    window.scrollTo(0, savedScrollPosition.current);
+                    console.log('🏠 Double-checked scroll at:', window.scrollY);
+                    savedScrollPosition.current = null;
+                }, 0);
+            });
+        }
+        
+        // Reset filtering flag after a brief delay
+        if (isFilteringRef.current) {
+            setTimeout(() => {
+                isFilteringRef.current = false;
+                console.log('🏠 After update - Scroll position:', window.scrollY);
+            }, 100);
+        }
     }, [pageJobs.data, pageJobs.next_page_url]);
 
     const observerRef = useRef();
@@ -56,7 +99,7 @@ export default function Home() {
 
         router.visit(nextPageUrl, {
             preserveState: true,
-            preserveScroll: true,
+            preserveScroll: (page) => true,
             only: ['jobs'],
             onSuccess: (page) => {
                 const newJobs = page.props.jobs;
@@ -142,7 +185,7 @@ export default function Home() {
 
                 </div>
 
-                <section id="jobs" className="min-h-[100vh]">
+                <section id="jobs" className="min-h-[100vh]" style={{ minHeight: 'max(100vh, 1200px)' }}>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 border-b border-slate-200 pb-6">
                         <div>
                             <h3 className="text-3xl font-bold text-slate-900 font-['Poppins'] tracking-tight">
@@ -152,16 +195,16 @@ export default function Home() {
 
                         <div className="self-start sm:self-center mt-4 sm:mt-0">
                             <span className="inline-block text-sm text-black bg-[#BCD0CA] px-4 py-1.5 rounded-full">
-                                {allJobs.length} Position(s) found
+                                {pageJobs.total || allJobs.length} Position(s) found
                             </span>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 gap-6 relative">
+                    <div className="grid grid-cols-1 gap-6 relative" style={{ minHeight: '800px' }}>
                         {allJobs.length > 0 ? (
                             <>
                                 {allJobs.map((job, index) => (
                                     <div
-                                        key={job.id}
+                                        key={`${job.id}-${index}`}
                                         ref={index === allJobs.length - 1 ? lastJobRef : null}
                                         className="group relative transition-all duration-300 hover:-translate-y-1 hover:z-50"
                                     >

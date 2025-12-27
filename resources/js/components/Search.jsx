@@ -141,6 +141,9 @@ export default function Search({
     };
 
     const submitSearch = (updatedParams = {}) => {
+        // Debug: Log scroll position before search
+        console.log('🔍 Before Search - Scroll Position:', window.scrollY);
+        
         const params = {
             keyword: keyword || undefined,
             industry: industry || undefined,
@@ -158,13 +161,30 @@ export default function Search({
             Object.entries(params).filter(([_, v]) => v !== '' && v !== undefined)
         );
 
+        console.log('🔍 Search Params:', queryParams);
+
         router.visit(window.location.pathname, {
             method: 'get',
             data: queryParams,
             only: ['jobs', 'filters'],
             preserveState: true,
-            preserveScroll: true,
+            preserveScroll: (page) => {
+                console.log('🔍 PreserveScroll callback triggered');
+                return true;
+            },
             replace: true,
+            onBefore: () => {
+                console.log('🔍 OnBefore - Scroll Position:', window.scrollY);
+            },
+            onStart: () => {
+                console.log('🔍 OnStart - Scroll Position:', window.scrollY);
+            },
+            onSuccess: () => {
+                console.log('🔍 OnSuccess - Scroll Position:', window.scrollY);
+            },
+            onFinish: () => {
+                console.log('🔍 OnFinish - Scroll Position:', window.scrollY);
+            }
         });
     };
 
@@ -246,7 +266,11 @@ export default function Search({
         setShowOptionsList(false);
         setExpandedSubType(null);
         setExpandedHealthcare(null);
-        router.get(window.location.pathname, {}, { preserveState: false, preserveScroll: true });
+        
+        router.get(window.location.pathname, {}, { 
+            preserveState: false, 
+            preserveScroll: (page) => true
+        });
     };
 
     const handleLevel3Click = (displayText, key) => {
@@ -648,14 +672,14 @@ export default function Search({
                                                                         </div>
                                                                         
                                                                         {isMobile && isSubExpanded && (
-                                                                            <div className="bg-white">
+                                                                            <div className="bg-orange-50 border-t border-orange-100">
                                                                                 {options.map((option, i) => {
                                                                                     const displayText = typeof option === 'string' ? option : option?.name;
                                                                                     return (
                                                                                         <button 
                                                                                             key={i} 
                                                                                             type="button" 
-                                                                                            className="w-full text-left px-12 py-2.5 hover:bg-orange-100 transition-all text-sm text-slate-800 border-b border-gray-200 last:border-0"
+                                                                                            className="w-full text-left px-12 py-2.5 hover:bg-orange-100 transition-all text-sm text-slate-800 border-b border-orange-100 last:border-0"
                                                                                             onClick={() => handleLevel3Click(displayText, key)}
                                                                                         >
                                                                                             {displayText}

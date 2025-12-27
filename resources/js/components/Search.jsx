@@ -27,12 +27,22 @@ export default function Search({
     const [selectedAlliedHealth, setSelectedAlliedHealth] = useState(filters.allied_health || "");
     const [isInsideDropdown, setIsInsideDropdown] = useState(false);
     const [isFinalSelection, setIsFinalSelection] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const [expandedSubType, setExpandedSubType] = useState(null);
 
     const dropdownRef = useRef(null);
     const closeTimeoutRef = useRef(null);
-
-    // Track if this is the initial load to prevent immediate search
     const isInitialMount = useRef(true);
+
+    // Detect mobile view
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     const cancelClose = () => {
         if (closeTimeoutRef.current) {
@@ -48,10 +58,11 @@ export default function Search({
             setHoveredHealthcare(null);
             setShowOptionsList(false);
             setIsInsideDropdown(false);
+            setExpandedSubType(null);
         }, 150);
     };
 
-    const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
+    const [coords, setCoords] = useState({ top: 0, left: 0, width: 0, right: 0 });
     const [subTypeCoords, setSubTypeCoords] = useState(null);
 
     const updateCoords = () => {
@@ -109,11 +120,9 @@ export default function Search({
         submitSearch();
     }, [industry, workFrom, licensedIn, licensedType, selectedPhysician, selectedAlliedHealth]);
 
-    // Handle clicks outside to close dropdown
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-                // Check if click happened inside any of the portaled dropdown menus
                 const portaledDropdowns = document.querySelectorAll('div[data-portal-dropdown]');
                 const clickedInsidePortal = Array.from(portaledDropdowns).some(
                     (el) => el.contains(e.target)
@@ -124,6 +133,7 @@ export default function Search({
                     setShowOptionsList(false);
                     setHoveredHealthcare(null);
                     setSelectedSubType(null);
+                    setExpandedSubType(null);
                 }
             }
         };
@@ -144,15 +154,15 @@ export default function Search({
         setHoveredHealthcare(null);
         setSelectedSubType(null);
         setShowOptionsList(false);
+        setExpandedSubType(null);
         router.get(window.location.pathname, {}, { preserveState: false, preserveScroll: true });
     };
 
     const handleLevel3Click = (displayText, key) => {
-        cancelClose(); // Stop any pending close actions
+        cancelClose();
         setIsFinalSelection(true);
         setSelectedDisplay(displayText);
         
-        // Reset both before setting the specific one to avoid filter conflicts
         setSelectedPhysician("");
         setSelectedAlliedHealth("");
 
@@ -161,14 +171,18 @@ export default function Search({
         } else if (key === 'allied_health') {
             setSelectedAlliedHealth(displayText);
         } else {
-            // For RN or Admin where you just want the display text but no specific physician/allied ID
             submitSearch(); 
         }
 
-        // Close everything
         setIsDropdownOpen(false);
         setShowOptionsList(false);
         setIsInsideDropdown(false);
+        setExpandedSubType(null);
+    };
+
+    const toggleSubTypeExpansion = (hcName, typeKey) => {
+        const key = `${hcName}-${typeKey}`;
+        setExpandedSubType(expandedSubType === key ? null : key);
     };
 
     const hasActiveFilters = keyword || industry || workFrom || licensedIn || licensedType || selectedPhysician || selectedAlliedHealth;
@@ -177,7 +191,7 @@ export default function Search({
         <>
             <div className="text-center font-['Poppins'] space-y-2 pb-6">
                 <p className="text-xl pb-8">REAL QUICK</p>
-                <p className="text-4xl font-semibold">Here’s What You</p>
+                <p className="text-4xl font-semibold">Here's What You</p>
                 <p className="text-4xl text-[#FB721B] font-semibold border-b-4 border-[#FB721B] inline-block pb-7">Need to Know</p>
             </div>
 
@@ -234,13 +248,28 @@ export default function Search({
                             className="flex-1 relative" 
                             ref={dropdownRef}
                             onMouseEnter={() => {
-                                updateCoords();
-                                setIsDropdownOpen(true);
-                                cancelClose();
+                                if (!isMobile) {
+                                    updateCoords();
+                                    setIsDropdownOpen(true);
+                                    cancelClose();
+                                }
                             }}
-                            onMouseLeave={scheduleClose}
+                            onMouseLeave={() => {
+                                if (!isMobile) {
+                                    scheduleClose();
+                                }
+                            }}
                         >
-                            <button type="button" className="w-full p-3 bg-white border border-slate-200 rounded-2xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer h-full text-left pl-4 flex items-center justify-between">
+                            <button 
+                                type="button" 
+                                className="w-full p-3 bg-white border border-slate-200 rounded-2xl text-slate-700 focus:ring-1 focus:ring-[#F8721B] outline-none transition-all cursor-pointer h-full text-left pl-4 flex items-center justify-between"
+                                onClick={() => {
+                                    if (isMobile) {
+                                        updateCoords();
+                                        setIsDropdownOpen(!isDropdownOpen);
+                                    }
+                                }}
+                            >
                                 <span className={selectedDisplay ? "text-slate-900 font-medium" : "text-slate-500"}>
                                     {selectedDisplay || "Select Healthcare"}
                                 </span>
@@ -262,43 +291,94 @@ export default function Search({
                                         zIndex: 9999
                                     }}
                                     onMouseEnter={() => {
-                                        cancelClose();
-                                        setIsInsideDropdown(true);
+                                        if (!isMobile) {
+                                            cancelClose();
+                                            setIsInsideDropdown(true);
+                                        }
                                     }}
-                                    onMouseLeave={scheduleClose}
+                                    onMouseLeave={() => {
+                                        if (!isMobile) {
+                                            scheduleClose();
+                                        }
+                                    }}
                                 >
                                     <div className="max-h-96 overflow-y-auto">
                                         {healthcares.map((hc) => (
-                                            <div key={hc.id} className="border-b border-slate-100 last:border-0" onMouseEnter={() => setHoveredHealthcare(hc)}>
+                                            <div 
+                                                key={hc.id} 
+                                                className="border-b border-slate-100 last:border-0" 
+                                                onMouseEnter={() => {
+                                                    if (!isMobile) {
+                                                        setHoveredHealthcare(hc);
+                                                    }
+                                                }}
+                                            >
                                                 <div className="w-full px-5 py-3 hover:bg-slate-50 text-left font-medium text-slate-800 flex items-center justify-between transition-colors cursor-default">
                                                     <span>{hc.name}</span>
                                                     <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
                                                 </div>
-                                                {hoveredHealthcare?.id === hc.id && (
+                                                {((isMobile && isDropdownOpen) || (!isMobile && hoveredHealthcare?.id === hc.id)) && (
                                                     <div className="bg-slate-50 border-t border-slate-200">
                                                         {[{ key: 'rn', label: 'Registered Nurse (RN)' }, { key: 'physician', label: 'Physician' }, { key: 'allied_health', label: 'Allied Health' }, { key: 'administrator', label: 'Administrator' }].map(({ key, label }) => {
                                                             const raw = hc[key];
                                                             const options = Array.isArray(raw) ? raw : (raw ? [{ name: raw }] : []);
                                                             if (options.length === 0) return null;
 
+                                                            const expansionKey = `${hc.name}-${key}`;
+                                                            const isExpanded = expandedSubType === expansionKey;
+
                                                             return (
-                                                                <div
-                                                                    key={key}
-                                                                    className="w-full px-8 py-3 text-left hover:bg-orange-100 text-slate-700 flex justify-between items-center transition-colors cursor-default"
-                                                                    onMouseEnter={(e) => {
-                                                                        const rect = e.currentTarget.getBoundingClientRect();
-                                                                        setSubTypeCoords({
-                                                                            top: rect.top + window.scrollY,
-                                                                            left: rect.left + window.scrollX,
-                                                                            right: rect.right + window.scrollX,
-                                                                            height: rect.height,
-                                                                        });
-                                                                        setSelectedSubType({ healthcare: hc.name, type: label, options, key });
-                                                                        setShowOptionsList(true);
-                                                                    }}
-                                                                >
-                                                                    <div className="font-medium text-sm">{label}</div>
-                                                                    <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+                                                                <div key={key}>
+                                                                    <div
+                                                                        className="w-full px-8 py-3 text-left hover:bg-orange-100 text-slate-700 flex justify-between items-center transition-colors cursor-pointer"
+                                                                        onMouseEnter={(e) => {
+                                                                            if (!isMobile) {
+                                                                                const rect = e.currentTarget.getBoundingClientRect();
+                                                                                setSubTypeCoords({
+                                                                                    top: rect.top + window.scrollY,
+                                                                                    left: rect.left + window.scrollX,
+                                                                                    right: rect.right + window.scrollX,
+                                                                                    height: rect.height,
+                                                                                });
+                                                                                setSelectedSubType({ healthcare: hc.name, type: label, options, key });
+                                                                                setShowOptionsList(true);
+                                                                            }
+                                                                        }}
+                                                                        onClick={() => {
+                                                                            if (isMobile) {
+                                                                                toggleSubTypeExpansion(hc.name, key);
+                                                                            }
+                                                                        }}
+                                                                    >
+                                                                        <div className="font-medium text-sm">{label}</div>
+                                                                        <svg 
+                                                                            className={`w-4 h-4 text-slate-400 transition-transform ${isMobile && isExpanded ? 'rotate-90' : ''}`} 
+                                                                            fill="none" 
+                                                                            stroke="currentColor" 
+                                                                            viewBox="0 0 24 24"
+                                                                        >
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                                                        </svg>
+                                                                    </div>
+                                                                    
+                                                                    {/* Mobile Accordion Content */}
+                                                                    {isMobile && isExpanded && (
+                                                                        <div className="bg-orange-50 border-t border-orange-100">
+                                                                            {options.map((option, i) => {
+                                                                                const displayText = typeof option === 'string' ? option : option?.name;
+                                                                                return (
+                                                                                    <button 
+                                                                                        key={i} 
+                                                                                        type="button" 
+                                                                                        className="w-full text-left px-12 py-2.5 hover:bg-orange-100 transition-all text-sm text-slate-800 border-b border-orange-100 last:border-0"
+                                                                                        onClick={() => handleLevel3Click(displayText, key)}
+                                                                                    >
+                                                                                        {displayText}
+                                                                                    </button>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                    )}
                                                                 </div>
                                                             );
                                                         })}
@@ -311,8 +391,8 @@ export default function Search({
                                 document.body
                             )}
 
-                            {/* Level 3 Fly-out */}
-                            {showOptionsList && selectedSubType && createPortal(
+                            {/* Level 3 Fly-out — Desktop Only */}
+                            {!isMobile && showOptionsList && selectedSubType && createPortal(
                                 <div 
                                     data-portal-dropdown
                                     className="absolute bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
@@ -324,7 +404,9 @@ export default function Search({
                                             const menuWidth = 300;
                                             const parentLeft = subTypeCoords ? subTypeCoords.left : coords.left;
                                             const preferredLeft = parentLeft - menuWidth - gap;
-                                            return preferredLeft < 0 ? (subTypeCoords?.right ?? coords.right) + gap : preferredLeft;
+                                            return preferredLeft < 0 
+                                                ? (subTypeCoords?.right ?? coords.right) + gap 
+                                                : preferredLeft;
                                         })(),
                                         width: '300px',
                                         zIndex: 10000,

@@ -32,21 +32,14 @@ export default function Home() {
     const savedScrollPosition = useRef(null);
 
     useEffect(() => {
-        console.log('🏠 Home useEffect triggered');
-        console.log('🏠 Previous jobs count:', allJobs.length);
-        console.log('🏠 New jobs count:', pageJobs.data.length);
-        console.log('🏠 Current scroll position:', window.scrollY);
         
-        // Save scroll position before update
         if (allJobs.length > 0 && pageJobs.data.length !== allJobs.length) {
             savedScrollPosition.current = window.scrollY;
-            console.log('🏠 Saved scroll position:', savedScrollPosition.current);
         }
         
         // Check if this is a filter change (jobs reset to first page)
         if (pageJobs.data.length > 0 && allJobs.length > pageJobs.data.length) {
             isFilteringRef.current = true;
-            console.log('🏠 Detected filtering action');
         }
         
         setAllJobs(pageJobs.data);
@@ -56,10 +49,9 @@ export default function Home() {
         if (savedScrollPosition.current !== null) {
             requestAnimationFrame(() => {
                 window.scrollTo(0, savedScrollPosition.current);
-                console.log('🏠 Restored scroll to:', savedScrollPosition.current);
+              
                 setTimeout(() => {
                     window.scrollTo(0, savedScrollPosition.current);
-                    console.log('🏠 Double-checked scroll at:', window.scrollY);
                     savedScrollPosition.current = null;
                 }, 0);
             });
@@ -69,7 +61,6 @@ export default function Home() {
         if (isFilteringRef.current) {
             setTimeout(() => {
                 isFilteringRef.current = false;
-                console.log('🏠 After update - Scroll position:', window.scrollY);
             }, 100);
         }
     }, [pageJobs.data, pageJobs.next_page_url]);
@@ -185,7 +176,7 @@ export default function Home() {
 
                 </div>
 
-                <section id="jobs" className="min-h-[100vh]" style={{ minHeight: 'max(100vh, 1200px)' }}>
+                <section id="jobs" className="min-h-[100vh]" style={{ minHeight: allJobs.length > 0 ? 'max(100vh, 1200px)' : 'auto' }}>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 border-b border-slate-200 pb-6">
                         <div>
                             <h3 className="text-3xl font-bold text-slate-900 font-['Poppins'] tracking-tight">
@@ -199,7 +190,7 @@ export default function Home() {
                             </span>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 gap-6 relative" style={{ minHeight: '800px' }}>
+                    <div className="grid grid-cols-1 gap-6 relative" style={{ minHeight: allJobs.length > 0 ? '800px' : 'auto' }}>
                         {allJobs.length > 0 ? (
                             <>
                                 {allJobs.map((job, index) => (
@@ -220,15 +211,15 @@ export default function Home() {
                                 )}
                             </>
                         ) : (
-                            <div className="text-center py-20 px-6 rounded-[2.5rem] bg-white border border-dashed border-slate-300">
-                                <div className="w-24 h-24 mx-auto bg-slate-50 rounded-full flex items-center justify-center mb-6">
-                                    <svg className="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="text-center py-10 px-6 rounded-[2rem] bg-white border border-dashed border-slate-300">
+                                <div className="w-16 h-16 mx-auto bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                                    <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
                                 </div>
-                                <h4 className="text-2xl font-bold text-slate-900 mb-2">No jobs matched your search</h4>
-                                <p className="text-slate-500 max-w-sm mx-auto">
-                                    Try removing some filters or searching for broader keywords like "RN" or "Case Manager".
+                                <h4 className="text-xl font-bold text-slate-900 mb-1">No jobs matched your search</h4>
+                                <p className="text-sm text-slate-500 max-w-sm mx-auto">
+                                    Try removing some filters or searching for broader keywords.
                                 </p>
                             </div>
                         )}

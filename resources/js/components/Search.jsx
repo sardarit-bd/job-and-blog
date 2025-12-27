@@ -141,8 +141,6 @@ export default function Search({
     };
 
     const submitSearch = (updatedParams = {}) => {
-        // Debug: Log scroll position before search
-        console.log('🔍 Before Search - Scroll Position:', window.scrollY);
         
         const params = {
             keyword: keyword || undefined,
@@ -161,7 +159,6 @@ export default function Search({
             Object.entries(params).filter(([_, v]) => v !== '' && v !== undefined)
         );
 
-        console.log('🔍 Search Params:', queryParams);
 
         router.visit(window.location.pathname, {
             method: 'get',
@@ -169,22 +166,9 @@ export default function Search({
             only: ['jobs', 'filters'],
             preserveState: true,
             preserveScroll: (page) => {
-                console.log('🔍 PreserveScroll callback triggered');
                 return true;
             },
             replace: true,
-            onBefore: () => {
-                console.log('🔍 OnBefore - Scroll Position:', window.scrollY);
-            },
-            onStart: () => {
-                console.log('🔍 OnStart - Scroll Position:', window.scrollY);
-            },
-            onSuccess: () => {
-                console.log('🔍 OnSuccess - Scroll Position:', window.scrollY);
-            },
-            onFinish: () => {
-                console.log('🔍 OnFinish - Scroll Position:', window.scrollY);
-            }
         });
     };
 

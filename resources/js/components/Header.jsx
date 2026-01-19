@@ -98,9 +98,23 @@ export default function Header({ auth }) {
                     <a
                         href="/#jobs"
                         onClick={() => setOpen(false)}
-                        className="text-center pt-2 rounded-xl font-bold text-slate-600 hover:bg-[#FB721B] hover:text-white"
+                        className="text-center py-2 rounded-xl font-bold text-slate-600 hover:bg-[#FB721B] hover:text-white"
                     >
                         Browse Jobs
+                    </a>
+
+                    <a
+                        href="/blogs"
+                        className="text-center py-2 rounded-xl font-bold text-slate-600 hover:bg-[#FB721B] hover:text-white"
+                    >
+                        Blogs
+                    </a>
+
+                    <a
+                        href="/about"
+                        className="text-center py-2 rounded-xl font-bold text-slate-600 hover:bg-[#FB721B] hover:text-white"
+                    >
+                        About Me
                     </a>
 
                     {/* Mobile Auth */}

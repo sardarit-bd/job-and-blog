@@ -14,7 +14,9 @@ class BlogHeroForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
+            ->columns(3)
             ->components([
+                // Left side - Hero Content (takes 2 columns)
                 Section::make('Hero Content')
                     ->schema([
                         RichEditor::make('title')
@@ -37,11 +39,14 @@ class BlogHeroForm
                             ->placeholder('Enter hero description or motto')
                             ->helperText('Brief description or tagline for the blog section'),
                     ])
+                    ->columnSpan(2)
                     ->columns(1),
 
-                Section::make('Hero Image')
+                // Right side - Hero Image & Status (takes 1 column)
+                Section::make('Settings')
                     ->schema([
                         FileUpload::make('image')
+                            ->label('Hero Image')
                             ->image()
                             ->directory('blog-hero')
                             ->disk('public')
@@ -55,15 +60,15 @@ class BlogHeroForm
                             ->nullable()
                             ->columnSpanFull()
                             ->helperText('Recommended size: 1200x800px. Max: 5MB'),
-                    ]),
 
-                Section::make('Status')
-                    ->schema([
                         Toggle::make('is_active')
                             ->label('Active Hero')
                             ->helperText('⚠️ Only one hero can be active at a time. Activating this will deactivate others.')
-                            ->default(true),
-                    ]),
+                            ->default(true)
+                            ->columnSpanFull(),
+                    ])
+                    ->columnSpan(1)
+                    ->columns(1),
             ]);
     }
 }

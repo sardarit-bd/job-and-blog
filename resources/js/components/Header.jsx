@@ -29,6 +29,20 @@ export default function Header({ auth }) {
                         >
                             Browse Jobs
                         </a>
+
+                        <a
+                            href="/blogs"
+                            className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-white rounded-xl hover:bg-[#FB721B] transition-all"
+                        >
+                            Blogs
+                        </a>
+
+                        <a
+                            href="/about"
+                            className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-white rounded-xl hover:bg-[#FB721B] transition-all"
+                        >
+                            About Me
+                        </a>
                     </nav>
 
                     {/* Desktop Auth (Hidden on Mobile) */}

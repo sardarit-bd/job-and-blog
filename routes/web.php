@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Cache\RateLimiting\Limit;
 use App\Http\Controllers\ProfileController;
@@ -26,6 +27,12 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', function () {
         return Inertia::render('Auth/Register');
     })->name('register');
+
+
+    // blog
+    Route::get('/blogs', function () {
+        return Inertia::render('Blog');
+    })->name('blogs');
 
     
     RateLimiter::for('forgot-password', function (Request $request) {
@@ -52,6 +59,11 @@ Route::middleware('guest')->group(function () {
 Route::get('/', HomeController::class)->name('home');
 Route::get('/job/{slug}', JobDetailController::class)->name('job-detail');
 Route::get('/company/{id}', [CompanyAboutController::class, 'show'])->name('company-about');
+
+
+// blog routes
+Route::get('/blogs', [BlogController::class, 'index'])->name('blogs');
+Route::get('/blogs/{slug}', [BlogController::class, 'show'])->name('blogs.show');
 
 
 

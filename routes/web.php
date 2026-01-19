@@ -10,6 +10,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Cache\RateLimiting\Limit;
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\RateLimiter;
 use App\Http\Controllers\JobDetailController;
@@ -64,6 +65,9 @@ Route::get('/company/{id}', [CompanyAboutController::class, 'show'])->name('comp
 // blog routes
 Route::get('/blogs', [BlogController::class, 'index'])->name('blogs');
 Route::get('/blogs/{slug}', [BlogController::class, 'show'])->name('blogs.show');
+
+// about me route
+Route::get('/about', [AboutController::class, 'index'])->name('about');
 
 
 

@@ -46,6 +46,8 @@ class RecruiterPanelProvider extends PanelProvider
                 'Expertise',
                 'License',
                 'Work Type & Schedule',
+                'Blogs Management',
+                'Content Management',
                 'Settings',
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')

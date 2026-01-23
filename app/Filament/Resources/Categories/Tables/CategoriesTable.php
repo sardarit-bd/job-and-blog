@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Categories\Tables;
 
 use Filament\Tables\Table;
 use Filament\Actions\EditAction;
+use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\BulkActionGroup;
@@ -45,6 +46,8 @@ class CategoriesTable
                 RestoreAction::make(),
             ])
             ->toolbarActions([
+                CreateAction::make()
+                    ->createAnother(false),
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                     ForceDeleteBulkAction::make(),

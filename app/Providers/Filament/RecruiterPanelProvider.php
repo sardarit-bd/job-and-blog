@@ -5,6 +5,8 @@ namespace App\Providers\Filament;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Pages\Dashboard;
+use App\Filament\Pages\Profile;
+use Filament\Navigation\MenuItem;
 use Filament\Support\Enums\Width;
 use Filament\Support\Colors\Color;
 use App\Filament\Widgets\TotalJobs;
@@ -39,6 +41,15 @@ class RecruiterPanelProvider extends PanelProvider
             ->authGuard('web')
             ->colors([
                 'primary' => Color::Orange,
+            ])
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label(fn () => auth()->user()->name)
+                    ->icon('heroicon-o-user'),
+                MenuItem::make()
+                    ->label('Profile')
+                    ->url(fn (): string => Profile::getUrl())
+                    ->icon('heroicon-o-cog-6-tooth'),
             ])
              ->navigationGroups([
                 'Company & Industry',

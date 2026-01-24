@@ -229,7 +229,7 @@ export default function Home() {
 
                 </div>
 
-                <section id="jobs" className="min-h-[100vh]" style={{ minHeight: allJobs.length > 0 ? 'max(100vh, 1200px)' : 'auto' }}>
+                <section id="jobs">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 border-b border-slate-200 pb-6">
                         <div>
                             <h3 className="text-3xl font-bold text-slate-900 font-['Poppins'] tracking-tight">
@@ -243,7 +243,7 @@ export default function Home() {
                             </span>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 gap-6 relative" style={{ minHeight: allJobs.length > 0 ? '800px' : 'auto' }}>
+                    <div className="grid grid-cols-1 gap-6 relative">
                         {allJobs.length > 0 ? (
                             <>
                                 {allJobs.map((job, index) => (

@@ -196,7 +196,7 @@ export default function Login() {
             <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-[#F8721B] focus:ring-[#F8721B]" />
             <span>Stay signed in</span>
           </label>
-          <a href="#" className="text-sm font-semibold text-[#F8721B] hover:underline">Forgot password?</a>
+          <a href="/forgot-password" className="text-sm font-semibold text-[#F8721B] hover:underline">Forgot password?</a>
         </div>
 
         <button type="submit" className="w-full py-2.5 px-4 rounded-xl font-bold text-white bg-[#F8721B] hover:bg-[#e06317] transition-all active:scale-[0.98] shadow-lg shadow-orange-100">

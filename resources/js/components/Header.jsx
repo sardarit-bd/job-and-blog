@@ -23,26 +23,26 @@ export default function Header({ auth }) {
 
                     {/* Desktop Nav */}
                     <nav className="hidden md:flex items-center space-x-1">
-                        <a
+                        <Link
                             href="/#jobs"
                             className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-white rounded-xl hover:bg-[#FB721B] transition-all"
                         >
                             Browse Jobs
-                        </a>
+                        </Link>
 
-                        <a
+                        <Link
                             href="/blogs"
                             className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-white rounded-xl hover:bg-[#FB721B] transition-all"
                         >
                             Blogs
-                        </a>
+                        </Link>
 
-                        <a
+                        <Link
                             href="/about"
                             className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-white rounded-xl hover:bg-[#FB721B] transition-all"
                         >
                             About Me
-                        </a>
+                        </Link>
                     </nav>
 
                     {/* Desktop Auth (Hidden on Mobile) */}

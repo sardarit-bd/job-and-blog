@@ -5,12 +5,13 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Filament\Panel;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -78,5 +79,24 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsToMany(AllJob::class, 'job_applications')
             ->withPivot('status')
             ->withTimestamps();
+    }
+
+
+    protected $appends = ['image_url', 'resume_url'];
+
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+        return url('public/storage/' . $this->image);
+    }
+
+    public function getResumeUrlAttribute()
+    {
+        if (!$this->resume_path) {
+            return null;
+        }
+        return Storage::url($this->resume_path);
     }
 }

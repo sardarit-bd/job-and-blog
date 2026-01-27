@@ -125,7 +125,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'resume_path' => $request->user()->resume_path,
     ]);
     })->name('resume');
-    // Route::post('/resume/upload', [UploadResumeController::class, 'uploadResume'])->name('resume.upload');
+
     Route::post('/resume/upload', [ProfileController::class, 'uploadResume'])->name('resume.upload');
 
 

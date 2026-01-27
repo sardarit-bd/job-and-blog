@@ -10,20 +10,31 @@ use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
+    // public function edit()
+    // {
+    //     $user = Auth::user();
+
+    //     return Inertia::render('front/ResumeUpload', [
+    //         'auth' => [
+    //             'user' => [
+    //                 'name' => $user->name,
+    //                 'email' => $user->email,
+    //                 'linkedin' => $user->linkedin ?? '',
+    //                 'image' => $user->image ?? null,
+    //             ],
+    //         ],
+    //         'resume_path' => $user->resume_path ?? null,
+    //     ]);
+    // }
     public function edit()
     {
         $user = Auth::user();
 
         return Inertia::render('front/ResumeUpload', [
             'auth' => [
-                'user' => [
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'linkedin' => $user->linkedin ?? '',
-                    'image' => $user->image ?? null,
-                ],
+                'user' => $user->only(['name', 'email', 'linkedin', 'image_url']),
             ],
-            'resume_path' => $user->resume_path ?? null,
+            'resume_path' => $user->resume_url,
         ]);
     }
 

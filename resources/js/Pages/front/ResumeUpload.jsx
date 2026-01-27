@@ -28,7 +28,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
     const [clientError, setClientError] = useState({ profile: null, resume: null });
 
     const [imagePreview, setImagePreview] = useState(
-        auth.user.image ? `/storage/${auth.user.image}` : null
+        auth.user.image_url || null
     );
 
     const profileForm = useForm({
@@ -156,6 +156,10 @@ const ResumeUpload = ({ auth, resume_path }) => {
     };
 
     const currentFileName = resume_path?.split('/').pop() || "Your Resume";
+
+    const fullResumeUrl = resume_path 
+        ? (resume_path.startsWith('http') ? resume_path : `${window.location.origin}${resume_path}`)
+        : null;
 
     return (
         <MainLayout auth={auth}>
@@ -392,7 +396,7 @@ const ResumeUpload = ({ auth, resume_path }) => {
                                                 </div>
                                             </div>
                                             <Button variant="ghost" size="sm" asChild className="text-[#fb721b] border hover:bg-white hover:shadow-sm rounded-lg">
-                                                <a href={`/storage/${resume_path}`} target="_blank" rel="noopener noreferrer">
+                                                <a href={fullResumeUrl} target="_blank" rel="noopener noreferrer">
                                                     <ExternalLink size={16} className="mr-2" />
                                                     View
                                                 </a>

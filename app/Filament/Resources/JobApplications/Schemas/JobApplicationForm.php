@@ -8,23 +8,32 @@ use Filament\Schemas\Schema;
 
 class JobApplicationForm
 {
+
     public static function configure(Schema $schema): Schema
     {
         return $schema
             ->components([
-                TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('all_job_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('user_id')
+                    ->label('Applicant')
+                    ->relationship('user', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                
+                Select::make('all_job_id')
+                    ->label('Job')
+                    ->relationship('job', 'title') 
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                
                 Select::make('status')
                     ->options([
-            'pending' => 'Pending',
-            'shortlisted' => 'Shortlisted',
-            'rejected' => 'Rejected',
-            'hired' => 'Hired',
-        ])
+                        'pending' => 'Pending',
+                        'shortlisted' => 'Shortlisted',
+                        'rejected' => 'Rejected',
+                        'hired' => 'Hired',
+                    ])
                     ->default('pending')
                     ->required(),
             ]);

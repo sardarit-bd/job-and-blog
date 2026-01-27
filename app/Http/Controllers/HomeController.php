@@ -44,8 +44,14 @@ class HomeController extends Controller
         }
 
         // Industry filter - filter by healthcare's industry
+        // if ($request->filled('industry')) {
+        //     $query->whereHas('healthcare.industry', function($q) use ($request) {
+        //         $q->where('name', $request->industry);
+        //     });
+        // }
+        // Industry filter - filter by direct industry relationship
         if ($request->filled('industry')) {
-            $query->whereHas('healthcare.industry', function($q) use ($request) {
+            $query->whereHas('industries', function($q) use ($request) {
                 $q->where('name', $request->industry);
             });
         }
